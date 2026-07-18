@@ -120,7 +120,7 @@ const InventoryPage: React.FC = () => {
   // --- Mock Database / States ---
   const [assets, setAssets] = useState<Asset[]>([
     { id: 'AST001', name: 'Dell OptiPlex 5090 (x30)', category: 'Electronics', value: '$24,000', location: 'Computer Lab A', status: 'In Use' },
-    { id: 'AST002', name: 'Smart Interactive Board 75\"', category: 'Electronics', value: '$3,200', location: 'Classroom 102', status: 'In Use' },
+    { id: 'AST002', name: 'Smart Interactive Board 75"', category: 'Electronics', value: '$3,200', location: 'Classroom 102', status: 'In Use' },
     { id: 'AST003', name: 'Physics Lab Microscope Kit (x15)', category: 'Lab Equipment', value: '$4,500', location: 'Physics Lab', status: 'In Use' },
     { id: 'AST004', name: 'Wooden Classroom Desk & Chairs (x40)', category: 'Furniture', value: '$6,000', location: 'Classroom 105', status: 'In Use' },
     { id: 'AST005', name: 'Toyota Coaster School Bus', category: 'Vehicles', value: '$45,000', location: 'Main Gate Parking', status: 'Under Repair' },
@@ -150,7 +150,7 @@ const InventoryPage: React.FC = () => {
 
   const [maintenanceLogs, setMaintenanceLogs] = useState<MaintenanceLog[]>([
     { id: 'MNT001', assetId: 'AST005', assetName: 'Toyota Coaster School Bus', issue: 'Engine coolant system leak', reportedDate: '2026-06-28', cost: '$650', priority: 'High', status: 'In Progress' },
-    { id: 'MNT002', assetId: 'AST002', assetName: 'Smart Interactive Board 75\"', issue: 'HDMI input port 2 non-responsive', reportedDate: '2026-06-15', cost: '$180', priority: 'Medium', status: 'Resolved' },
+    { id: 'MNT002', assetId: 'AST002', assetName: 'Smart Interactive Board 75"', issue: 'HDMI input port 2 non-responsive', reportedDate: '2026-06-15', cost: '$180', priority: 'Medium', status: 'Resolved' },
     { id: 'MNT003', assetId: 'AST003', assetName: 'Physics Lab Microscope Kit', issue: 'Coarse adjustment knob stuck', reportedDate: '2026-07-02', cost: '$45', priority: 'Low', status: 'Reported' },
   ]);
 
