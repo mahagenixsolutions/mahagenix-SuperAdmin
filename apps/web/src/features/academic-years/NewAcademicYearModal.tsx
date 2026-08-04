@@ -9,9 +9,6 @@ export default function NewAcademicYearModal({ onClose, onSuccess }: { onClose: 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implementation for creating the academic year would go here
-    // including creating terms and copying settings
-    console.log({ name, startDate, endDate, copySettings, terms });
     if (onSuccess) onSuccess();
     onClose();
   };

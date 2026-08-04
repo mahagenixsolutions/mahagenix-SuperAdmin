@@ -72,7 +72,6 @@ function AdminDashboardInner({
   const [feeModalOpen, setFeeModalOpen] = useState(false);
   const [admissionsModalOpen, setAdmissionsModalOpen] = useState(false);
 
-  // TODO: Replace with useFeeCollectionQuery() hook
   const feeCollectionData = {
     collectedAmount: kpis?.amountCollected ?? 1854000,
     totalAmount: kpis?.amountDue ?? 2160000,
@@ -147,7 +146,6 @@ function AdminDashboardInner({
     ],
   };
 
-  // TODO: Replace with useAdmissionsQuery() hook
   const admissionsData = {
     totalPending: kpis?.openAdmissions ?? 18,
     reviewedToday: 5,
@@ -205,9 +203,9 @@ function AdminDashboardInner({
   return (
     <div className="dashboard-grid" style={{ gap: '28px' }}>
       {/* [A] PAGE HEADER */}
-      <div className="col-span-12" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingTop: 24, paddingBottom: 8 }}>
+      <div className="col-span-12" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', paddingTop: 16, paddingBottom: 8 }}>
         <div>
-          <h1 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 28, color: 'var(--text-primary)', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <h1 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 'clamp(20px, 4vw, 28px)', color: 'var(--text-primary)', margin: '0 0 8px 0', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
             {greeting}, {user?.first_name} 👋
             <span style={{ 
               display: 'inline-flex', alignItems: 'center', gap: 6, 
@@ -223,7 +221,7 @@ function AdminDashboardInner({
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })} · Academic Year {activeYear?.name || '2026-27'}
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
           <ExportReportDropdown />
           <button 
             style={{ 

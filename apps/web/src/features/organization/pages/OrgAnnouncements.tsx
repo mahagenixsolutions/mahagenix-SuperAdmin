@@ -143,18 +143,19 @@ export default function OrgAnnouncements({ defaultTab = 'announcements' }: Props
   };
 
   const getActiveTabStyle = (active: boolean) => ({
-    padding: '10px 20px',
-    borderRadius: '8px',
-    border: active ? 'none' : '1px solid #e5e7eb',
-    fontWeight: 600,
+    padding: '8px 18px',
+    borderRadius: '9999px',
+    border: 'none',
+    fontWeight: active ? 700 : 600,
     fontSize: 13,
     cursor: 'pointer',
-    background: active ? '#2563eb' : '#ffffff',
-    color: active ? '#ffffff' : '#4b5563',
-    display: 'flex',
+    background: active ? '#ffffff' : 'transparent',
+    color: active ? '#0284C7' : '#475569',
+    display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
-    transition: 'all 0.2s',
+    boxShadow: active ? '0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06)' : 'none',
+    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
   });
 
   const renderAnnouncements = () => (
@@ -683,7 +684,7 @@ export default function OrgAnnouncements({ defaultTab = 'announcements' }: Props
         </div>
 
         {/* Tab Selection */}
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', background: 'var(--bg-surface-raised, #F1F5F9)', border: '1px solid var(--border-subtle, rgba(226, 232, 240, 0.8))', borderRadius: '9999px', padding: '4px 6px', gap: 4 }}>
           <button
             onClick={() => setTab('announcements')}
             style={getActiveTabStyle(tab === 'announcements')}

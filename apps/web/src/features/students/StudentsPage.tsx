@@ -100,7 +100,7 @@ export default function StudentsPage() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  const { data, isLoading } = useGetStudentsQuery({ page, limit: 20, search: search || undefined });
+  const { data, isLoading } = useGetStudentsQuery({ page: 1, limit: 100, search: search || undefined });
 
   // Client side filtration matching additional filter inputs
   const filteredStudents = useMemo(() => {
@@ -116,6 +116,13 @@ export default function StudentsPage() {
     }
     return list;
   }, [data?.data, classFilter, statusFilter, genderFilter]);
+
+  // Pagination logic (max 10 students per page)
+  const totalPages = Math.ceil(filteredStudents.length / 10);
+  const paginatedStudents = useMemo(() => {
+    const start = (page - 1) * 10;
+    return filteredStudents.slice(start, start + 10);
+  }, [filteredStudents, page]);
 
   // Push page context to AI assistant
   useRegisterAIContext({
@@ -244,16 +251,16 @@ export default function StudentsPage() {
       {/* Table */}
       <DataTable
         columns={COLUMNS}
-        data={filteredStudents}
+        data={paginatedStudents}
         loading={isLoading}
         onRowClick={(row) => navigate(`/students/${String((row as { id: string }).id)}`)}
         emptyMessage="No students found matching your criteria. Try adjusting filters."
       />
 
-      {data?.meta && !classFilter && !statusFilter && !genderFilter && (
+      {totalPages > 1 && (
         <Pagination
           page={page}
-          total_pages={data.meta.total_pages}
+          total_pages={totalPages}
           onPage={setPage}
         />
       )}

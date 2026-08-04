@@ -23,6 +23,7 @@ import {
   PieChart, Pie, Cell
 } from 'recharts';
 import './participation.css';
+import { Tabs } from '../../components/ui/Tabs';
 
 const THEME_COLORS = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'];
 
@@ -231,12 +232,18 @@ export default function ParticipationPage() {
         </div>
       </div>
 
-      <div className="participation-tabs">
-        <button className={`p-tab ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}><Target size={18}/> Analytics Overview</button>
-        <button className={`p-tab ${activeTab === 'spreadsheet' ? 'active' : ''}`} onClick={() => setActiveTab('spreadsheet')}><Activity size={18}/> Spreadsheet View</button>
-        <button className={`p-tab ${activeTab === 'achievements' ? 'active' : ''}`} onClick={() => setActiveTab('achievements')}><Trophy size={18}/> Achievements Gallery</button>
-        <button className={`p-tab ${activeTab === 'badges' ? 'active' : ''}`} onClick={() => setActiveTab('badges')}><Star size={18}/> Badges</button>
-      </div>
+      <Tabs
+        tabs={[
+          { id: 'overview', label: 'Analytics Overview', icon: <Target size={18} /> },
+          { id: 'spreadsheet', label: 'Spreadsheet View', icon: <Activity size={18} /> },
+          { id: 'achievements', label: 'Achievements Gallery', icon: <Trophy size={18} /> },
+          { id: 'badges', label: 'Badges', icon: <Star size={18} /> },
+        ]}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        variant="default"
+        style={{ marginBottom: '20px' }}
+      />
 
       {activeTab === 'overview' && (
         <div className="chart-grid">

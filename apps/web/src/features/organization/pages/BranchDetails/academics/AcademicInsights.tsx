@@ -1,3 +1,4 @@
+import { BookOpen, Calendar, UploadCloud, Trophy, TrendingUp, TrendingDown, FileText } from 'lucide-react';
 import type { AcademicData } from '../types';
 
 interface Props {
@@ -6,16 +7,16 @@ interface Props {
 
 export default function AcademicInsights({ data }: Props) {
   const metrics = [
-    { label: 'Homework Completion', val: data.homeworkCompletion, color: '#3b82f6', icon: '📝' },
-    { label: 'Lesson Plan Progress', val: data.lessonPlanCompletion, color: '#10b981', icon: '📅' },
-    { label: 'Assignment Submissions', val: data.assignmentSubmission, color: '#f59e0b', icon: '📤' }
+    { label: 'Homework Completion', val: data.homeworkCompletion, color: '#3b82f6', icon: <BookOpen size={16} color="#3b82f6" /> },
+    { label: 'Lesson Plan Progress', val: data.lessonPlanCompletion, color: '#10b981', icon: <Calendar size={16} color="#10b981" /> },
+    { label: 'Assignment Submissions', val: data.assignmentSubmission, color: '#f59e0b', icon: <UploadCloud size={16} color="#f59e0b" /> }
   ];
 
   const highlights = [
-    { label: 'Average Exam Grade', val: data.averageGrade, sub: 'Target: A', icon: '🏆', color: '#8b5cf6', bg: '#f5f3ff' },
-    { label: 'Top Performing Class', val: data.topPerformingClass, sub: 'Avg Score: 94.6%', icon: '📈', color: '#10b981', bg: '#ecfdf5' },
-    { label: 'Lowest Performing Class', val: data.lowestPerformingClass, sub: 'Avg Score: 71.2%', icon: '📉', color: '#ef4444', bg: '#fef2f2' },
-    { label: 'Upcoming Term Exams', val: `${data.upcomingExamsCount} Exams`, sub: 'Starting Aug 10', icon: '📄', color: '#3b82f6', bg: '#eff6ff' }
+    { label: 'Average Exam Grade', val: data.averageGrade, sub: 'Target: A', icon: <Trophy size={18} color="#8b5cf6" />, color: '#8b5cf6', bg: '#f5f3ff' },
+    { label: 'Top Performing Class', val: data.topPerformingClass, sub: 'Avg Score: 94.6%', icon: <TrendingUp size={18} color="#10b981" />, color: '#10b981', bg: '#ecfdf5' },
+    { label: 'Lowest Performing Class', val: data.lowestPerformingClass, sub: 'Avg Score: 71.2%', icon: <TrendingDown size={18} color="#ef4444" />, color: '#ef4444', bg: '#fef2f2' },
+    { label: 'Upcoming Term Exams', val: `${data.upcomingExamsCount} Exams`, sub: 'Starting Aug 10', icon: <FileText size={18} color="#3b82f6" />, color: '#3b82f6', bg: '#eff6ff' }
   ];
 
   return (

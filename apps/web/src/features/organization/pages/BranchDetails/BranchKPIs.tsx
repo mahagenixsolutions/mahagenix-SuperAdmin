@@ -1,3 +1,4 @@
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import type { CompleteBranchData } from './mockData';
 
 interface Props {
@@ -13,9 +14,9 @@ export default function BranchKPIs({ branch }: Props) {
       color: isNegative ? '#ef4444' : '#10b981',
       display: 'inline-flex',
       alignItems: 'center',
-      gap: '3px'
+      gap: '2px'
     }}>
-      {isNegative ? '↓' : '↑'} {value}
+      {isNegative ? <ArrowDownRight size={12} /> : <ArrowUpRight size={12} />} {value}
     </span>
   );
 

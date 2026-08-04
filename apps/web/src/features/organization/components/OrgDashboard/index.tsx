@@ -1,4 +1,6 @@
 import { useOrganizationDashboard } from '../../hooks/useOrganizationDashboard';
+import { LayoutDashboard, GraduationCap, DollarSign, Shield, Terminal } from 'lucide-react';
+import { Tabs } from '../../../../components/ui/Tabs';
 
 // Subcomponents
 import DashboardHeader from './DashboardHeader';
@@ -101,34 +103,18 @@ export default function OrgDashboardIndex() {
       />
 
       {/* 3. Tab Selectors */}
-      <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
-        {[
-          { key: 'overview', label: 'Executive Overview' },
-          { key: 'academics', label: 'Academics Control' },
-          { key: 'financial', label: 'Financial Control' },
-          { key: 'operations', label: 'Operations & Safety' },
-          { key: 'timeline', label: 'System Logs' }
-        ].map(tab => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            style={{
-              padding: '8px 16px',
-              fontSize: '12px',
-              fontWeight: 700,
-              border: 'none',
-              borderBottom: activeTab === tab.key ? '2px solid var(--color-primary)' : '2px solid transparent',
-              background: 'transparent',
-              color: activeTab === tab.key ? 'var(--color-primary)' : '#64748b',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.15s'
-            }}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        tabs={[
+          { id: 'overview', label: 'Executive Overview', icon: <LayoutDashboard size={14} /> },
+          { id: 'academics', label: 'Academics Control', icon: <GraduationCap size={14} /> },
+          { id: 'financial', label: 'Financial Control', icon: <DollarSign size={14} /> },
+          { id: 'operations', label: 'Operations & Safety', icon: <Shield size={14} /> },
+          { id: 'timeline', label: 'System Logs', icon: <Terminal size={14} /> }
+        ]}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        variant="default"
+      />
 
       {/* Tab Renderers */}
       {activeTab === 'overview' && (

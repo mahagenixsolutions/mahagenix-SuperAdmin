@@ -39,10 +39,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   rightActions,
 }) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: 'var(--bg-surface)', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', flex: 1, alignItems: 'center' }}>
-          <div style={{ position: 'relative', minWidth: '240px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: 'var(--bg-surface)', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', flex: 1, alignItems: 'center', width: '100%' }}>
+          <div style={{ position: 'relative', flex: '1 1 200px', minWidth: '180px', maxWidth: '100%' }}>
             <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -51,7 +51,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             <input
               type="text"
               className="form-input"
-              style={{ paddingLeft: '36px', height: '38px', width: '100%' }}
+              style={{ paddingLeft: '36px', height: '38px', width: '100%', boxSizing: 'border-box' }}
               placeholder={searchPlaceholder}
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
@@ -62,7 +62,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             <select
               key={idx}
               className="form-select"
-              style={{ height: '38px', width: 'auto', minWidth: '140px' }}
+              style={{ height: '38px', flex: '1 1 130px', minWidth: '120px', maxWidth: '100%', boxSizing: 'border-box' }}
               value={dropdown.value}
               onChange={(e) => dropdown.onChange(e.target.value)}
             >
@@ -76,7 +76,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           ))}
         </div>
 
-        {rightActions && <div style={{ display: 'flex', gap: '8px' }}>{rightActions}</div>}
+        {rightActions && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>{rightActions}</div>}
       </div>
 
       {chips.length > 0 && (

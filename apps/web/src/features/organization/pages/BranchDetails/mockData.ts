@@ -25,7 +25,6 @@ export interface CompleteBranchData {
   expense: string;
   leadership: {
     principal: LeadershipProfile;
-    vicePrincipal: LeadershipProfile;
     admin: LeadershipProfile;
   };
   info: BranchInfo;
@@ -61,15 +60,6 @@ export const mockBranchDetails: Record<string, CompleteBranchData> = {
         tenure: 'Since 2021',
         avatarBg: '#fffbeb',
         avatarColor: '#d97706'
-      },
-      vicePrincipal: {
-        name: 'Sunita Desai',
-        role: 'VICE_PRINCIPAL',
-        email: 'sunita.desai@edutrack.demo',
-        phone: '+91 98765 41005',
-        tenure: 'Since 2022',
-        avatarBg: '#eff6ff',
-        avatarColor: '#2563eb'
       },
       admin: {
         name: 'Ravi Sharma',
@@ -190,15 +180,6 @@ export const mockBranchDetails: Record<string, CompleteBranchData> = {
         tenure: 'Since 2020',
         avatarBg: '#eff6ff',
         avatarColor: '#2563eb'
-      },
-      vicePrincipal: {
-        name: 'Farida Khan',
-        role: 'VICE_PRINCIPAL',
-        email: 'farida.khan@edutrack.demo',
-        phone: '+91 98765 42005',
-        tenure: 'Since 2021',
-        avatarBg: '#fffbeb',
-        avatarColor: '#d97706'
       },
       admin: {
         name: 'Amit Patel',

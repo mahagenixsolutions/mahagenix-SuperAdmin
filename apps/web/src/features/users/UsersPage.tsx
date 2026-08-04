@@ -6,6 +6,8 @@ import {
   useSetStaffStatusMutation,
 } from './usersApi';
 import { PageSkeleton } from '../../components/ui/Skeleton';
+import { DataGrid } from '../../components/erp/DataGrid';
+import type { GridColumn } from '../../components/erp/DataGrid';
 
 export default function UsersPage() {
   const { data: staffList, isLoading, refetch } = useGetStaffQuery();
@@ -99,83 +101,83 @@ export default function UsersPage() {
 
       <div className="card">
         <div className="card-body" style={{ padding: 0 }}>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Staff Member</th>
-                <th>Email Address</th>
-                <th>Phone Number</th>
-                <th>Access Role</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'right' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {staffList && staffList.length > 0 ? (
-                staffList.map((staff) => {
+          <DataGrid
+            data={staffList || []}
+            columns={[
+              {
+                key: 'name',
+                header: 'Staff Member',
+                mobilePriority: 'high',
+                render: (staff: any) => {
                   const initials = `${staff.first_name[0] || ''}${staff.last_name[0] || ''}`.toUpperCase();
-                  const isActive = staff.status === 'ACTIVE';
-
                   return (
-                    <tr key={staff.id}>
-                      <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div
-                            className="avatar-fallback"
-                            style={{
-                              width: 36,
-                              height: 36,
-                              fontSize: 12,
-                              fontWeight: 700,
-                              background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
-                              color: 'white',
-                            }}
-                          >
-                            {initials}
-                          </div>
-                          <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                            {staff.first_name} {staff.last_name}
-                          </div>
-                        </div>
-                      </td>
-                      <td>{staff.email}</td>
-                      <td>{staff.phone || '—'}</td>
-                      <td>
-                        <span className="badge badge-primary" style={{ fontSize: 11 }}>
-                          {staff.role}
-                        </span>
-                      </td>
-                      <td>
-                        <span className={`badge badge-${isActive ? 'present' : 'absent'}`} style={{ fontSize: 10 }}>
-                          {staff.status}
-                        </span>
-                      </td>
-                      <td>
-                        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                          <button className="btn btn-secondary btn-xs" onClick={() => handleEditClick(staff)}>
-                            ✏️ Edit
-                          </button>
-                          <button
-                            className={`btn btn-xs ${isActive ? 'btn-ghost' : 'btn-ghost'}`}
-                            style={{ color: isActive ? 'var(--color-danger)' : 'var(--color-secondary)' }}
-                            onClick={() => toggleStatus(staff)}
-                          >
-                            {isActive ? '🚫 Deactivate' : '⚡ Activate'}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div
+                        className="avatar-fallback"
+                        style={{
+                          width: 36,
+                          height: 36,
+                          fontSize: 12,
+                          fontWeight: 700,
+                          background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderRadius: '50%'
+                        }}
+                      >
+                        {initials}
+                      </div>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
+                        {staff.first_name} {staff.last_name}
+                      </div>
+                    </div>
                   );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={6} style={{ textAlign: 'center', padding: 24, color: 'var(--text-muted)' }}>
-                    No staff records found in registry.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                }
+              },
+              { key: 'email', header: 'Email Address' },
+              { key: 'phone', header: 'Phone Number', render: (staff: any) => staff.phone || '—' },
+              {
+                key: 'role',
+                header: 'Access Role',
+                mobilePriority: 'high',
+                render: (staff: any) => <span className="badge badge-primary" style={{ fontSize: 11 }}>{staff.role}</span>
+              },
+              {
+                key: 'status',
+                header: 'Status',
+                mobilePriority: 'high',
+                render: (staff: any) => {
+                  const isActive = staff.status === 'ACTIVE';
+                  return <span className={`badge badge-${isActive ? 'present' : 'absent'}`} style={{ fontSize: 10 }}>{staff.status}</span>;
+                }
+              }
+            ]}
+            keyField="id"
+            actions={(staff: any) => {
+              const isActive = staff.status === 'ACTIVE';
+              return (
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+                  <button className="btn btn-secondary btn-xs" onClick={() => handleEditClick(staff)}>
+                    ✏️ Edit
+                  </button>
+                  <button
+                    className={`btn btn-xs ${isActive ? 'btn-ghost' : 'btn-ghost'}`}
+                    style={{ color: isActive ? 'var(--color-danger)' : 'var(--color-secondary)' }}
+                    onClick={() => toggleStatus(staff)}
+                  >
+                    {isActive ? '🚫 Deactivate' : '⚡ Activate'}
+                  </button>
+                </div>
+              );
+            }}
+            emptyState={
+              <div style={{ textAlign: 'center', padding: 24, color: 'var(--text-muted)' }}>
+                No staff records found in registry.
+              </div>
+            }
+          />
         </div>
       </div>
 
@@ -211,9 +213,7 @@ export default function UsersPage() {
               <select className="form-select" value={role} onChange={(e) => setRole(e.target.value)}>
                 <option value="TEACHER">Teacher</option>
                 <option value="SCHOOL_ADMIN">School Admin</option>
-                <option value="SUPER_ADMIN">Super Admin</option>
                 <option value="PRINCIPAL">Principal</option>
-                <option value="VICE_PRINCIPAL">Vice Principal</option>
                 <option value="ACCOUNTANT">Accountant</option>
                 <option value="HR">HR</option>
                 <option value="LIBRARIAN">Librarian</option>
@@ -261,9 +261,7 @@ export default function UsersPage() {
               <select className="form-select" value={editRole} onChange={(e) => setEditRole(e.target.value)}>
                 <option value="TEACHER">Teacher</option>
                 <option value="SCHOOL_ADMIN">School Admin</option>
-                <option value="SUPER_ADMIN">Super Admin</option>
                 <option value="PRINCIPAL">Principal</option>
-                <option value="VICE_PRINCIPAL">Vice Principal</option>
                 <option value="ACCOUNTANT">Accountant</option>
                 <option value="HR">HR</option>
                 <option value="LIBRARIAN">Librarian</option>

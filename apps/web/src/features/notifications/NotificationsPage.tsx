@@ -500,19 +500,22 @@ export default function NotificationsPage() {
         .feed-controls { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--border-color); }
         .search-box { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--bg-body); border-radius: 10px; border: 1px solid var(--border-color); }
         .search-box input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-size: 14px; }
-        .priority-tabs { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .priority-tabs button, .channel-row button { border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-secondary); border-radius: 999px; padding: 7px 13px; cursor: pointer; font-size: 12px; font-weight: 700; }
-        .priority-tabs button.active, .channel-row button.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+        .priority-tabs { display: inline-flex; align-items: center; gap: 4px; background: var(--bg-surface-raised, #F1F5F9); border: 1px solid var(--border-subtle, rgba(226, 232, 240, 0.8)); border-radius: 9999px; padding: 4px 6px; flex-wrap: wrap; }
+        .priority-tabs button, .channel-row button { border: none !important; background: transparent; color: var(--text-secondary, #475569); border-radius: 9999px !important; padding: 6px 14px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
+        .priority-tabs button.active, .channel-row button.active { background: #ffffff !important; color: var(--color-primary, #0284C7) !important; font-weight: 700 !important; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12) !important; }
         .feed-list { padding: 10px; display: flex; flex-direction: column; gap: 10px; max-height: 560px; overflow: auto; }
-        .feed-item { width: 100%; text-align: left; border: 1px solid var(--border-color); background: var(--bg-body); border-radius: 12px; padding: 13px; color: inherit; cursor: pointer; }
-        .feed-item.selected { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(79,70,229,.12); }
-        .feed-topline, .feed-meta, .detail-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-        .priority-chip, .category-pill, .status-pill { border: 1px solid transparent; border-radius: 999px; padding: 5px 8px; font-size: 13px; font-weight: 800; }
-        .feed-time { color: var(--text-muted); font-size: 12px; }
-        .feed-item strong { display: block; margin-top: 10px; color: var(--text-primary); font-size: 14px; }
-        .feed-item p { margin: 6px 0 10px; color: var(--text-secondary); font-size: 13px; line-height: 1.45; }
-        .feed-meta { justify-content: flex-start; color: var(--text-muted); font-size: 12px; }
-        .feed-meta span { display: inline-flex; align-items: center; gap: 5px; }
+        .feed-item { width: 100%; text-align: left; border: none !important; background: var(--bg-surface-raised, var(--bg-body)) !important; border-radius: 8px !important; padding: 14px 16px; color: inherit; cursor: pointer; transition: all 0.15s ease-in-out; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+        .feed-item:hover { border-color: var(--color-primary) !important; }
+        .feed-item.selected { border-color: var(--color-primary) !important; background: rgba(79,70,229,.08) !important; box-shadow: none !important; }
+        .feed-topline { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; margin-bottom: 2px; }
+        .priority-chip { display: inline-flex; align-items: center; justify-content: center; border-radius: 4px !important; padding: 3px 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.2; border: none !important; }
+        .category-pill, .status-pill { border: none !important; border-radius: 4px !important; padding: 4px 10px; font-size: 12px; font-weight: 700; }
+        .feed-time { color: var(--text-muted); font-size: 11.5px; font-weight: 500; white-space: nowrap; }
+        .feed-item strong { display: block; margin: 2px 0 4px 0; color: var(--text-primary); font-size: 14px; font-weight: 700; line-height: 1.35; }
+        .feed-item p { margin: 0 0 8px 0; color: var(--text-secondary); font-size: 13px; line-height: 1.45; }
+        .feed-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-start; color: var(--text-muted); font-size: 11.5px; border-top: 1px dashed var(--border-color); padding-top: 8px; margin-top: 4px; }
+        .feed-meta span { display: inline-flex; align-items: center; gap: 5px; font-weight: 500; }
+        .detail-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
         .detail-panel, .composer-panel, .ai-panel { padding: 18px; }
         .category-pill { background: rgba(79,70,229,.10); color: #4338CA; }
         .status-pill { background: rgba(16,185,129,.12); color: #047857; }

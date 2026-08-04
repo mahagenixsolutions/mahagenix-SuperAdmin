@@ -34,7 +34,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({ isOpen, onClose, tit
           top: 0,
           right: 0,
           bottom: 0,
-          width: '460px',
+          width: 'min(460px, 100vw)',
           maxWidth: '100%',
           background: 'var(--bg-secondary)',
           borderLeft: '1px solid var(--border-subtle)',

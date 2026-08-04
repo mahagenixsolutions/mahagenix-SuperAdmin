@@ -1,351 +1,237 @@
 import React, { useState } from 'react';
-import { PageLayout } from '../../components/erp/PageLayout';
-import { PageHeader } from '../../components/erp/PageHeader';
-import { DataGrid } from '../../components/erp/DataGrid';
-import type { GridColumn } from '../../components/erp/DataGrid';
-import { KPICard } from '../../components/erp/KPICard';
-import { DetailDrawer } from '../../components/erp/DetailDrawer';
-import { StatusBadge } from '../../components/erp/StatusBadge';
 import { 
-  BookOpen, Calendar, GraduationCap, Clock, Award, Plus, FolderOpen, ListTodo
+  BookOpen, Folder, FileText, ChevronRight, ChevronDown, 
+  MoreVertical, Search, Plus, Filter, Shield, Activity, Target
 } from 'lucide-react';
 
-interface SubjectDetail {
-  name: string;
-  code: string;
-  teacher: string;
-}
+export default function AcademicPage() {
+  const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({
+    'b1': true,
+    's1': true,
+    'u1': true,
+  });
 
-interface AcademicClass {
-  id: string;
-  name: string;
-  sections: string[];
-  classTeacher: string;
-  studentCount: number;
-  subjects: SubjectDetail[];
-}
+  const toggleNode = (id: string) => {
+    setExpandedNodes(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
-interface CurriculumChapter {
-  name: string;
-  status: 'success' | 'warning' | 'danger';
-  statusLabel: string;
-  plannedDate: string;
-}
-
-interface LessonPlan {
-  subjectName: string;
-  className: string;
-  chapters: CurriculumChapter[];
-}
-
-interface CalendarEvent {
-  date: string;
-  title: string;
-  type: 'success' | 'warning' | 'info' | 'danger';
-  typeLabel: string;
-  description: string;
-}
-
-interface TimetableItem {
-  time: string;
-  mon: string;
-  tue: string;
-  wed: string;
-  thu: string;
-  fri: string;
-}
-
-const mockClasses: AcademicClass[] = [
-  {
-    id: 'cls-1',
-    name: 'Class 10',
-    sections: ['A', 'B'],
-    classTeacher: 'Sarah Jenkins',
-    studentCount: 73,
-    subjects: [
-      { name: 'Mathematics', code: 'MAT-10', teacher: 'Sarah Jenkins' },
-      { name: 'Physics', code: 'PHY-10', teacher: 'Dr. Aris Vance' },
-      { name: 'English', code: 'ENG-10', teacher: 'Elena Rostova' }
-    ]
-  },
-  {
-    id: 'cls-2',
-    name: 'Class 9',
-    sections: ['A'],
-    classTeacher: 'Elena Rostova',
-    studentCount: 42,
-    subjects: [
-      { name: 'Chemistry', code: 'CHM-09', teacher: 'Dr. Aris Vance' },
-      { name: 'History', code: 'HIS-09', teacher: 'Rohan Sharma' }
-    ]
-  }
-];
-
-const mockLessonPlans: LessonPlan[] = [
-  {
-    subjectName: 'Physics',
-    className: 'Class 10 A',
-    chapters: [
-      { name: 'Light Reflection & Refraction', status: 'success', statusLabel: 'Completed', plannedDate: '2026-06-12' },
-      { name: 'Electricity & Circuits', status: 'warning', statusLabel: 'In Progress', plannedDate: '2026-07-10' },
-      { name: 'Magnetic Effects of Current', status: 'danger', statusLabel: 'Not Started', plannedDate: '2026-08-01' }
-    ]
-  },
-  {
-    subjectName: 'Mathematics',
-    className: 'Class 10 A',
-    chapters: [
-      { name: 'Real Numbers', status: 'success', statusLabel: 'Completed', plannedDate: '2026-06-10' },
-      { name: 'Polynomials', status: 'success', statusLabel: 'Completed', plannedDate: '2026-06-25' },
-      { name: 'Quadratic Equations', status: 'warning', statusLabel: 'In Progress', plannedDate: '2026-07-15' }
-    ]
-  }
-];
-
-const mockCalendarEvents: CalendarEvent[] = [
-  { date: '2026-07-10', title: 'Unit Test I Exam Block', type: 'warning', typeLabel: 'EXAM', description: 'Terminal unit examination for grade 9 and 10.' },
-  { date: '2026-08-15', title: 'Independence Day Holiday', type: 'danger', typeLabel: 'HOLIDAY', description: 'National holiday celebration.' },
-  { date: '2026-07-25', title: 'Parent-Teacher Meet (PTM)', type: 'info', typeLabel: 'EVENT', description: 'Academic performance audit PTM.' }
-];
-
-const mockTimetable: TimetableItem[] = [
-  { time: '08:30 AM', mon: 'Physics (Class 10 A)', tue: 'Algebra (Class 11 A)', wed: 'Physics (Class 10 A)', thu: 'Algebra (Class 11 A)', fri: 'Lab' },
-  { time: '09:30 AM', mon: 'Calculus (Class 12 A)', tue: 'Physics (Class 10 B)', wed: 'Calculus (Class 12 A)', thu: 'Literature (Class 10 B)', fri: 'Library' },
-  { time: '10:30 AM', mon: 'Chemistry (Class 9 A)', tue: 'Civics (Class 10 A)', wed: 'Grammar (Class 9 A)', thu: 'History (Class 10 A)', fri: 'Games' }
-];
-
-const AcademicPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'classes' | 'curriculum' | 'timetable' | 'calendar'>('classes');
-  const [selectedClass, setSelectedClass] = useState<AcademicClass | null>(null);
-
-  const classColumns: GridColumn<AcademicClass>[] = [
+  const curriculumData = [
     {
-      key: 'name',
-      header: 'Class Grade',
-      sortable: true
+      id: 'b1', title: 'CBSE Grade 10 - Science', type: 'board', status: 'Approved',
+      children: [
+        {
+          id: 's1', title: 'Physics', type: 'subject',
+          children: [
+            {
+              id: 'u1', title: 'Unit 1: Light - Reflection and Refraction', type: 'unit', periods: 14,
+              children: [
+                { id: 'c1', title: '1.1 Reflection of Light', type: 'chapter', periods: 3, lo: 'Understand laws of reflection' },
+                { id: 'c2', title: '1.2 Spherical Mirrors', type: 'chapter', periods: 4, lo: 'Image formation by spherical mirrors' },
+                { id: 'c3', title: '1.3 Refraction of Light', type: 'chapter', periods: 4, lo: 'Refractive index and Snell’s Law' },
+                { id: 'c4', title: '1.4 Lenses', type: 'chapter', periods: 3, lo: 'Lens formula and magnification' },
+              ]
+            },
+            {
+              id: 'u2', title: 'Unit 2: Human Eye and Colourful World', type: 'unit', periods: 10,
+              children: [
+                { id: 'c5', title: '2.1 Structure of Human Eye', type: 'chapter', periods: 3, lo: 'Identify parts and functions' },
+                { id: 'c6', title: '2.2 Defects of Vision', type: 'chapter', periods: 4, lo: 'Myopia, Hypermetropia, Presbyopia' },
+                { id: 'c7', title: '2.3 Refraction through a Prism', type: 'chapter', periods: 3, lo: 'Dispersion of white light' },
+              ]
+            }
+          ]
+        },
+        {
+          id: 's2', title: 'Chemistry', type: 'subject',
+          children: [
+            { id: 'u3', title: 'Unit 1: Chemical Reactions', type: 'unit', periods: 12, children: [] }
+          ]
+        }
+      ]
     },
     {
-      key: 'sections',
-      header: 'Sections',
-      render: (row) => (
-        <div style={{ display: 'flex', gap: '6px' }}>
-          {row.sections.map((sec, idx) => (
-            <span key={idx} style={{ background: 'var(--accent-primary-surface)', color: 'var(--accent-primary)', padding: '2px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: 600 }}>
-              Section {sec}
-            </span>
-          ))}
-        </div>
-      )
-    },
-    {
-      key: 'classTeacher',
-      header: 'Class Representative',
-      sortable: true
-    },
-    {
-      key: 'studentCount',
-      header: 'Headcount',
-      sortable: true,
-      render: (row) => <strong>{row.studentCount} Students</strong>
+      id: 'b2', title: 'CBSE Grade 10 - Mathematics', type: 'board', status: 'Draft',
+      children: []
     }
   ];
 
-  return (
-    <PageLayout>
-      {/* Page Header */}
-      <PageHeader
-        title="Academic Portal"
-        subtitle="Manage classrooms, section distributions, timetable schedules, curriculum progress, and calendar events"
-        breadcrumbs={[{ label: 'Academic' }]}
-        actions={
-          <button className="btn btn-primary btn-sm" style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-            <Plus size={15} /> Configure Term
-          </button>
-        }
-      />
+  const renderTree = (nodes: any[], level = 0) => {
+    return nodes.map(node => {
+      const isExpanded = expandedNodes[node.id];
+      const hasChildren = node.children && node.children.length > 0;
+      const paddingLeft = level * 24 + 16;
+      
+      const isChapter = node.type === 'chapter';
+      const isBoard = node.type === 'board';
 
-      {/* KPI summaries */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: '24px',
-        marginTop: '24px',
-        marginBottom: '24px'
-      }}>
-        <KPICard title="Total Classes" value={mockClasses.length} icon={<GraduationCap size={20} />} accentColor="var(--accent-primary)" />
-        <KPICard title="Active Sections" value={3} icon={<FolderOpen size={20} />} accentColor="var(--accent-violet)" />
-        <KPICard title="Total Subjects" value={6} icon={<BookOpen size={20} />} accentColor="var(--accent-success)" />
-        <KPICard title="Syllabus Target" value="84% Met" icon={<Award size={20} />} accentColor="var(--accent-warning)" />
-      </div>
-
-      {/* Navigation Tabs */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '1px', gap: '24px', overflowX: 'auto' }}>
-        {[
-          { id: 'classes', label: 'Classes & Sections', icon: <GraduationCap size={15} /> },
-          { id: 'curriculum', label: 'Curriculum & Lesson Plans', icon: <ListTodo size={15} /> },
-          { id: 'timetable', label: 'Academic Timetable', icon: <Clock size={15} /> },
-          { id: 'calendar', label: 'Academic Calendar', icon: <Calendar size={15} /> },
-        ].map((tab) => {
-          const active = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '12px 4px',
-                border: 'none',
-                background: 'transparent',
-                borderBottom: active ? '2px solid var(--accent-primary)' : '2px solid transparent',
-                color: active ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                fontWeight: active ? 700 : 500,
-                fontSize: '14px',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s',
-              }}
-            >
-              {tab.icon}
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
-
-      <div style={{ marginTop: '24px' }}>
-        {/* Tab 1: Classes & Sections */}
-        {activeTab === 'classes' && (
-          <DataGrid
-            columns={classColumns}
-            data={mockClasses}
-            keyField="id"
-            actions={(row) => (
-              <button 
-                className="btn btn-ghost btn-sm"
-                onClick={() => setSelectedClass(row)}
-                style={{ border: '1px solid var(--border-subtle)' }}
-              >
-                View Subjects
-              </button>
-            )}
-          />
-        )}
-
-        {/* Tab 2: Curriculum & Lesson Plans */}
-        {activeTab === 'curriculum' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {mockLessonPlans.map((lp, idx) => (
-              <div key={idx} className="card" style={{ padding: '20px', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)' }}>
-                <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>{lp.subjectName} · {lp.className}</span>
-                  <span style={{ fontSize: '13px', background: 'var(--bg-surface-raised)', border: '1px solid var(--border-subtle)', padding: '4px 10px', borderRadius: '20px', color: 'var(--text-secondary)' }}>Curriculum progress</span>
-                </h3>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {lp.chapters.map((chap, cIdx) => (
-                    <div key={cIdx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'var(--bg-surface-raised)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)' }}>
-                      <div>
-                        <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{chap.name}</div>
-                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px' }}>Completion Target: {chap.plannedDate}</div>
-                      </div>
-                      <StatusBadge status={chap.status} label={chap.statusLabel} />
-                    </div>
-                  ))}
-                </div>
+      return (
+        <div key={node.id}>
+          <div 
+            onClick={() => hasChildren && toggleNode(node.id)}
+            style={{ 
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              padding: `12px 16px 12px ${paddingLeft}px`, 
+              background: isBoard ? '#f8fafc' : 'white',
+              borderBottom: '1px solid #f1f5f9',
+              cursor: hasChildren ? 'pointer' : 'default',
+              transition: 'background 0.2s'
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+            onMouseLeave={e => e.currentTarget.style.background = isBoard ? '#f8fafc' : 'white'}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {/* Chevron */}
+              <div style={{ width: 16, display: 'flex', justifyContent: 'center' }}>
+                {hasChildren ? (
+                  isExpanded ? <ChevronDown size={16} color="#64748b" /> : <ChevronRight size={16} color="#64748b" />
+                ) : (
+                  <div style={{ width: 16 }} />
+                )}
               </div>
-            ))}
-          </div>
-        )}
+              
+              {/* Icon */}
+              {node.type === 'board' && <Shield size={18} color="#4f46e5" />}
+              {node.type === 'subject' && <BookOpen size={18} color="#10b981" />}
+              {node.type === 'unit' && <Folder size={18} color="#f59e0b" />}
+              {node.type === 'chapter' && <FileText size={16} color="#64748b" />}
+              
+              {/* Title */}
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ 
+                  fontSize: isBoard ? '15px' : isChapter ? '13px' : '14px', 
+                  fontWeight: isBoard ? 800 : isChapter ? 500 : 600,
+                  color: isChapter ? '#4b5563' : '#111827'
+                }}>
+                  {node.title}
+                </span>
+                {isChapter && node.lo && (
+                  <span style={{ fontSize: '11px', color: '#9ca3af', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Target size={10} /> LO: {node.lo}
+                  </span>
+                )}
+              </div>
+            </div>
 
-        {/* Tab 3: Timetable Layout */}
-        {activeTab === 'timetable' && (
-          <div className="card" style={{ padding: '20px', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', overflowX: 'auto' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>Weekly Lecture Grid Layout</h3>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-              <thead>
-                <tr style={{ background: 'var(--bg-surface-raised)', borderBottom: '1px solid var(--border-subtle)' }}>
-                  <th style={{ padding: '12px', fontWeight: 600 }}>Time Slot</th>
-                  <th style={{ padding: '12px', fontWeight: 600 }}>Mon</th>
-                  <th style={{ padding: '12px', fontWeight: 600 }}>Tue</th>
-                  <th style={{ padding: '12px', fontWeight: 600 }}>Wed</th>
-                  <th style={{ padding: '12px', fontWeight: 600 }}>Thu</th>
-                  <th style={{ padding: '12px', fontWeight: 600 }}>Fri</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mockTimetable.map((row, idx) => (
-                  <tr key={idx} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                    <td style={{ padding: '12px', fontWeight: 700 }}>{row.time}</td>
-                    <td style={{ padding: '12px' }}>{row.mon}</td>
-                    <td style={{ padding: '12px' }}>{row.tue}</td>
-                    <td style={{ padding: '12px' }}>{row.wed}</td>
-                    <td style={{ padding: '12px' }}>{row.thu}</td>
-                    <td style={{ padding: '12px' }}>{row.fri}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Tab 4: Academic Calendar */}
-        {activeTab === 'calendar' && (
-          <div className="card" style={{ padding: '20px', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>Upcoming Term Milestones</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {mockCalendarEvents.map((evt, idx) => (
-                <div key={idx} style={{ display: 'flex', gap: '16px', padding: '12px', border: '1px solid var(--border-subtle)', borderRadius: '8px', background: 'var(--bg-surface-raised)' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: '6px', minWidth: '70px', padding: '6px 0' }}>
-                    <strong style={{ fontSize: '16px', color: 'var(--accent-primary)' }}>{evt.date.split('-')[2]}</strong>
-                    <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{evt.date.split('-')[1] === '07' ? 'JUL' : 'AUG'}</span>
-                  </div>
-                  <div>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <strong style={{ fontSize: '14px', color: 'var(--text-primary)' }}>{evt.title}</strong>
-                      <StatusBadge status={evt.type} label={evt.typeLabel} />
-                    </div>
-                    <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0 0', lineHeight: 1.4 }}>{evt.description}</p>
-                  </div>
-                </div>
-              ))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              {/* Status / Periods */}
+              {node.status && (
+                <span style={{ 
+                  background: node.status === 'Approved' ? '#ecfdf5' : '#fef3c7', 
+                  color: node.status === 'Approved' ? '#10b981' : '#d97706',
+                  padding: '2px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 600
+                }}>
+                  {node.status}
+                </span>
+              )}
+              {node.periods && (
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>
+                  {node.periods} Periods
+                </span>
+              )}
+              
+              {/* Actions Menu */}
+              <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>
+                <MoreVertical size={16} />
+              </button>
             </div>
           </div>
-        )}
+          
+          {/* Children */}
+          {hasChildren && isExpanded && (
+            <div>{renderTree(node.children, level + 1)}</div>
+          )}
+        </div>
+      );
+    });
+  };
+
+  return (
+    <div style={{ fontFamily: 'Inter, sans-serif', paddingBottom: '40px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <h1 style={{ margin: '0 0 6px 0', fontSize: '24px', fontWeight: 800, color: '#111827' }}>Curriculum Management</h1>
+          <p style={{ margin: 0, color: '#6b7280', fontSize: '14px' }}>Design and version control academic structures from Board to Chapter level.</p>
+        </div>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'white', color: '#111827', border: '1px solid #d1d5db', padding: '10px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
+            <Filter size={16} /> Filters
+          </button>
+          <button style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#4f46e5', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
+            <Plus size={16} /> New Curriculum
+          </button>
+        </div>
       </div>
 
-      {/* Class Subjects Detail Drawer */}
-      <DetailDrawer
-        isOpen={!!selectedClass}
-        onClose={() => setSelectedClass(null)}
-        title={selectedClass ? `${selectedClass.name} - Course Allocations` : ''}
-      >
-        {selectedClass && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ background: 'var(--bg-surface-raised)', padding: '16px', borderRadius: '12px' }}>
-              <div style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Class Teacher</div>
-              <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>{selectedClass.classTeacher}</div>
-            </div>
-
-            <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Assigned Subject Curriculum</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {selectedClass.subjects.map((sub, idx) => (
-                <div key={idx} style={{ padding: '12px', background: 'var(--bg-surface-raised)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ fontSize: '14px', color: 'var(--text-primary)' }}>{sub.name}</strong>
-                    <span style={{ fontSize: '13px', color: 'var(--text-secondary)', background: 'var(--bg-surface)', padding: '2px 8px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>{sub.code}</span>
-                  </div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '6px' }}>Instructor: <strong>{sub.teacher}</strong></div>
-                </div>
-              ))}
-            </div>
+      {/* KPI Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#eff6ff', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Shield size={24} />
           </div>
-        )}
-      </DetailDrawer>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280', marginBottom: '4px' }}>Active Curriculums</div>
+            <div style={{ fontSize: '24px', fontWeight: 800, color: '#111827' }}>12</div>
+          </div>
+        </div>
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#ecfdf5', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <BookOpen size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280', marginBottom: '4px' }}>Subjects Mapped</div>
+            <div style={{ fontSize: '24px', fontWeight: 800, color: '#111827' }}>84</div>
+          </div>
+        </div>
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f3e8ff', color: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Target size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280', marginBottom: '4px' }}>Learning Outcomes</div>
+            <div style={{ fontSize: '24px', fontWeight: 800, color: '#111827' }}>1,240</div>
+          </div>
+        </div>
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#fffbeb', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Activity size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280', marginBottom: '4px' }}>Drafts Pending</div>
+            <div style={{ fontSize: '24px', fontWeight: 800, color: '#111827' }}>4</div>
+          </div>
+        </div>
+      </div>
 
-    </PageLayout>
+      {/* Main Builder / Explorer */}
+      <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden' }}>
+        
+        {/* Toolbar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #e5e7eb', background: '#f8fafc' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ position: 'relative', width: '320px' }}>
+              <Search size={16} style={{ position: 'absolute', left: 12, top: 10, color: '#9ca3af' }} />
+              <input type="text" placeholder="Search curriculum by board, subject, or chapter..." style={{ width: '100%', padding: '8px 12px 8px 36px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '13px', outline: 'none' }} />
+            </div>
+            <select style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '13px', color: '#4b5563', outline: 'none' }}>
+              <option>Academic Year 2026-27</option>
+              <option>Academic Year 2025-26</option>
+            </select>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', background: 'transparent', border: 'none', cursor: 'pointer' }}>Expand All</button>
+            <span style={{ color: '#d1d5db' }}>|</span>
+            <button style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', background: 'transparent', border: 'none', cursor: 'pointer' }}>Collapse All</button>
+          </div>
+        </div>
+
+        {/* Tree View */}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {renderTree(curriculumData)}
+        </div>
+      </div>
+
+    </div>
   );
-};
-
-export default AcademicPage;
+}

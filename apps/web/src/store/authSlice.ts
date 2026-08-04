@@ -86,9 +86,8 @@ const authSlice = createSlice({
       const roleUserMap: Record<string, any> = {
         SCHOOL_ADMIN: mockUsers.admin,
         ORGANIZATION_ADMIN: (mockUsers as any).orgAdmin,
-        SUPER_ADMIN: (mockUsers as any).superAdmin,
         PRINCIPAL: (mockUsers as any).principal,
-        VICE_PRINCIPAL: (mockUsers as any).vicePrincipal,
+        ACADEMIC_COORDINATOR: (mockUsers as any).academicCoordinator,
         TEACHER: mockUsers.teacher,
         STUDENT: (mockUsers as any).student,
         PARENT: mockUsers.parent,

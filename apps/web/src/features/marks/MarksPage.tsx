@@ -1557,7 +1557,8 @@ export default function MarksPage() {
         }
 
         .student-drawer-sheet {
-          width: 420px;
+          width: min(420px, 100vw);
+          max-width: 100%;
           height: 100vh;
           background-color: var(--bg-primary);
           border-left: 1px solid var(--border-color);
@@ -1852,6 +1853,12 @@ export default function MarksPage() {
 
         @media (max-width: 480px) {
           .filters-control-bar {
+            grid-template-columns: 1fr;
+          }
+          .diagnostic-details-row {
+            grid-template-columns: 1fr;
+          }
+          .term-comparison-row {
             grid-template-columns: 1fr;
           }
         }

@@ -87,8 +87,8 @@ export default function KpiRow({
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-      gap: '24px',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))',
+      gap: '16px',
       marginBottom: '24px'
     }}>
       {cards.map((card, idx) => (

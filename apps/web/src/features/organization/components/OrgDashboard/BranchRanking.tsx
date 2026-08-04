@@ -30,7 +30,8 @@ export default function BranchRanking({ rankings, onCompare }: RankingProps) {
         </div>
       </div>
 
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', minWidth: '700px' }}>
+      <div style={{ overflowX: 'auto', width: '100%' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', minWidth: '650px' }}>
         <thead>
           <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', textAlign: 'left' }}>
             <th style={{ padding: '12px 10px', fontWeight: 700 }}>Rank</th>
@@ -83,6 +84,7 @@ export default function BranchRanking({ rankings, onCompare }: RankingProps) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

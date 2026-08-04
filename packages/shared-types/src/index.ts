@@ -3,11 +3,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export enum UserRole {
-  SUPER_ADMIN = 'SUPER_ADMIN',
   ORGANIZATION_ADMIN = 'ORGANIZATION_ADMIN',
   SCHOOL_ADMIN = 'SCHOOL_ADMIN',
   PRINCIPAL = 'PRINCIPAL',
-  VICE_PRINCIPAL = 'VICE_PRINCIPAL',
+  ACADEMIC_COORDINATOR = 'ACADEMIC_COORDINATOR',
   TEACHER = 'TEACHER',
   STUDENT = 'STUDENT',
   PARENT = 'PARENT',

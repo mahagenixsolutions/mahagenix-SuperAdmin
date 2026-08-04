@@ -1,15 +1,17 @@
 
+import { Building2, UserPlus, Megaphone, Coins, Palette } from 'lucide-react';
+
 interface QuickActionsProps {
   onActionClick: (action: string) => void;
 }
 
 export default function DashboardQuickActions({ onActionClick }: QuickActionsProps) {
   const actions = [
-    { label: 'Create Branch', desc: 'Provision a new school branch', icon: '🏢', color: '#2563eb', bg: '#eff6ff', type: 'create-branch' },
-    { label: 'Add Principal', desc: 'Hire/Assign Branch Administrator', icon: '👤', color: '#10b981', bg: '#ecfdf5', type: 'add-principal' },
-    { label: 'Broadcast Message', desc: 'Send SMS/WhatsApp notification', icon: '📢', color: '#ec4899', bg: '#fdf2f8', type: 'broadcast' },
-    { label: 'Generate Financial Audit', desc: 'Review collection worksheets', icon: '💰', color: '#f59e0b', bg: '#fffbeb', type: 'generate-audit' },
-    { label: 'Branding Options', desc: 'Manage logos, domains & themes', icon: '🎨', color: '#8b5cf6', bg: '#f5f3ff', type: 'branding' }
+    { label: 'Create Branch', desc: 'Provision a new school branch', icon: <Building2 size={20} color="#2563eb" />, color: '#2563eb', bg: '#eff6ff', type: 'create-branch' },
+    { label: 'Add Principal', desc: 'Hire/Assign Branch Administrator', icon: <UserPlus size={20} color="#10b981" />, color: '#10b981', bg: '#ecfdf5', type: 'add-principal' },
+    { label: 'Broadcast Message', desc: 'Send SMS/WhatsApp notification', icon: <Megaphone size={20} color="#ec4899" />, color: '#ec4899', bg: '#fdf2f8', type: 'broadcast' },
+    { label: 'Generate Financial Audit', desc: 'Review collection worksheets', icon: <Coins size={20} color="#f59e0b" />, color: '#f59e0b', bg: '#fffbeb', type: 'generate-audit' },
+    { label: 'Branding Options', desc: 'Manage logos, domains & themes', icon: <Palette size={20} color="#8b5cf6" />, color: '#8b5cf6', bg: '#f5f3ff', type: 'branding' }
   ];
 
   return (

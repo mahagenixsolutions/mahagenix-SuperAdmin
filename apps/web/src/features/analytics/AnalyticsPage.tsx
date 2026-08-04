@@ -61,9 +61,8 @@ export default function AnalyticsPage() {
   const [aiChatLogs, setAiChatLogs] = useState<Array<{ role: 'user' | 'assistant'; text: string }>>([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
 
-  // 4. Load core stats from backend (Prisma-seeded values)
   const user = useSelector((s: RootState) => s.auth.user);
-  const isAdmin = user?.role === 'SCHOOL_ADMIN' || user?.role === 'SUPER_ADMIN';
+  const isAdmin = user?.role === 'SCHOOL_ADMIN' || user?.role === 'ORGANIZATION_ADMIN';
 
   const { isLoading: isKPIsLoading } = useGetAdminKPIsQuery(undefined, { skip: !isAdmin });
   const { data: detailedData } = useGetDetailedAnalyticsQuery(undefined, { skip: !isAdmin });

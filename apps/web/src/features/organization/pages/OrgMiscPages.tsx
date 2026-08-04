@@ -1,4 +1,16 @@
 import React from 'react';
+import { 
+  GraduationCap, 
+  Wallet, 
+  Users, 
+  BookOpen, 
+  Bus, 
+  Building2, 
+  Sparkles, 
+  Check, 
+  Layers 
+} from 'lucide-react';
+
 
 interface Props {
   page: 'documents' | 'reports' | 'audit-logs' | 'subscription' | 'settings';
@@ -185,17 +197,17 @@ export default function OrgMiscPages({ page }: Props) {
         </div>
 
         {/* Tabs Bar */}
-        <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', gap: 10, marginTop: 4 }}>
-          <button style={{ padding: '10px 18px', border: 'none', borderBottom: '2px solid #2563eb', background: 'transparent', color: '#2563eb', fontWeight: 600, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', background: 'var(--bg-surface-raised, #F1F5F9)', border: '1px solid var(--border-subtle, rgba(226, 232, 240, 0.8))', borderRadius: '9999px', padding: '4px 6px', gap: 4, marginTop: 4 }}>
+          <button style={{ padding: '8px 18px', border: 'none', borderRadius: '9999px', background: '#ffffff', color: '#0284C7', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06)' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Trust Documents
           </button>
-          <button onClick={() => alert('Categories Settings')} style={{ padding: '10px 18px', border: 'none', borderBottom: '2px solid transparent', background: 'transparent', color: '#6b7280', fontWeight: 600, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button onClick={() => alert('Categories Settings')} style={{ padding: '8px 18px', border: 'none', borderRadius: '9999px', background: 'transparent', color: '#475569', fontWeight: 600, fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Categories
           </button>
-          <button onClick={() => alert('Access Management Settings')} style={{ padding: '10px 18px', border: 'none', borderBottom: '2px solid transparent', background: 'transparent', color: '#6b7280', fontWeight: 600, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button onClick={() => alert('Access Management Settings')} style={{ padding: '8px 18px', border: 'none', borderRadius: '9999px', background: 'transparent', color: '#475569', fontWeight: 600, fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Access Management
           </button>
-          <button onClick={() => alert('Document Global Settings')} style={{ padding: '10px 18px', border: 'none', borderBottom: '2px solid transparent', background: 'transparent', color: '#6b7280', fontWeight: 600, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button onClick={() => alert('Document Global Settings')} style={{ padding: '8px 18px', border: 'none', borderRadius: '9999px', background: 'transparent', color: '#475569', fontWeight: 600, fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Document Settings
           </button>
         </div>
@@ -1210,31 +1222,150 @@ export default function OrgMiscPages({ page }: Props) {
           {/* Enabled Modules */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#4b5563' }}>
-              {getIconSvg('⚙️', 12)}
-              <span style={{ fontSize: '12px', fontWeight: 700, color: '#4b5563', fontFamily: 'Inter, sans-serif' }}>Enabled Modules</span>
+              <Layers size={15} color="#4f46e5" />
+              <span style={{ fontSize: '13px', fontWeight: 700, color: '#334155', fontFamily: "'Outfit', 'Inter', sans-serif" }}>Enabled Modules</span>
+              <span style={{ fontSize: '11px', fontWeight: 600, color: '#10b981', background: 'rgba(16, 185, 129, 0.1)', padding: '2px 8px', borderRadius: '9999px', marginLeft: '4px' }}>
+                7 Active
+              </span>
             </div>
 
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
               {[
-                { name: 'Student ERP', icon: '👥' },
-                { name: 'Finance & Fees', icon: '💵' },
-                { name: 'HR & Payroll', icon: '👤' },
-                { name: 'Smart Library', icon: '📖' },
-                { name: 'Live Transport Tracker', icon: '🚚' },
-                { name: 'Hostel/ Mess Control', icon: '🏢' },
-                { name: 'AI Intelligent Insights', icon: '🌐' }
-              ].map((mod, idx) => (
+                {
+                  name: 'Student ERP',
+                  icon: GraduationCap,
+                  gradient: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+                  bg: 'rgba(99, 102, 241, 0.07)',
+                  border: 'rgba(99, 102, 241, 0.22)',
+                  borderHover: 'rgba(99, 102, 241, 0.45)',
+                  shadowHover: 'rgba(99, 102, 241, 0.28)',
+                  textColor: '#312e81',
+                },
+                {
+                  name: 'Finance & Fees',
+                  icon: Wallet,
+                  gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  bg: 'rgba(16, 185, 129, 0.07)',
+                  border: 'rgba(16, 185, 129, 0.22)',
+                  borderHover: 'rgba(16, 185, 129, 0.45)',
+                  shadowHover: 'rgba(16, 185, 129, 0.28)',
+                  textColor: '#064e3b',
+                },
+                {
+                  name: 'HR & Payroll',
+                  icon: Users,
+                  gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                  bg: 'rgba(139, 92, 246, 0.07)',
+                  border: 'rgba(139, 92, 246, 0.22)',
+                  borderHover: 'rgba(139, 92, 246, 0.45)',
+                  shadowHover: 'rgba(139, 92, 246, 0.28)',
+                  textColor: '#4c1d95',
+                },
+                {
+                  name: 'Smart Library',
+                  icon: BookOpen,
+                  gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                  bg: 'rgba(245, 158, 11, 0.07)',
+                  border: 'rgba(245, 158, 11, 0.22)',
+                  borderHover: 'rgba(245, 158, 11, 0.45)',
+                  shadowHover: 'rgba(245, 158, 11, 0.28)',
+                  textColor: '#78350f',
+                },
+                {
+                  name: 'Live Transport Tracker',
+                  icon: Bus,
+                  gradient: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+                  bg: 'rgba(14, 165, 233, 0.07)',
+                  border: 'rgba(14, 165, 233, 0.22)',
+                  borderHover: 'rgba(14, 165, 233, 0.45)',
+                  shadowHover: 'rgba(14, 165, 233, 0.28)',
+                  textColor: '#0c4a6e',
+                },
+                {
+                  name: 'Hostel/ Mess Control',
+                  icon: Building2,
+                  gradient: 'linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)',
+                  bg: 'rgba(244, 63, 94, 0.07)',
+                  border: 'rgba(244, 63, 94, 0.22)',
+                  borderHover: 'rgba(244, 63, 94, 0.45)',
+                  shadowHover: 'rgba(244, 63, 94, 0.28)',
+                  textColor: '#881337',
+                },
+                {
+                  name: 'AI Intelligent Insights',
+                  icon: Sparkles,
+                  gradient: 'linear-gradient(135deg, #d946ef 0%, #a855f7 100%)',
+                  bg: 'rgba(217, 70, 239, 0.07)',
+                  border: 'rgba(217, 70, 239, 0.22)',
+                  borderHover: 'rgba(217, 70, 239, 0.45)',
+                  shadowHover: 'rgba(217, 70, 239, 0.3)',
+                  textColor: '#701a75',
+                },
+              ].map((mod) => (
                 <div
-                  key={idx}
+                  key={mod.name}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px',
-                    borderRadius: '8px', border: '1px solid #e5e7eb', background: '#eff6ff',
-                    fontSize: '13px', fontWeight: 600, color: '#1e40af'
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    minHeight: '44px',
+                    padding: '6px 14px 6px 8px',
+                    borderRadius: '14px',
+                    background: mod.bg,
+                    border: `1px solid ${mod.border}`,
+                    boxShadow: '0 2px 6px rgba(15, 23, 42, 0.03)',
+                    fontSize: '13px',
+                    fontWeight: 650,
+                    fontFamily: "'Outfit', 'Inter', system-ui, sans-serif",
+                    cursor: 'default',
+                    userSelect: 'none',
+                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                    position: 'relative',
+                    backdropFilter: 'blur(8px)',
+                    color: mod.textColor,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.015)';
+                    e.currentTarget.style.borderColor = mod.borderHover;
+                    e.currentTarget.style.boxShadow = `0 8px 20px -4px ${mod.shadowHover}`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.borderColor = mod.border;
+                    e.currentTarget.style.boxShadow = '0 2px 6px rgba(15, 23, 42, 0.03)';
                   }}
                 >
-                  {getIconSvg(mod.icon, 12)}
-                  <span>{mod.name}</span>
-                  <span style={{ color: '#10b981', display: 'flex', alignItems: 'center' }}>{getIconSvg('✓', 10)}</span>
+                  <div style={{
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '9px',
+                    background: mod.gradient,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#ffffff',
+                    boxShadow: `0 3px 8px ${mod.shadowHover}`,
+                    flexShrink: 0,
+                    transition: 'transform 0.25s ease'
+                  }}>
+                    <mod.icon size={15} strokeWidth={2.4} />
+                  </div>
+                  <span style={{ fontSize: '13px', fontWeight: 650, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>{mod.name}</span>
+                  <div style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '18px',
+                    height: '18px',
+                    borderRadius: '50%',
+                    background: mod.gradient,
+                    color: '#ffffff',
+                    boxShadow: `0 2px 6px ${mod.shadowHover}`,
+                    marginLeft: '2px',
+                    flexShrink: 0,
+                  }}>
+                    <Check size={11} strokeWidth={3} />
+                  </div>
                 </div>
               ))}
             </div>
@@ -1673,18 +1804,20 @@ export default function OrgMiscPages({ page }: Props) {
 
         {/* Tab Selection Row */}
         <div style={{
-          background: '#ffffff', border: '1px solid var(--border-subtle)', borderRadius: '12px',
-          padding: '4px 16px', display: 'flex', gap: '32px', alignItems: 'center', marginTop: '8px',
-          overflowX: 'auto', whiteSpace: 'nowrap'
+          display: 'inline-flex', alignItems: 'center', background: 'var(--bg-surface-raised, #F1F5F9)',
+          border: '1px solid var(--border-subtle, rgba(226, 232, 240, 0.8))', borderRadius: '9999px',
+          padding: '4px 6px', gap: '4px', marginTop: '8px', overflowX: 'auto', maxWidth: '100%'
         }}>
           <button
             onClick={() => setActiveSettingsTab('global')}
             style={{
-              background: 'none', border: 'none', padding: '14px 4px', fontSize: '13px',
-              fontWeight: activeSettingsTab === 'global' ? 700 : 500,
-              color: activeSettingsTab === 'global' ? '#2563eb' : '#6b7280',
-              borderBottom: activeSettingsTab === 'global' ? '2.5px solid #2563eb' : '2.5px solid transparent',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s', outline: 'none'
+              padding: '8px 18px', borderRadius: '9999px', border: 'none',
+              background: activeSettingsTab === 'global' ? '#ffffff' : 'transparent',
+              fontSize: '13px', fontWeight: activeSettingsTab === 'global' ? 700 : 600,
+              color: activeSettingsTab === 'global' ? '#0284C7' : '#475569',
+              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
+              boxShadow: activeSettingsTab === 'global' ? '0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06)' : 'none',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', outline: 'none'
             }}
           >
             {getIconSvg('🌐', 14)} Global Parameters
@@ -1692,11 +1825,13 @@ export default function OrgMiscPages({ page }: Props) {
           <button
             onClick={() => setActiveSettingsTab('portal')}
             style={{
-              background: 'none', border: 'none', padding: '14px 4px', fontSize: '13px',
-              fontWeight: activeSettingsTab === 'portal' ? 700 : 500,
-              color: activeSettingsTab === 'portal' ? '#2563eb' : '#6b7280',
-              borderBottom: activeSettingsTab === 'portal' ? '2.5px solid #2563eb' : '2.5px solid transparent',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s', outline: 'none'
+              padding: '8px 18px', borderRadius: '9999px', border: 'none',
+              background: activeSettingsTab === 'portal' ? '#ffffff' : 'transparent',
+              fontSize: '13px', fontWeight: activeSettingsTab === 'portal' ? 700 : 600,
+              color: activeSettingsTab === 'portal' ? '#0284C7' : '#475569',
+              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
+              boxShadow: activeSettingsTab === 'portal' ? '0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06)' : 'none',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', outline: 'none'
             }}
           >
             {getIconSvg('monitor', 14)} Portal Preferences
@@ -1704,11 +1839,13 @@ export default function OrgMiscPages({ page }: Props) {
           <button
             onClick={() => setActiveSettingsTab('security')}
             style={{
-              background: 'none', border: 'none', padding: '14px 4px', fontSize: '13px',
-              fontWeight: activeSettingsTab === 'security' ? 700 : 500,
-              color: activeSettingsTab === 'security' ? '#2563eb' : '#6b7280',
-              borderBottom: activeSettingsTab === 'security' ? '2.5px solid #2563eb' : '2.5px solid transparent',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s', outline: 'none'
+              padding: '8px 18px', borderRadius: '9999px', border: 'none',
+              background: activeSettingsTab === 'security' ? '#ffffff' : 'transparent',
+              fontSize: '13px', fontWeight: activeSettingsTab === 'security' ? 700 : 600,
+              color: activeSettingsTab === 'security' ? '#0284C7' : '#475569',
+              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
+              boxShadow: activeSettingsTab === 'security' ? '0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06)' : 'none',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', outline: 'none'
             }}
           >
             {getIconSvg('shield', 14)} Security Settings
@@ -1716,11 +1853,13 @@ export default function OrgMiscPages({ page }: Props) {
           <button
             onClick={() => setActiveSettingsTab('notifications')}
             style={{
-              background: 'none', border: 'none', padding: '14px 4px', fontSize: '13px',
-              fontWeight: activeSettingsTab === 'notifications' ? 700 : 500,
-              color: activeSettingsTab === 'notifications' ? '#2563eb' : '#6b7280',
-              borderBottom: activeSettingsTab === 'notifications' ? '2.5px solid #2563eb' : '2.5px solid transparent',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s', outline: 'none'
+              padding: '8px 18px', borderRadius: '9999px', border: 'none',
+              background: activeSettingsTab === 'notifications' ? '#ffffff' : 'transparent',
+              fontSize: '13px', fontWeight: activeSettingsTab === 'notifications' ? 700 : 600,
+              color: activeSettingsTab === 'notifications' ? '#0284C7' : '#475569',
+              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
+              boxShadow: activeSettingsTab === 'notifications' ? '0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06)' : 'none',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', outline: 'none'
             }}
           >
             {getIconSvg('bell', 14)} Notification Settings
@@ -1728,11 +1867,13 @@ export default function OrgMiscPages({ page }: Props) {
           <button
             onClick={() => setActiveSettingsTab('integrations')}
             style={{
-              background: 'none', border: 'none', padding: '14px 4px', fontSize: '13px',
-              fontWeight: activeSettingsTab === 'integrations' ? 700 : 500,
-              color: activeSettingsTab === 'integrations' ? '#2563eb' : '#6b7280',
-              borderBottom: activeSettingsTab === 'integrations' ? '2.5px solid #2563eb' : '2.5px solid transparent',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s', outline: 'none'
+              padding: '8px 18px', borderRadius: '9999px', border: 'none',
+              background: activeSettingsTab === 'integrations' ? '#ffffff' : 'transparent',
+              fontSize: '13px', fontWeight: activeSettingsTab === 'integrations' ? 700 : 600,
+              color: activeSettingsTab === 'integrations' ? '#0284C7' : '#475569',
+              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
+              boxShadow: activeSettingsTab === 'integrations' ? '0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06)' : 'none',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', outline: 'none'
             }}
           >
             {getIconSvg('plug', 14)} Integrations

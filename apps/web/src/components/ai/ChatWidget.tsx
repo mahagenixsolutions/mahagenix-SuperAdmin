@@ -46,22 +46,22 @@ export default function ChatWidget() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 6px 20px rgba(79, 70, 229, 0.45), 0 2px 6px rgba(0, 0, 0, 0.12)',
+          boxShadow: '0 1px 2px rgba(79, 70, 229, 0.2), 0 8px 24px rgba(79, 70, 229, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
           zIndex: 9999,
-          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
           transform: isOpen ? 'scale(0.9) rotate(45deg)' : 'scale(1)',
         }}
         onMouseEnter={(e) => {
           if (!isOpen) {
-            e.currentTarget.style.transform = 'scale(1.08)';
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.08)';
             e.currentTarget.style.boxShadow =
-              '0 8px 28px rgba(79, 70, 229, 0.55), 0 4px 10px rgba(0, 0, 0, 0.15)';
+              '0 2px 4px rgba(79, 70, 229, 0.25), 0 16px 36px rgba(79, 70, 229, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 12px rgba(79, 70, 229, 0.25)';
           }
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = isOpen ? 'scale(0.9) rotate(45deg)' : 'scale(1)';
           e.currentTarget.style.boxShadow =
-            '0 6px 20px rgba(79, 70, 229, 0.45), 0 2px 6px rgba(0, 0, 0, 0.12)';
+            '0 1px 2px rgba(79, 70, 229, 0.2), 0 8px 24px rgba(79, 70, 229, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
         }}
       >
         {isOpen ? (

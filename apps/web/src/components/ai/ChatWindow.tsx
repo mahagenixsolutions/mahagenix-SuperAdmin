@@ -159,7 +159,7 @@ export default function ChatWindow({ isOpen, onClose, onUnreadChange }: ChatWind
           background: 'var(--bg-secondary)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-xl)',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0, 0, 0, 0.08)',
+          boxShadow: 'var(--shadow-xl)',
           display: 'flex',
           flexDirection: 'column',
           zIndex: 9998,

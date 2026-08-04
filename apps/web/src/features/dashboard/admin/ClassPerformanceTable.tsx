@@ -48,12 +48,9 @@ export default function ClassPerformanceTable({ academicYearId }: { academicYear
 
   return (
     <div
+      className="card dashboard-card"
       style={{
         marginBottom: 24,
-        background: 'var(--bg-surface)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: 'var(--radius-lg)',
-        overflow: 'hidden',
       }}
     >
       <div

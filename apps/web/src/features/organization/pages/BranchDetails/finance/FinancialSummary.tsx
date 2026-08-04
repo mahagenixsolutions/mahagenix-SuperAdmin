@@ -1,3 +1,4 @@
+import { TrendingUp, TrendingDown, Coins, BarChart3, Hourglass, Users } from 'lucide-react';
 import type { FinancialData } from '../types';
 
 interface Props {
@@ -6,12 +7,12 @@ interface Props {
 
 export default function FinancialSummary({ data }: Props) {
   const cards = [
-    { label: 'Total Revenue (Income)', val: `₹${(data.income / 100000).toFixed(1)}L`, icon: '📈', desc: 'All billing collected', color: '#10b981', bg: '#f0fdf4' },
-    { label: 'Total Operations Expense', val: `₹${(data.expense / 100000).toFixed(1)}L`, icon: '📉', desc: 'Salaries & overheads', color: '#ef4444', bg: '#fef2f2' },
-    { label: 'Net Profit Margin', val: `₹${(data.profit / 100000).toFixed(1)}L`, icon: '💰', desc: 'Positive cashflow surplus', color: '#3b82f6', bg: '#eff6ff' },
-    { label: 'Fee Collection This Month', val: `₹${(data.collectedThisMonth / 100000).toFixed(1)}L`, icon: '📊', desc: 'July fee billing cycle', color: '#8b5cf6', bg: '#f5f3ff' },
-    { label: 'Pending / Outstanding Fees', val: `₹${(data.pendingFees / 100000).toFixed(1)}L`, icon: '⏳', desc: 'Active collection cycle', color: '#f59e0b', bg: '#fffbeb' },
-    { label: 'Outstanding Students', val: `${data.outstandingStudents} Students`, icon: '👥', desc: 'Defaulters notices sent', color: '#ef4444', bg: '#fff5f5' }
+    { label: 'Total Revenue (Income)', val: `₹${(data.income / 100000).toFixed(1)}L`, icon: <TrendingUp size={20} color="#10b981" />, desc: 'All billing collected', color: '#10b981', bg: '#f0fdf4' },
+    { label: 'Total Operations Expense', val: `₹${(data.expense / 100000).toFixed(1)}L`, icon: <TrendingDown size={20} color="#ef4444" />, desc: 'Salaries & overheads', color: '#ef4444', bg: '#fef2f2' },
+    { label: 'Net Profit Margin', val: `₹${(data.profit / 100000).toFixed(1)}L`, icon: <Coins size={20} color="#3b82f6" />, desc: 'Positive cashflow surplus', color: '#3b82f6', bg: '#eff6ff' },
+    { label: 'Fee Collection This Month', val: `₹${(data.collectedThisMonth / 100000).toFixed(1)}L`, icon: <BarChart3 size={20} color="#8b5cf6" />, desc: 'July fee billing cycle', color: '#8b5cf6', bg: '#f5f3ff' },
+    { label: 'Pending / Outstanding Fees', val: `₹${(data.pendingFees / 100000).toFixed(1)}L`, icon: <Hourglass size={20} color="#f59e0b" />, desc: 'Active collection cycle', color: '#f59e0b', bg: '#fffbeb' },
+    { label: 'Outstanding Students', val: `${data.outstandingStudents} Students`, icon: <Users size={20} color="#ef4444" />, desc: 'Defaulters notices sent', color: '#ef4444', bg: '#fff5f5' }
   ];
 
   return (

@@ -47,6 +47,11 @@ export const PERMISSIONS = {
   ACADEMIC_CREATE: 'academic.create',
   ACADEMIC_EDIT: 'academic.edit',
   ACADEMIC_DELETE: 'academic.delete',
+  LESSON_PLAN_VIEW: 'lesson_plan.view',
+  LESSON_PLAN_APPROVE: 'lesson_plan.approve',
+  LESSON_PLAN_REJECT: 'lesson_plan.reject',
+  ONLINE_CLASS_SCHEDULE: 'online_class.schedule',
+  ONLINE_CLASS_MONITOR: 'online_class.monitor',
 
   // Reports
   REPORTS_VIEW: 'reports.view',
@@ -75,6 +80,9 @@ export const PERMISSIONS = {
   EXAMS_VIEW: 'exams.view',
   EXAMS_CREATE: 'exams.create',
   EXAMS_EDIT: 'exams.edit',
+  EXAMS_SCHEDULE: 'exams.schedule',
+  EXAMS_PUBLISH: 'exams.publish',
+  EXAMS_MONITOR: 'exams.monitor',
 
   // Communication
   COMMUNICATION_VIEW: 'communication.view',

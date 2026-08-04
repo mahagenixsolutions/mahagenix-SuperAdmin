@@ -1,24 +1,12 @@
+import { School, UserCheck } from 'lucide-react';
 import { orgMocks } from '../../../mock/organization/orgMocks';
 
 export default function PrincipalsDirectory() {
-  const getIconSvg = (name: string, size = 14) => {
-    switch (name) {
-      case 'user':
-      case '👨‍💼':
-        return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>;
-      case 'school':
-      case '🏫':
-        return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}><path d="M22 10v6M2 10l10-5 10 5-10 5-10 5-10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>;
-      default:
-        return null;
-    }
-  };
-
   return (
     <div style={{ padding: '24px 0', display: 'flex', flexDirection: 'column', gap: 24 }}>
       <div>
         <h1 style={{ fontSize: '26px', fontWeight: 700, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
-          {getIconSvg('👨‍💼', 24)} Branch Administrators Directory
+          <UserCheck size={24} /> Branch Administrators Directory
         </h1>
         <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: 4 }}>
           Organization-wide school branch administrators directory. Direct messaging and evaluation scores.
@@ -49,7 +37,7 @@ export default function PrincipalsDirectory() {
                   {principal.name}
                 </h3>
                 <p style={{ fontSize: '12px', color: 'var(--accent-primary)', fontWeight: 600, margin: '2px 0 0 0', display: 'flex', alignItems: 'center', gap: 4 }}>
-                  {getIconSvg('🏫', 12)} {principal.branch}
+                  <School size={12} /> {principal.branch}
                 </p>
                 <span style={{
                   display: 'inline-flex', padding: '2px 6px', fontSize: 10, fontWeight: 700,

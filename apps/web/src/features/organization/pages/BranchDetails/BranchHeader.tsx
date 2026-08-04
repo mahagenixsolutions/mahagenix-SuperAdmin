@@ -1,3 +1,4 @@
+import { MapPin, Pencil, Download, MoreHorizontal, UserCheck, User, UserCog } from 'lucide-react';
 import type { CompleteBranchData } from './mockData';
 
 interface Props {
@@ -7,29 +8,6 @@ interface Props {
 }
 
 export default function BranchHeader({ branch, onEdit, onExport }: Props) {
-  // SVG Icon Helpers
-  const getIconSvg = (name: string, size = 14) => {
-    switch (name) {
-      case 'pin':
-      case '📍':
-        return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>;
-      case 'mail':
-      case '✉️':
-        return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>;
-      case 'phone':
-      case '📞':
-        return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>;
-      case 'pencil':
-        return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>;
-      case 'download':
-        return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>;
-      case 'more':
-        return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>;
-      default:
-        return null;
-    }
-  };
-
   return (
     <div style={{
       background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
@@ -64,7 +42,7 @@ export default function BranchHeader({ branch, onEdit, onExport }: Props) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', fontSize: '13px', color: '#94a3b8', flexWrap: 'wrap' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              {getIconSvg('📍', 13)} {branch.location}
+              <MapPin size={13} style={{ display: 'inline-block', verticalAlign: 'middle' }} /> {branch.location}
             </span>
             <span>•</span>
             <span>{branch.info.board}</span>
@@ -87,7 +65,7 @@ export default function BranchHeader({ branch, onEdit, onExport }: Props) {
             onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)'}
             onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
           >
-            {getIconSvg('pencil', 12)} Edit Branch
+            <Pencil size={12} /> Edit Branch
           </button>
           <button
             onClick={onExport}
@@ -101,7 +79,7 @@ export default function BranchHeader({ branch, onEdit, onExport }: Props) {
             onMouseEnter={(e) => e.currentTarget.style.background = '#1d4ed8'}
             onMouseLeave={(e) => e.currentTarget.style.background = '#2563eb'}
           >
-            {getIconSvg('download', 12)} Export Report
+            <Download size={12} /> Export Report
           </button>
           <button
             onClick={() => alert('Opening actions menu...')}
@@ -115,7 +93,7 @@ export default function BranchHeader({ branch, onEdit, onExport }: Props) {
             onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
             onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
           >
-            {getIconSvg('more', 14)}
+            <MoreHorizontal size={14} />
           </button>
         </div>
       </div>
@@ -139,7 +117,7 @@ export default function BranchHeader({ branch, onEdit, onExport }: Props) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontWeight: 700, fontSize: '18px'
           }}>
-            👨‍✈️
+            <UserCheck size={20} />
           </div>
           <div>
             <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.05em' }}>PRINCIPAL</div>
@@ -147,22 +125,6 @@ export default function BranchHeader({ branch, onEdit, onExport }: Props) {
           </div>
         </div>
 
-        {/* Vice Principal */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{
-            width: '42px', height: '42px', borderRadius: '50%',
-            background: branch.leadership.vicePrincipal.avatarBg,
-            color: branch.leadership.vicePrincipal.avatarColor,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 700, fontSize: '18px'
-          }}>
-            👩‍💼
-          </div>
-          <div>
-            <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.05em' }}>VICE PRINCIPAL</div>
-            <div style={{ fontSize: '14px', fontWeight: 700, color: '#f8fafc', marginTop: 1 }}>{branch.leadership.vicePrincipal.name}</div>
-          </div>
-        </div>
 
         {/* School Admin */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -173,7 +135,7 @@ export default function BranchHeader({ branch, onEdit, onExport }: Props) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontWeight: 700, fontSize: '18px'
           }}>
-            🧑‍💼
+            <UserCog size={20} />
           </div>
           <div>
             <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.05em' }}>SCHOOL ADMIN</div>

@@ -1,3 +1,4 @@
+import { School, FlaskConical, Book, Laptop, Monitor, Bus, Video, Zap } from 'lucide-react';
 import type { InfraStat } from '../types';
 import { mockBuses } from '../../../../../mock/dashboards/transport';
 
@@ -11,14 +12,14 @@ export default function OperationsSummary({ infrastructure, branchName }: Props)
   const branchBuses = mockBuses.filter(bus => bus.branch.toLowerCase().includes(branchName.split(' ')[0].toLowerCase()));
 
   const infraItems = [
-    { label: 'Active Classrooms', val: infrastructure.classrooms, icon: '🏫' },
-    { label: 'Science & Tech Labs', val: infrastructure.labs, icon: '🧪' },
-    { label: 'Library Catalog Books', val: infrastructure.books.toLocaleString(), icon: '📖' },
-    { label: 'Desktop Computers', val: infrastructure.computers, icon: '💻' },
-    { label: 'Interactive Smart Boards', val: infrastructure.smartBoards, icon: '🖥️' },
-    { label: 'Transport Bus Fleet', val: infrastructure.buses, icon: '🚌' },
-    { label: 'CCTV Active Cameras', val: infrastructure.cctvs, icon: '📹' },
-    { label: 'Power Generators', val: infrastructure.generators, icon: '⚡' }
+    { label: 'Active Classrooms', val: infrastructure.classrooms, icon: <School size={20} color="#3b82f6" /> },
+    { label: 'Science & Tech Labs', val: infrastructure.labs, icon: <FlaskConical size={20} color="#10b981" /> },
+    { label: 'Library Catalog Books', val: infrastructure.books.toLocaleString(), icon: <Book size={20} color="#f59e0b" /> },
+    { label: 'Desktop Computers', val: infrastructure.computers, icon: <Laptop size={20} color="#8b5cf6" /> },
+    { label: 'Interactive Smart Boards', val: infrastructure.smartBoards, icon: <Monitor size={20} color="#ec4899" /> },
+    { label: 'Transport Bus Fleet', val: infrastructure.buses, icon: <Bus size={20} color="#06b6d4" /> },
+    { label: 'CCTV Active Cameras', val: infrastructure.cctvs, icon: <Video size={20} color="#6b7280" /> },
+    { label: 'Power Generators', val: infrastructure.generators, icon: <Zap size={20} color="#eab308" /> }
   ];
 
   const getStatusColor = (status: string) => {
@@ -70,7 +71,9 @@ export default function OperationsSummary({ infrastructure, branchName }: Props)
                 gap: '12px'
               }}
             >
-              <span style={{ fontSize: '22px' }}>{item.icon}</span>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', flexShrink: 0 }}>
+                {item.icon}
+              </div>
               <div>
                 <div style={{ fontSize: '10px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   {item.label}

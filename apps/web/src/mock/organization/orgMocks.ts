@@ -3,7 +3,6 @@ export interface BranchData {
   name: string;
   logo: string;
   principal: string;
-  vicePrincipal: string;
   location: string;
   students: number;
   teachers: number;
@@ -63,7 +62,6 @@ export const orgMocks = {
       name: 'Koramangala Branch',
       logo: '🏫',
       principal: 'Rajesh Kumar',
-      vicePrincipal: 'Sunita Desai',
       location: 'Bangalore South',
       students: 1248,
       teachers: 82,
@@ -86,7 +84,6 @@ export const orgMocks = {
       name: 'Whitefield Branch',
       logo: '🏫',
       principal: 'Farhan Ali',
-      vicePrincipal: 'Farida Khan',
       location: 'Bangalore East',
       students: 850,
       teachers: 60,
@@ -112,7 +109,6 @@ export const orgMocks = {
       name: 'Yelahanka Branch',
       logo: '🏫',
       principal: 'Sunita Desai',
-      vicePrincipal: 'Anita Desai',
       location: 'Bangalore North',
       students: 442,
       teachers: 38,

@@ -1,716 +1,449 @@
-import { useMemo, useState, type ReactNode } from 'react';
-import {
-  CalendarDays,
-  Camera,
-  CheckCircle2,
-  Clock,
-  Download,
-  FileText,
-  Filter,
-  Lightbulb,
-  MapPin,
-  Search,
-  Sparkles,
-  TicketCheck,
-  Trophy,
-  Users,
+import React, { useState } from 'react';
+import { 
+  CalendarDays, Download, ChevronLeft, ChevronRight, 
+  MapPin, Clock, BookOpen, Hourglass, Calendar, 
+  ClipboardList, AlertTriangle, AlertCircle, Info, Sparkles, TrendingUp
 } from 'lucide-react';
-import { mockClasses } from '../../mock/classes';
-
-const EVENT_TYPES = ['All', 'Academic', 'Sports', 'Cultural', 'Community', 'Holiday'];
-
-const eventPalette: Record<string, { bg: string; text: string; soft: string }> = {
-  Academic: { bg: '#4F46E5', text: '#312E81', soft: 'rgba(79, 70, 229, 0.10)' },
-  Sports: { bg: '#10B981', text: '#065F46', soft: 'rgba(16, 185, 129, 0.12)' },
-  Cultural: { bg: '#F59E0B', text: '#92400E', soft: 'rgba(245, 158, 11, 0.14)' },
-  Community: { bg: '#06B6D4', text: '#155E75', soft: 'rgba(6, 182, 212, 0.12)' },
-  Holiday: { bg: '#64748B', text: '#334155', soft: 'rgba(100, 116, 139, 0.12)' },
-};
-
-const schoolEvents = [
-  {
-    id: 'evt-science-expo',
-    title: 'Science Innovation Expo',
-    type: 'Academic',
-    date: '2026-06-24',
-    time: '09:30 AM',
-    venue: 'Auditorium and Labs',
-    owner: 'Sana Qureshi',
-    classes: ['Class 6 A', 'Class 7 A', 'Class 8 A', 'Class 9 A', 'Class 10 A'],
-    status: 'Open',
-    capacity: 220,
-    registered: 184,
-    checkedIn: 0,
-    volunteers: 18,
-    budget: 76000,
-    reportStatus: 'Draft',
-    cover: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=1200&auto=format&fit=crop',
-    insight: 'Strong cross-grade participation. Class 8 A has fewer project submissions than expected.',
-  },
-  {
-    id: 'evt-sports-day',
-    title: 'Annual Sports Day',
-    type: 'Sports',
-    date: '2026-07-05',
-    time: '08:00 AM',
-    venue: 'Main Ground',
-    owner: 'Neeraj Bhatia',
-    classes: ['Class 1 A', 'Class 2 A', 'Class 3 A', 'Class 4 A', 'Class 5 A', 'Class 6 A'],
-    status: 'Open',
-    capacity: 420,
-    registered: 336,
-    checkedIn: 0,
-    volunteers: 32,
-    budget: 132000,
-    reportStatus: 'Pending',
-    cover: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&auto=format&fit=crop',
-    insight: 'Volunteer coverage is healthy. Medical desk staffing should be doubled for morning heats.',
-  },
-  {
-    id: 'evt-founders-day',
-    title: 'Founders Day Showcase',
-    type: 'Cultural',
-    date: '2026-07-18',
-    time: '05:30 PM',
-    venue: 'Open Air Theatre',
-    owner: 'Raghav Sethi',
-    classes: ['Class 7 A', 'Class 8 A', 'Class 9 A', 'Class 10 A'],
-    status: 'Planning',
-    capacity: 500,
-    registered: 278,
-    checkedIn: 0,
-    volunteers: 26,
-    budget: 185000,
-    reportStatus: 'Pending',
-    cover: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1200&auto=format&fit=crop',
-    insight: 'Costume approvals are behind schedule for senior performances.',
-  },
-  {
-    id: 'evt-parent-orientation',
-    title: 'Parent Orientation Forum',
-    type: 'Community',
-    date: '2026-06-28',
-    time: '10:00 AM',
-    venue: 'Seminar Hall',
-    owner: 'Aarav Mehta',
-    classes: ['Class 1 A', 'Class 2 A', 'Class 3 A'],
-    status: 'Open',
-    capacity: 180,
-    registered: 142,
-    checkedIn: 0,
-    volunteers: 10,
-    budget: 38000,
-    reportStatus: 'Ready',
-    cover: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&auto=format&fit=crop',
-    insight: 'Parent registrations are strongest for Class 1 A. Add one Q&A block for admissions queries.',
-  },
-  {
-    id: 'evt-reading-week',
-    title: 'Reading Week Finale',
-    type: 'Academic',
-    date: '2026-06-17',
-    time: '11:00 AM',
-    venue: 'Library',
-    owner: 'Joel Fernandes',
-    classes: ['Class 1 A', 'Class 2 A', 'Class 3 A', 'Class 4 A', 'Class 5 A'],
-    status: 'Completed',
-    capacity: 180,
-    registered: 166,
-    checkedIn: 158,
-    volunteers: 12,
-    budget: 24000,
-    reportStatus: 'Ready',
-    cover: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&auto=format&fit=crop',
-    insight: 'High completion rate. Convert the top reading logs into newsletter highlights.',
-  },
-  {
-    id: 'evt-yoga-day',
-    title: 'International Yoga Day',
-    type: 'Sports',
-    date: '2026-06-21',
-    time: '07:30 AM',
-    venue: 'Assembly Court',
-    owner: 'Neeraj Bhatia',
-    classes: ['Class 1 A', 'Class 2 A', 'Class 3 A', 'Class 4 A', 'Class 5 A', 'Class 6 A', 'Class 7 A'],
-    status: 'Ready',
-    capacity: 300,
-    registered: 268,
-    checkedIn: 0,
-    volunteers: 16,
-    budget: 18000,
-    reportStatus: 'Pending',
-    cover: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&auto=format&fit=crop',
-    insight: 'Attendance is likely to exceed 90%. Keep shaded seating ready for junior classes.',
-  },
-  {
-    id: 'evt-independence',
-    title: 'Independence Day Celebration',
-    type: 'Cultural',
-    date: '2026-08-15',
-    time: '08:30 AM',
-    venue: 'Main Quadrangle',
-    owner: 'Mohan Krishnan',
-    classes: mockClasses.map((item) => `${item.name} ${item.section}`),
-    status: 'Planning',
-    capacity: 650,
-    registered: 412,
-    checkedIn: 0,
-    volunteers: 44,
-    budget: 92000,
-    reportStatus: 'Pending',
-    cover: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1200&auto=format&fit=crop',
-    insight: 'Whole-school event. Stage flow needs class-wise arrival slots to avoid congestion.',
-  },
-  {
-    id: 'evt-winter-break',
-    title: 'Winter Break',
-    type: 'Holiday',
-    date: '2026-12-24',
-    time: 'All day',
-    venue: 'Campus Closed',
-    owner: 'Administration',
-    classes: mockClasses.map((item) => `${item.name} ${item.section}`),
-    status: 'Scheduled',
-    capacity: 0,
-    registered: 0,
-    checkedIn: 0,
-    volunteers: 0,
-    budget: 0,
-    reportStatus: 'Not required',
-    cover: 'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=1200&auto=format&fit=crop',
-    insight: 'Publish transport and office-hour reminders one week before closure.',
-  },
-];
-
-const timeline = [
-  { id: 'tl-1', time: 'Today, 09:15 AM', title: 'Science Expo registrations crossed 180', detail: 'Class 9 A submitted four new project teams.', tone: 'success' },
-  { id: 'tl-2', time: 'Today, 08:40 AM', title: 'Sports Day volunteer roster updated', detail: 'Medical desk and track marshals assigned.', tone: 'info' },
-  { id: 'tl-3', time: 'Yesterday', title: 'Founders Day budget revised', detail: 'Stage lighting estimate added to the planning report.', tone: 'warning' },
-  { id: 'tl-4', time: 'Jun 17', title: 'Reading Week report published', detail: '158 check-ins, 42 parent attendees, 24 awardees.', tone: 'success' },
-];
-
-const gallery = [
-  { id: 'gal-1', title: 'Reading Week Finale', count: 48, tag: 'Published', image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=900&auto=format&fit=crop' },
-  { id: 'gal-2', title: 'Science Lab Preview', count: 32, tag: 'Review', image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=900&auto=format&fit=crop' },
-  { id: 'gal-3', title: 'Sports Practice', count: 76, tag: 'Published', image: 'https://images.unsplash.com/photo-1526232761682-d26e03ac148e?w=900&auto=format&fit=crop' },
-  { id: 'gal-4', title: 'Cultural Rehearsal', count: 54, tag: 'Draft', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=900&auto=format&fit=crop' },
-];
-
-const participationRows = mockClasses.slice(0, 8).map((cls, index) => ({
-  className: `${cls.name} ${cls.section}`,
-  registered: 18 + ((index * 7) % 38),
-  attended: 14 + ((index * 6) % 32),
-  volunteers: 2 + (index % 5),
-  awards: index % 3,
-}));
-
-const reports = [
-  { title: 'Reading Week Finale Report', owner: 'Joel Fernandes', status: 'Ready', metrics: '158 check-ins, 95% attendance' },
-  { title: 'Science Expo Planning Sheet', owner: 'Sana Qureshi', status: 'Draft', metrics: '184 registrations, 38 teams' },
-  { title: 'Sports Day Risk Checklist', owner: 'Neeraj Bhatia', status: 'Review', metrics: '32 volunteers, 9 stations' },
-];
-
-const formatDay = (date: string) => new Date(date).toLocaleDateString(undefined, { day: '2-digit' });
-const formatMonth = (date: string) => new Date(date).toLocaleDateString(undefined, { month: 'short' });
-const formatDate = (date: string) => new Date(date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 
 export default function EventsPage() {
-  const [events, setEvents] = useState(schoolEvents);
-  const [selectedType, setSelectedType] = useState('All');
-  const [search, setSearch] = useState('');
-  const [selectedEventId, setSelectedEventId] = useState(schoolEvents[0].id);
-
-  // Modal and Toast states
-  const [showCreate, setShowCreate] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  // Form states
-  const [formTitle, setFormTitle] = useState('');
-  const [formType, setFormType] = useState('Academic');
-  const [formDate, setFormDate] = useState('2026-06-30');
-  const [formTime, setFormTime] = useState('10:00 AM');
-  const [formVenue, setFormVenue] = useState('Seminar Hall');
-  const [formCapacity, setFormCapacity] = useState('150');
-
-  const triggerToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
-  };
-
-  const handleExportCalendar = () => {
-    setIsProcessing(true);
-    triggerToast('⏳ Generating iCal calendar feeds...');
-    setTimeout(() => {
-      setIsProcessing(false);
-      triggerToast('📅 iCal feed generated and synced with mail server!');
-    }, 1000);
-  };
-
-  const handleCreateEvent = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formTitle.trim()) {
-      triggerToast('⚠️ Title is required!');
-      return;
-    }
-
-    setIsProcessing(true);
-    triggerToast('⏳ Scheduling event to school calendar registry...');
-
-    setTimeout(() => {
-      setIsProcessing(false);
-      const newEvent = {
-        id: `evt-${Date.now()}`,
-        title: formTitle,
-        type: formType,
-        date: formDate,
-        time: formTime,
-        venue: formVenue,
-        owner: 'Academic Office',
-        classes: ['All Classes'],
-        status: 'Open',
-        capacity: Number(formCapacity) || 100,
-        registered: 0,
-        checkedIn: 0,
-        volunteers: 4,
-        budget: 15000,
-        reportStatus: 'Pending',
-        cover: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&auto=format&fit=crop',
-        insight: 'New event added. Promote registrations early to monitor capacity limits.',
-      };
-
-      setEvents(prev => [newEvent, ...prev]);
-      setSelectedEventId(newEvent.id);
-      setShowCreate(false);
-      triggerToast(`🎉 Event "${formTitle}" successfully scheduled!`);
-      
-      // Clear form
-      setFormTitle('');
-    }, 1200);
-  };
-
-  const filteredEvents = useMemo(() => {
-    const term = search.trim().toLowerCase();
-    return events.filter((event) => {
-      const matchesType = selectedType === 'All' || event.type === selectedType;
-      const matchesSearch = !term || [event.title, event.venue, event.owner, event.type].some((value) => value.toLowerCase().includes(term));
-      return matchesType && matchesSearch;
-    });
-  }, [events, search, selectedType]);
-
-  const selectedEvent = events.find((event) => event.id === selectedEventId) || events[0];
-  const upcomingEvents = events.filter((event) => new Date(event.date) >= new Date('2026-06-18')).slice(0, 5);
-  const completedEvents = events.filter((event) => event.status === 'Completed');
-  const totalRegistrations = events.reduce((sum, event) => sum + event.registered, 0);
-  const activeEvents = events.filter((event) => event.status !== 'Completed' && event.type !== 'Holiday').length;
-  const participationRate = Math.round((completedEvents.reduce((sum, event) => sum + event.checkedIn, 0) / Math.max(1, completedEvents.reduce((sum, event) => sum + event.registered, 0))) * 100);
+  const [view, setView] = useState('Month');
 
   return (
-    <div className="events-hub" style={{ position: 'relative' }}>
-      {toastMessage && (
-        <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 9999 }}>
-          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 10, padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 10, boxShadow: 'var(--shadow-lg)' }}>
-            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{toastMessage}</span>
-          </div>
-        </div>
-      )}
-
-      <div className="hub-hero">
+    <div style={{ fontFamily: 'Inter, sans-serif', paddingBottom: '40px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <div className="eyebrow">School Experience Hub</div>
-          <h1>Events, participation, stories, and reports in one command center.</h1>
-          <p>Plan campus experiences, track class-wise registrations, publish galleries, and keep leadership informed with event intelligence.</p>
+          <h1 style={{ margin: '0 0 6px 0', fontSize: '24px', fontWeight: 800, color: '#111827' }}>Academic Calendar</h1>
+          <p style={{ margin: 0, color: '#6b7280', fontSize: '14px' }}>Plan, schedule, and track all academic activities for the current academic year.</p>
         </div>
-        <div className="hero-actions">
-          <button className="btn btn-secondary" onClick={handleExportCalendar} disabled={isProcessing}><Download size={16} /> {isProcessing ? 'Syncing...' : 'Export calendar'}</button>
-          <button className="btn btn-primary" onClick={() => setShowCreate(true)}><CalendarDays size={16} /> Create event</button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button style={{ 
+            display: 'flex', alignItems: 'center', gap: '8px', 
+            background: '#2563eb', color: 'white', border: 'none', 
+            padding: '10px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' 
+          }}>
+            <span style={{ fontSize: '16px' }}>+</span> Create Academic Event
+            <ChevronRight size={16} />
+          </button>
+          <button style={{ 
+            display: 'flex', alignItems: 'center', gap: '8px', 
+            background: 'white', color: '#4b5563', border: '1px solid #d1d5db', 
+            padding: '10px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' 
+          }}>
+            <Download size={16} /> Export Calendar
+          </button>
         </div>
       </div>
 
-      <div className="kpi-grid">
-        <MetricCard icon={<CalendarDays size={20} />} label="Active Events" value={activeEvents} note="Across this term" tone="primary" />
-        <MetricCard icon={<TicketCheck size={20} />} label="Registrations" value={totalRegistrations.toLocaleString()} note="Parent and student RSVPs" tone="success" />
-        <MetricCard icon={<Users size={20} />} label="Participation" value={`${participationRate}%`} note="Completed event check-ins" tone="warning" />
-        <MetricCard icon={<Camera size={20} />} label="Gallery Assets" value="210" note="Photos ready for review" tone="info" />
+      {/* KPIs Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px' }}>
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: '#10b981' }}>Academic Progress</span>
+            <div style={{ background: '#ecfdf5', color: '#10b981', padding: '6px', borderRadius: '8px' }}>
+              <TrendingUp size={16} />
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: '28px', fontWeight: 800, color: '#111827', margin: '8px 0 4px 0' }}>53%</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>of academic year completed</div>
+          </div>
+          {/* Mock sparkline chart */}
+          <svg style={{ width: '100%', height: '30px', marginTop: '12px' }}>
+            <path d="M0 25 Q10 25, 20 20 T40 22 T60 15 T80 20 T100 10 T120 15 L120 30 L0 30 Z" fill="#ecfdf5" />
+            <path d="M0 25 Q10 25, 20 20 T40 22 T60 15 T80 20 T100 10 T120 15" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </div>
+
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: '#3b82f6' }}>Working Days</span>
+            <div style={{ background: '#eff6ff', color: '#3b82f6', padding: '6px', borderRadius: '8px' }}>
+              <Calendar size={16} />
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: '28px', fontWeight: 800, color: '#111827', margin: '8px 0 4px 0' }}>118 <span style={{ fontSize: '18px', color: '#6b7280', fontWeight: 600 }}>/ 220</span></div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>days completed</div>
+          </div>
+          <div style={{ height: '30px', marginTop: '12px' }}></div>
+        </div>
+
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: '#8b5cf6' }}>Teaching Days Left</span>
+            <div style={{ background: '#f5f3ff', color: '#8b5cf6', padding: '6px', borderRadius: '8px' }}>
+              <Hourglass size={16} />
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: '28px', fontWeight: 800, color: '#111827', margin: '8px 0 4px 0' }}>102</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>teaching days remaining</div>
+          </div>
+          <div style={{ height: '30px', marginTop: '12px' }}></div>
+        </div>
+
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: '#f59e0b' }}>Current Term</span>
+            <div style={{ background: '#fffbeb', color: '#f59e0b', padding: '6px', borderRadius: '8px' }}>
+              <BookOpen size={16} />
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: '28px', fontWeight: 800, color: '#111827', margin: '8px 0 4px 0' }}>Term 1</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>ends on Oct 15, 2026</div>
+          </div>
+          <div style={{ height: '30px', marginTop: '12px' }}></div>
+        </div>
+
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: '#ef4444' }}>Upcoming Exams</span>
+            <div style={{ background: '#fef2f2', color: '#ef4444', padding: '6px', borderRadius: '8px' }}>
+              <ClipboardList size={16} />
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: '28px', fontWeight: 800, color: '#111827', margin: '8px 0 4px 0' }}>4</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>in next 30 days</div>
+          </div>
+          <div style={{ height: '30px', marginTop: '12px' }}></div>
+        </div>
       </div>
 
-      <div className="control-bar">
-        <div className="search-box">
-          <Search size={16} />
-          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search events, venues, owners..." />
-        </div>
-        <div className="type-pills">
-          <Filter size={16} />
-          {EVENT_TYPES.map((type) => (
-            <button key={type} className={selectedType === type ? 'active' : ''} onClick={() => setSelectedType(type)}>
-              {type}
-            </button>
+      {/* Timeline Section */}
+      <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '24px' }}>
+        <h3 style={{ margin: '0 0 24px 0', fontSize: '16px', fontWeight: 700, color: '#111827' }}>Academic Year Timeline</h3>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
+          
+          {/* Timeline Line */}
+          <div style={{ position: 'absolute', top: '24px', left: '5%', right: '5%', height: '2px', background: '#e5e7eb', zIndex: 0 }} />
+          <div style={{ position: 'absolute', top: '24px', left: '5%', width: '38%', height: '2px', background: '#10b981', zIndex: 1 }} />
+
+          {/* Timeline Nodes */}
+          {[
+            { title: 'School Reopens', date: 'Apr 1, 2026', status: 'Completed', color: '#10b981', icon: 'M5 13l4 4L19 7' },
+            { title: 'Unit Test 1', date: 'Jun 10 - 15', status: 'Completed', color: '#10b981', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+            { title: 'PTM 1', date: 'Jul 18', status: 'Completed', color: '#10b981', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
+            { title: 'Mid-Term Exams', date: 'Aug 12 - 22', status: 'Upcoming', color: '#f59e0b', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+            { title: 'Term Break', date: 'Oct 20 - Nov 2', status: 'Upcoming', color: '#f59e0b', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' },
+            { title: 'Final Exams', date: 'Feb 10 - 25, 2027', status: 'Upcoming', color: '#f59e0b', icon: 'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z' },
+            { title: 'Result Declaration', date: 'Mar 15, 2027', status: 'Upcoming', color: '#3b82f6', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+          ].map((item, index) => (
+            <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2, textAlign: 'center', width: '120px' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'white', border: `2px solid ${item.color}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={item.icon} />
+                </svg>
+              </div>
+              <strong style={{ fontSize: '13px', color: '#111827', margin: '0 0 4px 0', lineHeight: 1.2 }}>{item.title}</strong>
+              <span style={{ fontSize: '11px', color: '#6b7280', margin: '0 0 4px 0' }}>{item.date}</span>
+              <span style={{ fontSize: '11px', fontWeight: 600, color: item.color }}>{item.status}</span>
+            </div>
           ))}
         </div>
       </div>
 
-      <div className="main-grid">
-        <section className="panel calendar-panel">
-          <div className="panel-header">
-            <div>
-              <h2>Event Calendar</h2>
-              <span>June - August 2026</span>
+      {/* Main Grid: Calendar + Right Sidebar */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '24px' }}>
+        
+        {/* Left Side: Calendar Component */}
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>Academic Calendar View</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: '8px', padding: '4px' }}>
+                <button style={{ background: '#2563eb', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>Month</button>
+                <button style={{ background: 'transparent', color: '#6b7280', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>Week</button>
+                <button style={{ background: 'transparent', color: '#6b7280', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>List</button>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button style={{ border: '1px solid #d1d5db', background: 'white', borderRadius: '6px', padding: '4px 8px', cursor: 'pointer' }}><ChevronLeft size={16} color="#6b7280" /></button>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', width: '110px', textAlign: 'center' }}>August 2026</span>
+                <button style={{ border: '1px solid #d1d5db', background: 'white', borderRadius: '6px', padding: '4px 8px', cursor: 'pointer' }}><ChevronRight size={16} color="#6b7280" /></button>
+              </div>
+              <button style={{ border: '1px solid #d1d5db', background: 'white', borderRadius: '8px', padding: '6px 12px', fontSize: '13px', fontWeight: 600, color: '#4b5563', cursor: 'pointer' }}>Today</button>
             </div>
-            <span className="badge-soft">{filteredEvents.length} visible</span>
           </div>
-          <div className="calendar-list">
-            {filteredEvents.map((event) => {
-              const palette = eventPalette[event.type] || eventPalette['Holiday'];
-              const isSelected = selectedEvent.id === event.id;
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1px', background: '#e5e7eb', border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden' }}>
+            {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => (
+              <div key={day} style={{ background: 'white', padding: '12px', textAlign: 'center', fontSize: '11px', fontWeight: 700, color: '#6b7280' }}>
+                {day}
+              </div>
+            ))}
+
+            {/* Calendar grid (hardcoded for August 2026 based on mockup) */}
+            {Array.from({ length: 35 }).map((_, i) => {
+              const day = i - 6 + 1; // offset for Sun Aug 2 
+              const isCurrentMonth = day > 0 && day <= 31;
+              const displayDay = isCurrentMonth ? day : (day <= 0 ? 26 + i : day - 31);
+              
+              // Events based on image
+              let events = [];
+              if (isCurrentMonth) {
+                if (day === 3) events = [{ title: 'Bridge Course', color: '#10b981' }];
+                if (day === 5) events = [{ title: 'Lab Session', color: '#8b5cf6' }];
+                if (day === 8) events = [{ title: 'Club Activity', color: '#f59e0b' }];
+                if (day === 11) events = [{ title: 'Unit Test 2', color: '#ef4444' }];
+                if (day === 12) events = [{ title: 'Mid-Term Start', color: '#3b82f6', isStart: true }, { title: 'Science Pract.', color: '#8b5cf6' }];
+                if (day === 13) events = [{ title: 'Mid-Term', color: '#ef4444' }];
+                if (day === 14) events = [{ title: 'Mid-Term', color: '#ef4444' }];
+                if (day === 15) events = [{ title: 'Independence Day', color: '#3b82f6' }];
+                if (day === 17) events = [{ title: 'PTM Meeting', color: '#3b82f6' }];
+                if (day === 19) events = [{ title: 'Project Submiss.', color: '#8b5cf6' }];
+                if (day === 21) events = [{ title: 'Debate Comp.', color: '#f59e0b' }];
+                if (day === 26) events = [{ title: 'Teachers Meet', color: '#3b82f6' }];
+                if (day === 28) events = [{ title: 'Sports Day Prep', color: '#10b981' }];
+                if (day === 30) events = [{ title: 'Holiday', color: '#ef4444', isBlock: true }];
+              }
+
               return (
-                <button key={event.id} className={`calendar-event ${isSelected ? 'selected' : ''}`} onClick={() => setSelectedEventId(event.id)}>
-                  <div className="date-tile" style={{ background: palette.soft, color: palette.text }}>
-                    <span>{formatMonth(event.date)}</span>
-                    <strong>{formatDay(event.date)}</strong>
+                <div key={i} style={{ background: 'white', padding: '8px', height: '110px', display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ 
+                    fontSize: '13px', fontWeight: 600, color: isCurrentMonth ? '#111827' : '#9ca3af',
+                    background: (isCurrentMonth && day === 12) ? '#2563eb' : 'transparent',
+                    color: (isCurrentMonth && day === 12) ? 'white' : (isCurrentMonth ? '#111827' : '#9ca3af'),
+                    width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    {displayDay}
+                  </span>
+                  
+                  <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    {events.map((evt, idx) => {
+                      if (evt.isBlock) {
+                        return <div key={idx} style={{ background: '#fef2f2', color: '#ef4444', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 600 }}>● {evt.title}</div>
+                      }
+                      return (
+                        <div key={idx} style={{ fontSize: '10px', color: evt.color, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          ● {evt.title}
+                        </div>
+                      )
+                    })}
                   </div>
-                  <div className="event-summary">
-                    <div className="event-title-line">
-                      <strong>{event.title}</strong>
-                      <span style={{ background: palette.soft, color: palette.text }}>{event.type}</span>
-                    </div>
-                    <div className="event-meta">
-                      <span><Clock size={13} /> {event.time}</span>
-                      <span><MapPin size={13} /> {event.venue}</span>
-                    </div>
-                  </div>
-                </button>
+                </div>
               );
             })}
           </div>
-        </section>
+        </div>
 
-        <section className="panel spotlight-panel">
-          <img src={selectedEvent.cover} alt={selectedEvent.title} />
-          <div className="spotlight-content">
-            <div className="event-title-line">
-              <span className="badge-solid" style={{ background: (eventPalette[selectedEvent.type] || eventPalette['Holiday']).bg }}>{selectedEvent.type}</span>
-              <span className="status-chip">{selectedEvent.status}</span>
+        {/* Right Side */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          
+          {/* Upcoming Academic Events */}
+          <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#111827' }}>Upcoming Academic Events</h3>
+              <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>View All</a>
             </div>
-            <h2>{selectedEvent.title}</h2>
-            <p>{formatDate(selectedEvent.date)} at {selectedEvent.time} - {selectedEvent.venue}</p>
-            <div className="progress-row">
-              <div>
-                <span>Registration fill</span>
-                <strong>{selectedEvent.capacity ? Math.round((selectedEvent.registered / selectedEvent.capacity) * 100) : 0}%</strong>
-              </div>
-              <div className="progress-track">
-                <div style={{ width: `${selectedEvent.capacity ? Math.round((selectedEvent.registered / selectedEvent.capacity) * 100) : 0}%`, background: (eventPalette[selectedEvent.type] || eventPalette['Holiday']).bg }} />
-              </div>
-            </div>
-            <div className="mini-stats">
-              <span><Users size={15} /> {selectedEvent.registered} registered</span>
-              <span><CheckCircle2 size={15} /> {selectedEvent.checkedIn} checked in</span>
-              <span><Trophy size={15} /> {selectedEvent.volunteers} volunteers</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {[
+                { title: 'Mid-Term Examination', date: 'Aug 12 - Aug 22, 2026', time: 'In 12 days', icon: <ClipboardList size={16} />, color: '#8b5cf6', bg: '#f3e8ff' },
+                { title: 'Parent Teacher Meeting 1', date: 'Aug 17, 2026 (All Grades)', time: 'In 17 days', icon: <Calendar size={16} />, color: '#3b82f6', bg: '#eff6ff' },
+                { title: 'Science Practical Exams', date: 'Aug 12 - Aug 14, 2026', time: 'In 12 days', icon: <BookOpen size={16} />, color: '#10b981', bg: '#ecfdf5' },
+                { title: 'Project Submission (Grade 9-10)', date: 'Aug 19, 2026', time: 'In 19 days', icon: <ClipboardList size={16} />, color: '#ef4444', bg: '#fef2f2' },
+                { title: 'Independence Day', date: 'Aug 15, 2026', time: 'In 15 days', icon: <Calendar size={16} />, color: '#3b82f6', bg: '#eff6ff' },
+              ].map((ev, i) => (
+                <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: ev.bg, color: ev.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    {ev.icon}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#111827', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.title}</div>
+                    <div style={{ fontSize: '11px', color: '#6b7280' }}>{ev.date}</div>
+                  </div>
+                  <div style={{ fontSize: '11px', fontWeight: 600, color: '#3b82f6', background: '#eff6ff', padding: '4px 8px', borderRadius: '6px', whiteSpace: 'nowrap' }}>
+                    {ev.time}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </section>
 
-        <section className="panel ai-panel">
-          <div className="panel-header compact">
-            <h2><Sparkles size={18} /> AI Event Insights</h2>
+          {/* Academic Deadlines */}
+          <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#111827' }}>Academic Deadlines</h3>
+              <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>View All</a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {[
+                { title: 'Question Paper Submission', sub: 'All Subjects', date: 'Aug 8' },
+                { title: 'Lesson Plan Approval Deadline', sub: 'Week 6 - Term 1', date: 'Aug 9' },
+                { title: 'Internal Marks Submission', sub: 'Unit Test 2', date: 'Aug 16' },
+                { title: 'Syllabus Completion Target', sub: 'Term 1', date: 'Sep 30' },
+                { title: 'Project Evaluation Deadline', sub: 'Grade 9-10', date: 'Sep 5' },
+              ].map((d, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: i === 4 ? 'none' : '1px solid #f3f4f6', paddingBottom: i === 4 ? 0 : '10px' }}>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 600, color: '#111827' }}>{d.title}</div>
+                    <div style={{ fontSize: '11px', color: '#6b7280' }}>{d.sub}</div>
+                  </div>
+                  <div style={{ fontSize: '11px', fontWeight: 600, color: '#ef4444', border: '1px solid #fecaca', background: '#fff5f5', padding: '2px 6px', borderRadius: '4px' }}>
+                    {d.date}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="insight-card featured">
-            <Lightbulb size={18} />
-            <p>{selectedEvent.insight}</p>
-          </div>
-          <div className="insight-list">
-            <div>Class 8 A is under-indexing in academic event registrations by 18%.</div>
-            <div>Sports Day has enough volunteers, but first-aid role coverage is thin.</div>
-            <div>Publish gallery previews within 24 hours to improve parent engagement.</div>
-          </div>
-        </section>
+
+        </div>
       </div>
 
-      {/* Create Event Modal */}
-      {showCreate && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 16, width: '90%', maxWidth: 480, padding: 20, boxShadow: 'var(--shadow-lg)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>Schedule Campus Event</h3>
-              <button onClick={() => setShowCreate(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: 18, cursor: 'pointer' }} disabled={isProcessing}>✕</button>
-            </div>
-            <form onSubmit={handleCreateEvent} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Event Title</label>
-                <input type="text" required value={formTitle} onChange={e => setFormTitle(e.target.value)} placeholder="e.g. Science Fair Exhibition" style={{ padding: '10px 12px', border: '1px solid var(--border-color)', borderRadius: 8, background: 'var(--bg-body)', color: 'var(--text-primary)' }} />
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Event Type</label>
-                  <select value={formType} onChange={e => setFormType(e.target.value)} style={{ padding: '10px 12px', border: '1px solid var(--border-color)', borderRadius: 8, background: 'var(--bg-body)', color: 'var(--text-primary)' }}>
-                    <option value="Academic">Academic</option>
-                    <option value="Sports">Sports</option>
-                    <option value="Cultural">Cultural</option>
-                    <option value="Community">Community</option>
-                    <option value="Holiday">Holiday</option>
-                  </select>
+      {/* Analytics Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+        
+        {/* Syllabus Progress */}
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#111827' }}>Syllabus Progress by Grade</h3>
+            <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>View Details</a>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {[
+              { grade: 'Grade 6', val: 86, color: '#10b981' },
+              { grade: 'Grade 7', val: 78, color: '#10b981' },
+              { grade: 'Grade 8', val: 65, color: '#f59e0b' },
+              { grade: 'Grade 9', val: 52, color: '#ef4444' },
+              { grade: 'Grade 10', val: 72, color: '#10b981' },
+              { grade: 'Grade 11', val: 68, color: '#f59e0b' },
+              { grade: 'Grade 12', val: 60, color: '#f59e0b' },
+            ].map(g => (
+              <div key={g.grade} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#4b5563', width: '50px' }}>{g.grade}</span>
+                <div style={{ flex: 1, background: '#f3f4f6', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ width: `${g.val}%`, background: g.color, height: '100%' }} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Max Capacity</label>
-                  <input type="number" required value={formCapacity} onChange={e => setFormCapacity(e.target.value)} placeholder="150" style={{ padding: '10px 12px', border: '1px solid var(--border-color)', borderRadius: 8, background: 'var(--bg-body)', color: 'var(--text-primary)' }} />
-                </div>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#111827', width: '30px', textAlign: 'right' }}>{g.val}%</span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Date</label>
-                  <input type="date" required value={formDate} onChange={e => setFormDate(e.target.value)} style={{ padding: '10px 12px', border: '1px solid var(--border-color)', borderRadius: 8, background: 'var(--bg-body)', color: 'var(--text-primary)' }} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Time</label>
-                  <input type="text" required value={formTime} onChange={e => setFormTime(e.target.value)} placeholder="10:00 AM" style={{ padding: '10px 12px', border: '1px solid var(--border-color)', borderRadius: 8, background: 'var(--bg-body)', color: 'var(--text-primary)' }} />
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Venue / Location</label>
-                <input type="text" required value={formVenue} onChange={e => setFormVenue(e.target.value)} placeholder="e.g. Science Auditorium" style={{ padding: '10px 12px', border: '1px solid var(--border-color)', borderRadius: 8, background: 'var(--bg-body)', color: 'var(--text-primary)' }} />
-              </div>
-              <button type="submit" disabled={isProcessing} className="btn btn-primary" style={{ padding: 12, marginTop: 8 }}>
-                {isProcessing ? 'Scheduling Event...' : 'Schedule Event'}
-              </button>
-            </form>
+            ))}
           </div>
         </div>
-      )}
 
-
-      <div className="two-col">
-        <section className="panel">
-          <div className="panel-header">
-            <div>
-              <h2>Upcoming Events</h2>
-              <span>Operational readiness by date</span>
+        {/* Lesson Plan Approval */}
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#111827' }}>Lesson Plan Approval</h3>
+            <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>View All</a>
+          </div>
+          <div style={{ display: 'flex', flex: 1, alignItems: 'center', gap: '24px' }}>
+            {/* SVG Donut */}
+            <div style={{ position: 'relative', width: '120px', height: '120px' }}>
+              <svg viewBox="0 0 36 36" style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+                {/* Background Ring */}
+                <path className="circle" stroke="#f3f4f6" strokeWidth="4" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                {/* Approved 60% */}
+                <path className="circle" stroke="#10b981" strokeWidth="4" strokeDasharray="60, 100" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                {/* Pending 28% */}
+                <path className="circle" stroke="#f59e0b" strokeWidth="4" strokeDasharray="28, 100" strokeDashoffset="-60" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                {/* Rejected 7% */}
+                <path className="circle" stroke="#ef4444" strokeWidth="4" strokeDasharray="7, 100" strokeDashoffset="-88" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                {/* Needs Revision 5% */}
+                <path className="circle" stroke="#8b5cf6" strokeWidth="4" strokeDasharray="5, 100" strokeDashoffset="-95" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              </svg>
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: 600 }}>Total</span>
+                <span style={{ fontSize: '20px', color: '#111827', fontWeight: 800 }}>112</span>
+              </div>
+            </div>
+            
+            {/* Legend */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
+              {[
+                { label: 'Pending', val: 32, pct: '28.6%', color: '#f59e0b' },
+                { label: 'Approved', val: 68, pct: '60.7%', color: '#10b981' },
+                { label: 'Rejected', val: 8, pct: '7.1%', color: '#ef4444' },
+                { label: 'Needs Revision', val: 4, pct: '3.6%', color: '#8b5cf6' },
+              ].map(item => (
+                <div key={item.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color }} />
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: '#4b5563' }}>{item.label}</span>
+                  </div>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#111827' }}>
+                    {item.val} <span style={{ color: '#9ca3af', fontWeight: 500 }}>({item.pct})</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="upcoming-list">
-            {upcomingEvents.map((event) => (
-              <div key={event.id} className="upcoming-row">
-                <div>
-                  <strong>{event.title}</strong>
-                  <span>{formatDate(event.date)} - {event.owner}</span>
+          <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>Go to Lesson Plans →</a>
+          </div>
+        </div>
+
+        {/* Academic Alerts */}
+        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#111827' }}>Academic Alerts</h3>
+            <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>View All</a>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {[
+              { text: 'Grade 8 Science syllabus is 18% behind schedule.', link: 'Action required', icon: <AlertTriangle size={16} />, color: '#ef4444', bg: '#fef2f2' },
+              { text: '3 teacher allocations are pending for next week.', link: 'Needs attention', icon: <Info size={16} />, color: '#f59e0b', bg: '#fffbeb' },
+              { text: 'Timetable conflict detected in Grade 6 on Aug 14.', link: 'View conflicts', icon: <AlertCircle size={16} />, color: '#f59e0b', bg: '#fffbeb' },
+              { text: '5 lesson plans are overdue for approval.', link: 'Review now', icon: <ClipboardList size={16} />, color: '#3b82f6', bg: '#eff6ff' },
+            ].map((alert, i) => (
+              <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: alert.bg, color: alert.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  {alert.icon}
                 </div>
-                <div className="readiness">
-                  <span>{event.registered}/{event.capacity || '-'} RSVPs</span>
-                  <b>{event.status}</b>
+                <div>
+                  <div style={{ fontSize: '12px', fontWeight: 600, color: '#111827', lineHeight: 1.4 }}>{alert.text}</div>
+                  <a href="#" style={{ fontSize: '11px', fontWeight: 600, color: alert.color, textDecoration: 'none' }}>{alert.link}</a>
                 </div>
               </div>
             ))}
           </div>
-        </section>
+        </div>
+      </div>
 
-        <section className="panel">
-          <div className="panel-header">
+      {/* AI Insights */}
+      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+          <Sparkles size={18} color="#6366f1" />
+          <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#1e1b4b' }}>AI Academic Insights</h3>
+          <span style={{ background: '#e0e7ff', color: '#4f46e5', fontSize: '10px', fontWeight: 800, padding: '2px 6px', borderRadius: '4px' }}>Beta</span>
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+          <div style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '1px solid #e5e7eb', display: 'flex', gap: '12px' }}>
+            <div style={{ color: '#10b981' }}><Clock size={18} /></div>
             <div>
-              <h2>Registrations</h2>
-              <span>Class-wise participation pipeline</span>
+              <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: '#4b5563', lineHeight: 1.4 }}>Grade 9 Mathematics may miss the syllabus completion by 12 days based on current pace.</p>
+              <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>View details →</a>
             </div>
           </div>
-          <div className="registration-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Class</th>
-                  <th>Registered</th>
-                  <th>Attended</th>
-                  <th>Volunteers</th>
-                  <th>Awards</th>
-                </tr>
-              </thead>
-              <tbody>
-                {participationRows.map((row) => (
-                  <tr key={row.className}>
-                    <td>{row.className}</td>
-                    <td>{row.registered}</td>
-                    <td>{row.attended}</td>
-                    <td>{row.volunteers}</td>
-                    <td>{row.awards}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          
+          <div style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '1px solid #e5e7eb', display: 'flex', gap: '12px' }}>
+            <div style={{ color: '#3b82f6' }}><Info size={18} /></div>
+            <div>
+              <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: '#4b5563', lineHeight: 1.4 }}>Science department workload is 18% higher compared to other departments.</p>
+              <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>View analysis →</a>
+            </div>
           </div>
-        </section>
+          
+          <div style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '1px solid #e5e7eb', display: 'flex', gap: '12px' }}>
+            <div style={{ color: '#f59e0b' }}><Calendar size={18} /></div>
+            <div>
+              <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: '#4b5563', lineHeight: 1.4 }}>Recommend scheduling practical exams before Aug 18 to avoid timetable conflicts.</p>
+              <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>View suggestion →</a>
+            </div>
+          </div>
+
+          <div style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '1px solid #e5e7eb', display: 'flex', gap: '12px' }}>
+            <div style={{ color: '#10b981' }}><TrendingUp size={18} /></div>
+            <div>
+              <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: '#4b5563', lineHeight: 1.4 }}>Grade 10 students' performance trend shows improvement in all subjects.</p>
+              <a href="#" style={{ fontSize: '12px', fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>View report →</a>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="three-col">
-        <section className="panel">
-          <div className="panel-header compact"><h2>Event Timeline</h2></div>
-          <div className="timeline">
-            {timeline.map((item) => (
-              <div key={item.id} className={`timeline-item ${item.tone}`}>
-                <span>{item.time}</span>
-                <strong>{item.title}</strong>
-                <p>{item.detail}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel gallery-panel">
-          <div className="panel-header compact"><h2>Event Gallery</h2></div>
-          <div className="gallery-grid">
-            {gallery.map((item) => (
-              <div key={item.id} className="gallery-card">
-                <img src={item.image} alt={item.title} />
-                <div>
-                  <strong>{item.title}</strong>
-                  <span>{item.count} photos - {item.tag}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel">
-          <div className="panel-header compact"><h2>Event Reports</h2></div>
-          <div className="reports-list">
-            {reports.map((report) => (
-              <div key={report.title} className="report-card">
-                <FileText size={18} />
-                <div>
-                  <strong>{report.title}</strong>
-                  <span>{report.owner} - {report.metrics}</span>
-                </div>
-                <b>{report.status}</b>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      <style>{`
-        .events-hub { display: flex; flex-direction: column; gap: 20px; padding-bottom: 36px; }
-        .hub-hero { min-height: 220px; border-radius: 16px; padding: 28px; color: #fff; background: linear-gradient(120deg, rgba(15,23,42,.82), rgba(37,99,235,.58)), url('https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=1600&auto=format&fit=crop') center/cover; display: flex; justify-content: space-between; gap: 24px; align-items: flex-end; box-shadow: 0 18px 45px rgba(15,23,42,.18); }
-        .hub-hero h1 { max-width: 760px; margin: 8px 0 10px; font-size: 34px; line-height: 1.1; letter-spacing: 0; }
-        .hub-hero p { max-width: 700px; margin: 0; color: rgba(255,255,255,.84); font-size: 15px; }
-        .eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: 12px; font-weight: 800; color: rgba(255,255,255,.72); }
-        .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-        .hero-actions .btn { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-        .metric-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; display: flex; gap: 14px; align-items: center; box-shadow: 0 10px 25px rgba(15,23,42,.04); }
-        .metric-icon { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; }
-        .metric-card span { display: block; color: var(--text-muted); font-size: 12px; font-weight: 700; text-transform: uppercase; }
-        .metric-card strong { display: block; margin-top: 2px; color: var(--text-primary); font-size: 26px; line-height: 1; }
-        .metric-card p { margin: 4px 0 0; color: var(--text-secondary); font-size: 12px; }
-        .control-bar { display: flex; gap: 14px; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; }
-        .search-box { flex: 1; min-width: 240px; display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--bg-body); border-radius: 10px; border: 1px solid var(--border-color); }
-        .search-box input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-size: 14px; }
-        .type-pills { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .type-pills button { border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-secondary); border-radius: 999px; padding: 8px 12px; cursor: pointer; font-size: 12px; font-weight: 700; }
-        .type-pills button.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
-        .main-grid { display: grid; grid-template-columns: 1.15fr 1.35fr .9fr; gap: 16px; align-items: stretch; }
-        .two-col { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; }
-        .three-col { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 16px; }
-        .panel { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,.04); }
-        .panel-header { padding: 16px 18px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-        .panel-header.compact { border-bottom: 0; padding-bottom: 8px; }
-        .panel-header h2 { margin: 0; font-size: 16px; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
-        .panel-header span { display: block; margin-top: 3px; color: var(--text-muted); font-size: 12px; }
-        .badge-soft, .status-chip { border-radius: 999px; padding: 6px 10px; background: var(--bg-body); color: var(--text-secondary); font-size: 12px; font-weight: 800; }
-        .badge-solid { border-radius: 999px; padding: 6px 10px; color: #fff; font-size: 12px; font-weight: 800; }
-        .calendar-list { padding: 10px; display: flex; flex-direction: column; gap: 8px; max-height: 530px; overflow: auto; }
-        .calendar-event { width: 100%; text-align: left; display: flex; gap: 12px; border: 1px solid transparent; background: transparent; border-radius: 10px; padding: 10px; cursor: pointer; color: inherit; }
-        .calendar-event:hover, .calendar-event.selected { background: var(--bg-body); border-color: var(--border-color); }
-        .date-tile { width: 54px; min-width: 54px; height: 58px; border-radius: 10px; display: grid; place-items: center; }
-        .date-tile span { font-size: 13px; text-transform: uppercase; font-weight: 800; }
-        .date-tile strong { font-size: 22px; line-height: 1; }
-        .event-summary { flex: 1; min-width: 0; }
-        .event-title-line { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-        .event-title-line strong { color: var(--text-primary); font-size: 14px; }
-        .event-title-line span:not(.badge-solid):not(.status-chip) { border-radius: 999px; padding: 4px 8px; font-size: 13px; font-weight: 800; }
-        .event-meta { margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap; color: var(--text-muted); font-size: 12px; }
-        .event-meta span, .mini-stats span { display: inline-flex; align-items: center; gap: 5px; }
-        .spotlight-panel img { width: 100%; height: 210px; object-fit: cover; display: block; }
-        .spotlight-content { padding: 18px; }
-        .spotlight-content h2 { margin: 14px 0 8px; font-size: 24px; color: var(--text-primary); }
-        .spotlight-content p { margin: 0; color: var(--text-secondary); font-size: 14px; }
-        .progress-row { margin-top: 18px; }
-        .progress-row > div:first-child { display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 13px; margin-bottom: 8px; }
-        .progress-track { height: 9px; border-radius: 999px; background: var(--bg-body); overflow: hidden; }
-        .progress-track div { height: 100%; border-radius: inherit; }
-        .mini-stats { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; color: var(--text-secondary); font-size: 12px; font-weight: 700; }
-        .ai-panel { padding-bottom: 12px; }
-        .insight-card { margin: 0 16px 12px; border-radius: 12px; padding: 14px; background: rgba(79,70,229,.10); color: var(--text-primary); display: flex; gap: 10px; }
-        .insight-card p { margin: 0; font-size: 13px; line-height: 1.5; }
-        .insight-list { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; }
-        .insight-list div { padding: 12px; border-radius: 10px; background: var(--bg-body); color: var(--text-secondary); font-size: 13px; }
-        .upcoming-list, .reports-list, .timeline { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
-        .upcoming-row { display: flex; justify-content: space-between; gap: 12px; padding: 12px; border-radius: 10px; background: var(--bg-body); }
-        .upcoming-row strong, .report-card strong { display: block; color: var(--text-primary); font-size: 14px; }
-        .upcoming-row span, .report-card span { display: block; margin-top: 4px; color: var(--text-muted); font-size: 12px; }
-        .readiness { text-align: right; min-width: 120px; }
-        .readiness b, .report-card b { display: inline-block; margin-top: 4px; color: var(--color-primary); font-size: 12px; }
-        .registration-table { padding: 0 16px 16px; overflow-x: auto; }
-        .registration-table table { width: 100%; border-collapse: collapse; }
-        .registration-table th, .registration-table td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 13px; }
-        .registration-table th { color: var(--text-muted); font-size: 13px; text-transform: uppercase; }
-        .timeline-item { position: relative; padding: 0 0 0 20px; border-left: 2px solid var(--border-color); }
-        .timeline-item:before { content: ''; position: absolute; left: -6px; top: 2px; width: 10px; height: 10px; border-radius: 999px; background: var(--color-primary); }
-        .timeline-item.success:before { background: #10B981; }
-        .timeline-item.warning:before { background: #F59E0B; }
-        .timeline-item.info:before { background: #06B6D4; }
-        .timeline-item span { display: block; color: var(--text-muted); font-size: 13px; margin-bottom: 4px; }
-        .timeline-item strong { display: block; color: var(--text-primary); font-size: 13px; }
-        .timeline-item p { margin: 4px 0 0; color: var(--text-secondary); font-size: 12px; line-height: 1.4; }
-        .gallery-grid { padding: 14px 16px 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-        .gallery-card { border-radius: 10px; overflow: hidden; background: var(--bg-body); }
-        .gallery-card img { display: block; width: 100%; height: 92px; object-fit: cover; }
-        .gallery-card div { padding: 10px; }
-        .gallery-card strong { display: block; color: var(--text-primary); font-size: 13px; }
-        .gallery-card span { color: var(--text-muted); font-size: 12px; }
-        .report-card { display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: 10px; padding: 12px; border-radius: 10px; background: var(--bg-body); }
-        @media (max-width: 1180px) {
-          .main-grid, .three-col { grid-template-columns: 1fr; }
-          .two-col, .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        }
-        @media (max-width: 720px) {
-          .hub-hero { align-items: flex-start; flex-direction: column; padding: 22px; }
-          .hub-hero h1 { font-size: 26px; }
-          .control-bar { align-items: stretch; flex-direction: column; }
-          .two-col, .kpi-grid { grid-template-columns: 1fr; }
-          .gallery-grid { grid-template-columns: 1fr; }
-          .upcoming-row { flex-direction: column; }
-          .readiness { text-align: left; }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-function MetricCard({
-  icon,
-  label,
-  value,
-  note,
-  tone,
-}: {
-  icon: ReactNode;
-  label: string;
-  value: string | number;
-  note: string;
-  tone: 'primary' | 'success' | 'warning' | 'info';
-}) {
-  const colors = {
-    primary: 'rgba(79,70,229,.12)',
-    success: 'rgba(16,185,129,.12)',
-    warning: 'rgba(245,158,11,.14)',
-    info: 'rgba(6,182,212,.12)',
-  };
-
-  return (
-    <div className="metric-card">
-      <div className="metric-icon" style={{ background: colors[tone], color: tone === 'primary' ? '#4F46E5' : tone === 'success' ? '#10B981' : tone === 'warning' ? '#F59E0B' : '#06B6D4' }}>
-        {icon}
-      </div>
-      <div>
-        <span>{label}</span>
-        <strong>{value}</strong>
-        <p>{note}</p>
-      </div>
     </div>
   );
 }

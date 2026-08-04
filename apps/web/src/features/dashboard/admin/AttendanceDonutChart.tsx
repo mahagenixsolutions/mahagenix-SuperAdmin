@@ -28,7 +28,7 @@ export default function AttendanceDonutChart() {
   ];
 
   return (
-    <div style={{ marginBottom: 24, background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)' }}>
+    <div className="card dashboard-card" style={{ marginBottom: 24 }}>
       <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           Today's Attendance Breakdown
@@ -108,9 +108,9 @@ export default function AttendanceDonutChart() {
                       contentStyle={{
                         background: 'var(--bg-surface-raised)',
                         border: '1px solid var(--border-subtle)',
-                        borderRadius: 8,
+                        borderRadius: 12,
                         fontSize: 13,
-                        boxShadow: '0 10px 24px rgba(0,0,0,0.5)',
+                        boxShadow: 'var(--shadow-md)',
                         color: 'var(--text-primary)',
                         fontWeight: 600,
                       }}

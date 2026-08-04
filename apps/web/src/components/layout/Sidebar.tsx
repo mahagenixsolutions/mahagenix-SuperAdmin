@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import type { RootState } from '../../store';
@@ -17,7 +17,31 @@ interface SidebarProps {
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useSelector((s: RootState) => s.auth.user);
+
+  const checkActive = (to: string) => {
+    const currentPath = location.pathname + location.search;
+    
+    // If the path is exact match
+    if (currentPath === to) {
+      return true;
+    }
+    
+    // Fallback: If URL is exactly "/fees", treat it as "/fees?tab=dashboard"
+    if (location.pathname === '/fees' && location.search === '') {
+      if (to === '/fees?tab=dashboard') {
+        return true;
+      }
+    }
+    
+    // Default pathname matching for standard paths (without query parameters)
+    if (!to.includes('?')) {
+      return location.pathname === to;
+    }
+    
+    return false;
+  };
   
   // Create a helper to check permission directly since we can't call hooks in a map function easily
   const hasPermission = (permission?: string) => {
@@ -46,13 +70,14 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   const [collapsedSections, setCollapsedSections] = React.useState<Record<string, boolean>>(() => ({
     'Overview': false,
-    'Core Directories': true,
-    'Academic & Exams': true,
-    'School Operations': true,
-    'Insights & Core Settings': true,
+    'Leadership': false,
+    'Academic Oversight': false,
+    'Operations': false,
+    'Campus Operations': false,
+    'Intelligence': false,
+    'Finance Management': false,
+    'Human Resources': false,
     'Organization': false,
-    'Analytics & Insights': true,
-    'Setup & Logs': true,
   }));
 
   const toggleSection = (sectionName: string) => {
@@ -64,272 +89,182 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   };
 
   return (
-    <aside className={`sidebar${collapsed ? ' collapsed' : ''}`}>
+    <aside
+      className={`sidebar${collapsed ? ' collapsed' : ''}`}
+      style={{
+        width: collapsed ? '80px' : '260px',
+        backgroundColor: '#ffffff',
+        borderRight: '1px solid #e5e7eb',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        transition: 'width 0.2s',
+        fontFamily: 'Inter, sans-serif',
+      }}
+    >
       {/* Logo */}
-      <div className="sidebar-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start', padding: '20px 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div className="sidebar-logo-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" fill="white" />
-              <path
-                d="M2 17l10 5 10-5M2 12l10 5 10-5"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-          {!collapsed && <span className="sidebar-logo-text">EduTrack AI</span>}
+      <div style={{ display: 'flex', alignItems: 'center', padding: '24px 20px', gap: '12px' }}>
+        <div style={{
+          width: '32px', height: '32px', borderRadius: '8px', background: '#4f46e5',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" fill="white" />
+            <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
         </div>
+        {!collapsed && <span style={{ fontSize: '18px', fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>EduTrack AI</span>}
       </div>
 
-      {/* Navigation */}
-      <nav className="sidebar-nav">
-        {filteredNavItems.map((section) => {
-          const isSectionCollapsed = collapsed ? false : (collapsedSections[section.section] ?? true);
-          return (
-            <div key={section.section} style={{ marginBottom: 8 }}>
-              <div
-                className="sidebar-section-label"
-                onClick={() => toggleSection(section.section)}
-                style={{
-                  cursor: collapsed ? 'default' : 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  paddingRight: '12px',
-                  userSelect: 'none'
-                }}
-              >
-                <span>{section.section}</span>
-                {!collapsed && (
-                  <span style={{
-                    fontSize: '9px',
-                    opacity: 0.6,
-                    transform: isSectionCollapsed ? 'rotate(-90deg)' : 'none',
-                    transition: 'transform 0.2s',
-                    display: 'inline-block'
-                  }}>
-                    ▼
-                  </span>
-                )}
-              </div>
-
-              <motion.div
-                initial={false}
-                animate={{ height: isSectionCollapsed ? 0 : 'auto', opacity: isSectionCollapsed ? 0 : 1 }}
-                transition={{ duration: 0.2 }}
-                style={{ overflow: 'hidden' }}
-              >
-                <div style={{ display: 'flex', flexDirection: 'column', padding: '2px 0' }}>
-                  {section.items.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <NavLink
-                        key={item.to}
-                        to={item.to}
-                        className={({ isActive }) => `sidebar-item${isActive ? ' active' : ''}`}
-                        title={collapsed ? item.label : undefined}
-                      >
-                        <span className="sidebar-item-icon">
-                          <Icon />
-                        </span>
-                        <span className="sidebar-item-label">{item.label}</span>
-                      </NavLink>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            </div>
-          );
-        })}
-      </nav>
-
-
-      {/* User Info & Settings */}
-      <div
-        className="sidebar-footer"
-        style={{
-          padding: collapsed ? '16px 8px' : '16px 12px',
-          borderTop: '1px solid var(--border-color)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          gap: 10,
-        }}
-      >
-        {!collapsed ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '10px 12px',
-              background: 'var(--bg-surface-raised)',
-              border: '1px solid var(--border-color)',
-              borderRadius: 'var(--radius-lg)',
-              boxShadow: 'var(--shadow-xs)',
-              gap: 8,
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
-              <div
-                className="avatar-fallback"
-                style={{
-                  width: 32,
-                  height: 32,
-                  fontSize: 11,
-                  fontWeight: 700,
-                  background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
-                  color: 'white',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                {initials}
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: 'var(--text-primary)',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {user ? `${user.first_name} ${user.last_name}` : 'School Admin'}
-                </span>
-                <span
-                  style={{
-                    fontSize: 9,
-                    fontWeight: 600,
-                    color: 'var(--text-secondary)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.04em',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {user?.role?.replace('_', ' ')}
-                </span>
-              </div>
-            </div>
-            
-            <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexShrink: 0 }}>
-              <button
-                id="sidebar-theme-toggle"
-                onClick={() => {
-                  const html = document.documentElement;
-                  const nextTheme = html.dataset.theme === 'dark' ? '' : 'dark';
-                  html.dataset.theme = nextTheme;
-                  localStorage.setItem('edutrack_theme', nextTheme);
-                }}
-                title="Toggle Theme"
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-secondary)',
-                  border: 'none',
-                  background: 'transparent',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s, color 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-primary-surface)';
-                  e.currentTarget.style.color = 'var(--color-primary)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                }}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z" />
-                </svg>
-              </button>
-
-              <motion.button
-                id="sidebar-logout"
-                onClick={handleLogout}
-                whileHover={{ scale: 1.05, backgroundColor: 'var(--color-danger-surface)' }}
-                whileTap={{ scale: 0.95 }}
-                title="Logout"
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--accent-danger)',
-                  border: 'none',
-                  background: 'transparent',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  flexShrink: 0,
-                  transition: 'color 0.2s',
-                }}
-              >
-                <LogoutIcon />
-              </motion.button>
-            </div>
-          </motion.div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-            <div
-              className="avatar-fallback"
-              style={{
-                width: 32,
-                height: 32,
-                fontSize: 11,
-                fontWeight: 700,
-                background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
-                color: 'white',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              title={user ? `${user.first_name} ${user.last_name}` : 'User'}
-            >
+      {/* User Info Header */}
+      {!collapsed && (
+        <div style={{ padding: '0 20px 20px 20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '40px', height: '40px', borderRadius: '50%', background: '#1e1b4b',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'white', fontWeight: 700, fontSize: '14px', flexShrink: 0
+            }}>
               {initials}
             </div>
-            
-            <motion.button
-              id="sidebar-logout-collapsed"
-              onClick={handleLogout}
-              whileHover={{ scale: 1.05, backgroundColor: 'var(--color-danger-surface)' }}
-              whileTap={{ scale: 0.95 }}
-              title="Logout"
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: '50%',
-                color: 'var(--accent-danger)',
-                border: '1px solid var(--border-color)',
-                background: 'var(--bg-surface-raised)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              <LogoutIcon />
-            </motion.button>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                {user ? `${user.first_name} ${user.last_name}` : 'Meera Verma'}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#6b7280' }}><path d="m6 9 6 6 6-6"/></svg>
+              </span>
+              <span style={{ fontSize: '11px', fontWeight: 600, color: '#6b7280', marginTop: '2px' }}>
+                {user?.role?.replace('_', ' ') || 'Academic Coordinator'}
+              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }} />
+                <span style={{ fontSize: '11px', fontWeight: 600, color: '#10b981' }}>Online</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation */}
+      <nav style={{ flex: 1, overflowY: 'auto', padding: '0 12px' }} className="sidebar-nav-scroll">
+        {filteredNavItems.map((section) => (
+          <div key={section.section} style={{ marginBottom: '20px' }}>
+            {!collapsed && (
+              <div style={{ padding: '0 12px 10px 12px', fontSize: '11px', fontWeight: 800, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                {section.section}
+              </div>
+            )}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {section.items.map((item) => {
+                const isActive = checkActive(item.to);
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    title={collapsed ? item.label : undefined}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px',
+                      borderRadius: '8px', textDecoration: 'none',
+                      backgroundColor: isActive ? '#eef2ff' : 'transparent',
+                      color: isActive ? '#4f46e5' : '#4b5563',
+                      fontWeight: isActive ? 700 : 600,
+                      fontSize: '13px',
+                      transition: 'all 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = '#f3f4f6';
+                        e.currentTarget.style.color = '#111827';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = '#4b5563';
+                      }
+                    }}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? '#4f46e5' : '#6b7280' }}>
+                      <Icon />
+                    </span>
+                    {!collapsed && <span>{item.label}</span>}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      {/* Footer Area: Academic Year & Support */}
+      <div style={{ padding: '20px', borderTop: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        
+        {/* Academic Year Dropdown */}
+        {!collapsed && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: '#6b7280' }}>Academic Year</span>
+            <button style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              width: '100%', padding: '10px 12px', background: '#ffffff',
+              border: '1px solid #d1d5db', borderRadius: '8px', cursor: 'pointer',
+              color: '#111827', fontSize: '13px', fontWeight: 600
+            }}>
+              2026 - 2027
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#6b7280' }}><path d="m6 9 6 6 6-6"/></svg>
+            </button>
           </div>
         )}
+
+        {/* Support Card */}
+        {!collapsed && (
+          <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '16px', border: '1px solid #e2e8f0' }}>
+            <h4 style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: 700, color: '#111827' }}>Need Help?</h4>
+            <p style={{ margin: '0 0 12px 0', fontSize: '11px', color: '#64748b', lineHeight: 1.4 }}>Our support team is ready to help you.</p>
+            <button style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+              width: '100%', padding: '8px 12px', background: '#ffffff', color: '#4f46e5',
+              border: '1px solid #e0e7ff', borderRadius: '8px', fontSize: '12px', fontWeight: 600,
+              cursor: 'pointer', boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+            }}>
+              Contact Support
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {collapsed && (
+          <button
+            onClick={handleLogout}
+            style={{
+              width: '40px', height: '40px', borderRadius: '8px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: '#fef2f2', color: '#ef4444', border: 'none', cursor: 'pointer'
+            }}
+          >
+            <LogoutIcon />
+          </button>
+        )}
       </div>
+      
+      {/* Scrollbar styles to hide it nicely */}
+      <style>{`
+        .sidebar-nav-scroll::-webkit-scrollbar {
+          width: 4px;
+        }
+        .sidebar-nav-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .sidebar-nav-scroll::-webkit-scrollbar-thumb {
+          background: #e5e7eb;
+          border-radius: 4px;
+        }
+        .sidebar-nav-scroll:hover::-webkit-scrollbar-thumb {
+          background: #d1d5db;
+        }
+      `}</style>
     </aside>
   );
 }

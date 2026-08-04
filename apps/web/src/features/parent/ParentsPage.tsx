@@ -7,6 +7,7 @@ import type { GridColumn } from '../../components/erp/DataGrid';
 import { KPICard } from '../../components/erp/KPICard';
 import { DetailDrawer } from '../../components/erp/DetailDrawer';
 import { StatusBadge } from '../../components/erp/StatusBadge';
+import { Tabs } from '../../components/ui/Tabs';
 import { 
   Users, MessageSquare, CreditCard, UserPlus, GraduationCap
 } from 'lucide-react';
@@ -243,43 +244,17 @@ const ParentsPage: React.FC = () => {
         {selectedParent && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {/* Drawer Tabs */}
-            <div style={{
-              display: 'flex',
-              borderBottom: '1px solid var(--border-subtle)',
-              paddingBottom: '1px',
-              gap: '16px',
-            }}>
-              {[
+            <Tabs
+              tabs={[
                 { id: 'profile', label: 'Profile', icon: <Users size={14} /> },
                 { id: 'students', label: 'Linked Students', icon: <GraduationCap size={14} /> },
                 { id: 'communication', label: 'Comm. History', icon: <MessageSquare size={14} /> },
                 { id: 'fees', label: 'Fee Summary', icon: <CreditCard size={14} /> },
-              ].map((tab) => {
-                const active = detailTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setDetailTab(tab.id as any)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '8px 2px',
-                      border: 'none',
-                      background: 'transparent',
-                      borderBottom: active ? '2px solid var(--accent-primary)' : '2px solid transparent',
-                      color: active ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                      fontWeight: active ? 700 : 500,
-                      fontSize: '13px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {tab.icon}
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
+              ]}
+              activeTab={detailTab}
+              onChange={(id) => setDetailTab(id as any)}
+              variant="fullWidth"
+            />
 
             {/* Content Pane */}
             <div style={{ minHeight: '280px' }}>

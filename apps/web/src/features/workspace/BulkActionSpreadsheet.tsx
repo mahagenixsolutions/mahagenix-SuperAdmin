@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Save, Check } from 'lucide-react';
+import { Save, Check, ClipboardCheck, GraduationCap, MessageSquare } from 'lucide-react';
 import { mockRoster } from './mockCommandCenterData';
+import { Tabs } from '../../components/ui/Tabs';
 
 type TabType = 'attendance' | 'marks' | 'remarks';
 
@@ -19,6 +20,13 @@ export default function BulkActionSpreadsheet() {
     setRoster(prev => prev.map(student => ({ ...student, attendance: 'present' })));
     triggerToast('📋 Marked all students as Present.');
   };
+
+  const tabsList = [
+    { id: 'attendance', label: 'Attendance', icon: <ClipboardCheck size={14} /> },
+    { id: 'marks', label: 'Marks & Grades', icon: <GraduationCap size={14} /> },
+    { id: 'remarks', label: 'Remarks & Badges', icon: <MessageSquare size={14} /> },
+  ];
+
 
   const handleAttendanceChange = (studentId: string, status: 'present' | 'absent' | 'late') => {
     setRoster(prev => prev.map(s => s.id === studentId ? { ...s, attendance: status } : s));
@@ -68,30 +76,8 @@ export default function BulkActionSpreadsheet() {
       )}
 
       {/* Tabs Header */}
-      <div className="card-header border-b" style={{ padding: '0', display: 'flex', background: 'var(--bg-surface)' }}>
-        {[
-          { id: 'attendance', label: 'Attendance' },
-          { id: 'marks', label: 'Marks & Grades' },
-          { id: 'remarks', label: 'Remarks & Badges' },
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as TabType)}
-            style={{
-              padding: '16px 24px',
-              background: 'none',
-              border: 'none',
-              borderBottom: activeTab === tab.id ? '2px solid var(--color-primary)' : '2px solid transparent',
-              color: activeTab === tab.id ? 'var(--color-primary)' : 'var(--text-secondary)',
-              fontWeight: activeTab === tab.id ? 700 : 500,
-              fontSize: '14px',
-              cursor: 'pointer',
-              transition: 'all 0.2s'
-            }}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="card-header border-b" style={{ padding: '12px 16px', display: 'flex', background: 'var(--bg-surface)' }}>
+        <Tabs tabs={tabsList} activeTab={activeTab} onChange={(id) => setActiveTab(id as TabType)} variant="fullWidth" />
       </div>
 
       {/* Action Toolbar */}

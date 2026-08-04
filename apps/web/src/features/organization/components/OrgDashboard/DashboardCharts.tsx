@@ -49,7 +49,7 @@ export default function DashboardCharts({ financialData, academicData }: ChartsP
         </div>
 
         {/* Period Selector Tabs */}
-        <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: '8px', padding: '2px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', background: 'var(--bg-surface-raised, #F1F5F9)', border: '1px solid var(--border-subtle, rgba(226, 232, 240, 0.8))', borderRadius: '9999px', padding: '3px 4px', gap: '4px' }}>
           {periods.map(p => (
             <button
               key={p}
@@ -57,12 +57,13 @@ export default function DashboardCharts({ financialData, academicData }: ChartsP
               style={{
                 background: selectedPeriod === p ? '#ffffff' : 'transparent',
                 border: 'none',
-                borderRadius: '6px',
-                padding: '6px 12px',
+                borderRadius: '9999px',
+                padding: '5px 12px',
                 fontSize: '11px',
-                fontWeight: 700,
-                color: selectedPeriod === p ? '#1f2937' : '#6b7280',
+                fontWeight: selectedPeriod === p ? 700 : 600,
+                color: selectedPeriod === p ? '#0284C7' : '#475569',
                 cursor: 'pointer',
+                boxShadow: selectedPeriod === p ? '0 2px 6px rgba(2, 132, 199, 0.12)' : 'none',
                 transition: 'all 0.15s'
               }}
             >
@@ -73,7 +74,7 @@ export default function DashboardCharts({ financialData, academicData }: ChartsP
       </div>
 
       {/* Chart Category Tabs */}
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center', background: 'var(--bg-surface-raised, #F1F5F9)', border: '1px solid var(--border-subtle, rgba(226, 232, 240, 0.8))', borderRadius: '9999px', padding: '4px 6px', gap: '4px', marginBottom: '20px' }}>
         {[
           { key: 'finance' as const, label: 'Revenue vs Expense', color: '#10b981' },
           { key: 'attendance' as const, label: 'Attendance Ratio', color: '#3b82f6' },
@@ -83,18 +84,19 @@ export default function DashboardCharts({ financialData, academicData }: ChartsP
             key={tab.key}
             onClick={() => setActiveChart(tab.key)}
             style={{
-              background: activeChart === tab.key ? '#fafbfe' : 'transparent',
-              border: '1px solid',
-              borderColor: activeChart === tab.key ? '#cbd5e1' : '#e5e7eb',
-              borderRadius: '8px',
-              padding: '8px 14px',
-              fontSize: '12px',
-              fontWeight: 700,
-              color: activeChart === tab.key ? '#1f2937' : '#6b7280',
+              background: activeChart === tab.key ? '#ffffff' : 'transparent',
+              border: 'none',
+              borderRadius: '9999px',
+              padding: '8px 18px',
+              fontSize: '13px',
+              fontWeight: activeChart === tab.key ? 700 : 600,
+              color: activeChart === tab.key ? '#0284C7' : '#475569',
               cursor: 'pointer',
-              display: 'flex',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '6px',
+              boxShadow: activeChart === tab.key ? '0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06)' : 'none',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: tab.color }} />

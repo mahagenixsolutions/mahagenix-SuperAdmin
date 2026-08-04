@@ -98,7 +98,7 @@ export default function StudentDashboard() {
           overflow: 'hidden',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20, position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 20, position: 'relative', zIndex: 2 }}>
           <div
             className="avatar-fallback"
             style={{
@@ -109,16 +109,17 @@ export default function StudentDashboard() {
               background: 'rgba(255, 255, 255, 0.15)',
               border: '3px solid rgba(255, 255, 255, 0.3)',
               color: 'white',
+              flexShrink: 0,
             }}
           >
             {initials}
           </div>
-          <div>
+          <div style={{ flex: '1 1 200px', minWidth: 0 }}>
             <span style={{ textTransform: 'uppercase', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', opacity: 0.8 }}>Student Space</span>
-            <h1 style={{ fontSize: 26, fontWeight: 800, margin: '4px 0 0 0' }}>
+            <h1 style={{ fontSize: 'clamp(20px, 5vw, 26px)', fontWeight: 800, margin: '4px 0 0 0' }}>
               Welcome back, {profile?.first_name}! 👋
             </h1>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 12 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12, marginTop: 12 }}>
               <p style={{ opacity: 0.8, fontSize: 13, margin: 0 }}>
                 Class: {profile?.class ? `${profile.class.name} ${profile.class.section}` : 'Unassigned'} · Student ID: {profile?.student_code}
               </p>
@@ -185,6 +186,7 @@ export default function StudentDashboard() {
           borderRadius: 'var(--radius-lg)',
           cursor: 'pointer',
           display: 'flex',
+          flexWrap: 'wrap',
           justifyContent: 'space-between',
           alignItems: 'center',
           gap: 16,

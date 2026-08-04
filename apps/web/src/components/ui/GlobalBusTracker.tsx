@@ -12,41 +12,6 @@ export default function GlobalBusTracker() {
 
   return (
     <>
-      {/* ── Floating Action Button (above AI Chat Widget) ──────────────── */}
-      <button
-        onClick={() => setIsOpen(true)}
-        aria-label="Track Bus"
-        style={{
-          position: 'fixed',
-          bottom: 96, // Placed directly above the AI Chat widget (which is at bottom: 24)
-          right: 24,
-          width: 56,
-          height: 56,
-          borderRadius: '50%',
-          border: 'none',
-          background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-          color: 'white',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45), 0 2px 6px rgba(0, 0, 0, 0.12)',
-          zIndex: 9998,
-          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-          fontSize: 24,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.08)';
-          e.currentTarget.style.boxShadow = '0 8px 28px rgba(217, 119, 6, 0.55), 0 4px 10px rgba(0, 0, 0, 0.15)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = '0 6px 20px rgba(217, 119, 6, 0.45), 0 2px 6px rgba(0, 0, 0, 0.12)';
-        }}
-      >
-        🚌
-      </button>
-
       {/* ── Interactive Mock Map Modal ─────────────────────────────────── */}
       {isOpen && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.7)', zIndex: 10000, display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)', padding: 24 }}>

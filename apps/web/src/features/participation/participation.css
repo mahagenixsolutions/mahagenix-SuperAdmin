@@ -79,39 +79,44 @@
   line-height: 1.2;
 }
 
-/* Tabs */
+/* Tabs (Pill Capsule Design 2) */
 .participation-tabs {
-  display: flex;
-  gap: 12px;
-  border-bottom: 2px solid var(--border-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-surface-raised, #F1F5F9);
+  border: 1px solid var(--border-subtle, rgba(226, 232, 240, 0.8));
+  border-radius: 9999px;
+  padding: 4px 6px;
   margin-bottom: 24px;
-  padding-bottom: 8px;
   overflow-x: auto;
 }
 
 .p-tab {
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
   font-weight: 600;
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 13px;
+  color: var(--text-secondary, #475569);
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
 .p-tab:hover {
-  background: var(--bg-hover, #f3f4f6);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-primary);
 }
 
 .p-tab.active {
-  background: var(--primary-color, #4F46E5);
-  color: white;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  background: #ffffff;
+  color: var(--color-primary, #0284C7);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 /* Actions Header */

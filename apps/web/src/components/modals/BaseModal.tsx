@@ -113,8 +113,8 @@ export default function BaseModal({
           left: 50%;
           transform: translate(-50%, -50%) scale(0.94);
           z-index: 9999;
-          width: 90vw;
-          max-height: 85vh;
+          width: calc(100vw - 32px);
+          max-height: 88vh;
           overflow-y: auto;
           background: #111827;
           border: 1px solid rgba(255, 255, 255, 0.08);
@@ -123,6 +123,16 @@ export default function BaseModal({
           padding: 32px;
           opacity: 0;
           transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 280ms ease-out;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 640px) {
+          .edutrack-modal-panel {
+            width: calc(100vw - 20px) !important;
+            padding: 18px 16px !important;
+            border-radius: 18px !important;
+            max-height: 92vh !important;
+          }
         }
 
         .edutrack-modal-panel.animate-in {

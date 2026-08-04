@@ -10,6 +10,11 @@ import {
   Star,
   UserCheck,
   X,
+  User,
+  Calendar,
+  Sparkles,
+  Edit,
+  Download,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -40,6 +45,7 @@ import {
   useGetStudentProgressHistoryQuery,
 } from './progressApi';
 import { useGetParentAiInsightsQuery } from '../parent/parentApi';
+import { Tabs } from '../../components/ui/Tabs';
 
 // Initial ratings default structures
 const DEFAULT_PARTICIPATION = { discussion: 4, groupWork: 4, projects: 4, presentations: 4, questions: 4 };
@@ -326,22 +332,29 @@ function ProgressPageContent() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, width: '100%', maxWidth: '100%', minWidth: 0 }}>
       {/* Page Header */}
-      <div className="page-header">
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <h1 className="page-title">📈 Daily Progress Management</h1>
+          <h1 className="page-title">Daily Progress Management</h1>
           <p className="page-subtitle" style={{ fontSize: 13, marginTop: 4 }}>
             Track student performance, participation, behavior, homework completion, and daily classroom activities.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button className={`btn btn-sm ${activeTab === 'entry' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('entry')}>
-            📊 Record Daily Progress
-          </button>
-          <button className={`btn btn-sm ${activeTab === 'analytics' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('analytics')}>
-            📈 Analytics Dashboard
-          </button>
-          <button className="btn btn-secondary btn-sm" onClick={handleExport}>
-            📥 Export Report
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <Tabs
+            tabs={[
+              { id: 'entry', label: 'Record Daily Progress', icon: <Edit size={14} /> },
+              { id: 'analytics', label: 'Analytics Dashboard', icon: <TrendingUp size={14} /> }
+            ]}
+            activeTab={activeTab}
+            onChange={(id) => setActiveTab(id as 'entry' | 'analytics')}
+            variant="default"
+          />
+          <button 
+            className="btn btn-secondary btn-sm" 
+            onClick={handleExport}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', height: 38 }}
+          >
+            <Download size={14} /> Export Report
           </button>
         </div>
       </div>
@@ -1110,55 +1123,18 @@ function StudentDetailDrawer({ studentId, onClose }: StudentDetailDrawerProps) {
       </div>
 
       {/* Drawer Tabs */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-secondary)' }}>
-        <button
-          className="btn btn-ghost"
-          style={{
-            flex: 1, borderRadius: 0, padding: 12, fontSize: 13,
-            borderBottom: activeTab === 'profile' ? '2.5px solid var(--color-primary)' : 'none',
-            color: activeTab === 'profile' ? 'var(--color-primary)' : 'var(--text-secondary)',
-            fontWeight: activeTab === 'profile' ? 600 : 500,
-          }}
-          onClick={() => setActiveTab('profile')}
-        >
-          👤 Profile
-        </button>
-        <button
-          className="btn btn-ghost"
-          style={{
-            flex: 1, borderRadius: 0, padding: 12, fontSize: 13,
-            borderBottom: activeTab === 'timeline' ? '2.5px solid var(--color-primary)' : 'none',
-            color: activeTab === 'timeline' ? 'var(--color-primary)' : 'var(--text-secondary)',
-            fontWeight: activeTab === 'timeline' ? 600 : 500,
-          }}
-          onClick={() => setActiveTab('timeline')}
-        >
-          📅 Timeline
-        </button>
-        <button
-          className="btn btn-ghost"
-          style={{
-            flex: 1, borderRadius: 0, padding: 12, fontSize: 13,
-            borderBottom: activeTab === 'trends' ? '2.5px solid var(--color-primary)' : 'none',
-            color: activeTab === 'trends' ? 'var(--color-primary)' : 'var(--text-secondary)',
-            fontWeight: activeTab === 'trends' ? 600 : 500,
-          }}
-          onClick={() => setActiveTab('trends')}
-        >
-          📈 Trends
-        </button>
-        <button
-          className="btn btn-ghost"
-          style={{
-            flex: 1, borderRadius: 0, padding: 12, fontSize: 13,
-            borderBottom: activeTab === 'ai' ? '2.5px solid var(--color-primary)' : 'none',
-            color: activeTab === 'ai' ? 'var(--color-primary)' : 'var(--text-secondary)',
-            fontWeight: activeTab === 'ai' ? 600 : 500,
-          }}
-          onClick={() => setActiveTab('ai')}
-        >
-          ✨ AI Insights
-        </button>
+      <div style={{ padding: '10px 16px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
+        <Tabs
+          tabs={[
+            { id: 'profile', label: 'Profile', icon: <User size={14} /> },
+            { id: 'timeline', label: 'Timeline', icon: <Calendar size={14} /> },
+            { id: 'trends', label: 'Trends', icon: <TrendingUp size={14} /> },
+            { id: 'ai', label: 'AI Insights', icon: <Sparkles size={14} /> },
+          ]}
+          activeTab={activeTab}
+          onChange={(id) => setActiveTab(id as 'profile' | 'timeline' | 'trends' | 'ai')}
+          variant="fullWidth"
+        />
       </div>
 
       {/* Drawer Body Scroll */}

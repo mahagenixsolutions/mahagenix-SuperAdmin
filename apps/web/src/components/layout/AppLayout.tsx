@@ -4,42 +4,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { RootState } from '../../store';
 import Sidebar from './Sidebar';
-import { setSelectedStudent, logout, switchMockRole } from '../../store/authSlice';
-import { useGetLinkedStudentsQuery } from '../../features/parent/parentApi';
-import { useLazyGetStudentsQuery } from '../../features/students/studentsApi';
+import { logout, switchMockRole } from '../../store/authSlice';
 
 const BREADCRUMB_MAP: Record<string, string> = {
   '/dashboard': 'Dashboard',
   '/analytics': 'Analytics',
-  '/students': 'Students',
-  '/attendance': 'Attendance',
-  '/marks': 'Marks',
-  '/progress': 'Daily Progress',
-  '/participation': 'Participation',
-  '/classes': 'Classes',
-  '/subjects': 'Subjects',
-  '/academic-years': 'Academic Years',
-  '/users': 'Users',
-  '/events': 'Events',
   '/notifications': 'Notifications',
   '/audit-logs': 'Audit Logs',
   '/reports': 'Reports',
-  '/timeline': 'Timeline',
-  '/messages': 'Messages',
-  '/profile': 'Profile',
-  '/gallery': 'Gallery',
-  '/puzzles': 'Logic & Puzzles',
-  '/teachers': 'Teachers',
-  '/parents': 'Parents',
-  '/admissions': 'Admissions',
-  '/academic': 'Academic Setup',
-  '/exams': 'Examinations',
-  '/fees': 'Fee Management',
-  '/library': 'Library',
-  '/transport': 'Transport',
-  '/hr': 'Human Resources',
-  '/inventory': 'Inventory',
-  '/communication': 'Communication',
+  '/finance': 'Finance Portal',
+  '/library': 'Library Workspace',
+  '/transport': 'Transport Workspace',
+  '/hostel': 'Hostel Workspace',
+  '/hr': 'Human Resources Workspace',
+  '/reception': 'Reception Workspace',
+  '/security': 'Security Command Center',
   '/settings': 'Settings',
   '/org/branches': 'School Branches',
   '/org/principals': 'Branch Administrators Directory',
@@ -54,20 +33,23 @@ const BREADCRUMB_MAP: Record<string, string> = {
   '/org/audit-logs': 'Organization Audit Logs',
   '/org/subscription': 'Organization Subscription',
   '/org/settings': 'Organization Settings',
+  '/principal/approvals': 'Executive Approval Center',
+  '/principal/profile': 'Executive Profile',
+  '/principal/settings': 'Executive Settings',
 };
 
 export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window !== 'undefined') {
-      return window.innerWidth <= 768;
+      return window.innerWidth <= 1023;
     }
     return false;
   });
   
-  // Collapse sidebar automatically on mount / resize if on mobile viewport
+  // Collapse sidebar automatically on mount / resize if on tablet or mobile viewport
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 1023) {
         setCollapsed(true);
       }
     };
@@ -77,12 +59,10 @@ export default function AppLayout() {
   }, []);
 
   const user = useSelector((s: RootState) => s.auth.user);
-  const selectedStudent = useSelector((s: RootState) => s.auth.selected_student);
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isParentOrStudent = user?.role === 'PARENT' || user?.role === 'STUDENT';
   const pageTitle = BREADCRUMB_MAP[location.pathname] || 'EduTrack AI';
 
   // Sync dark theme state from localStorage on mount
@@ -91,29 +71,12 @@ export default function AppLayout() {
     document.documentElement.dataset.theme = savedTheme;
   }, []);
 
-  // Fetch linked students if parent or student
-  const { data: linkedStudents } = useGetLinkedStudentsQuery(undefined, {
-    skip: !isParentOrStudent,
-  });
-
-  // Auto-select first child/student if none is selected
-  useEffect(() => {
-    if (isParentOrStudent && !selectedStudent && linkedStudents && linkedStudents.length > 0) {
-      dispatch(setSelectedStudent(linkedStudents[0]));
-    }
-  }, [isParentOrStudent, selectedStudent, linkedStudents, dispatch]);
-
-  // Child Switcher dropdown state
-  const [showChildDropdown, setShowChildDropdown] = useState(false);
-
   // User Profile dropdown state
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   // Global Search state for staff
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const [triggerSearch, { data: searchResults, isFetching: isSearching }] =
-    useLazyGetStudentsQuery();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Handle hotkeys (focus search with '/')
@@ -134,12 +97,7 @@ export default function AppLayout() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-    if (query.trim().length > 1) {
-      triggerSearch({ page: 1, limit: 10, search: query });
-      setShowSearchResults(true);
-    } else {
-      setShowSearchResults(false);
-    }
+    setShowSearchResults(query.trim().length > 1);
   };
 
   const handleLogout = () => {
@@ -147,253 +105,65 @@ export default function AppLayout() {
     navigate('/login');
   };
   return (
-    <div
-      className="app-layout"
-      style={
-        isParentOrStudent
-          ? { display: 'block', minHeight: '100vh', background: 'var(--bg-secondary)' }
-          : undefined
-      }
-    >
-      {!isParentOrStudent && (
-        <>
-          <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-          
-          {/* Floating Circle Desktop Toggle Button */}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="desktop-sidebar-toggle"
-            style={{
-              position: 'fixed',
-              top: 28,
-              left: collapsed ? 'calc(var(--sidebar-collapsed) - 12px)' : 'calc(var(--sidebar-width) - 12px)',
-              width: 24,
-              height: 24,
-              borderRadius: '50%',
-              background: 'var(--bg-surface)',
-              border: '1.5px solid var(--border-color)',
-              color: 'var(--text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 1001,
-              boxShadow: 'var(--shadow-sm)',
-              transition: 'left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, border-color 0.2s ease',
-              padding: 0,
-            }}
-            title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-          >
-            {collapsed ? (
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            ) : (
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-            )}
-          </button>
+    <div className="app-layout">
+      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
+      
+      {/* Floating Circle Desktop Toggle Button */}
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className="desktop-sidebar-toggle"
+        style={{
+          position: 'fixed',
+          top: 28,
+          left: collapsed ? 'calc(var(--sidebar-collapsed) - 12px)' : 'calc(var(--sidebar-width) - 12px)',
+          width: 24,
+          height: 24,
+          borderRadius: '50%',
+          background: 'var(--bg-surface)',
+          border: '1.5px solid var(--border-color)',
+          color: 'var(--text-primary)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          zIndex: 1001,
+          boxShadow: 'var(--shadow-sm)',
+          transition: 'left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, border-color 0.2s ease',
+          padding: 0,
+        }}
+        title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+      >
+        {collapsed ? (
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        ) : (
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        )}
+      </button>
 
-          {!collapsed && (
-            <div
-              className="mobile-backdrop"
-              onClick={() => setCollapsed(true)}
-              style={{
-                display: 'none',
-                position: 'fixed',
-                inset: 0,
-                background: 'rgba(0, 0, 0, 0.3)',
-                backdropFilter: 'blur(3px)',
-                zIndex: 99,
-              }}
-            />
-          )}
-        </>
+      {!collapsed && (
+        <div
+          className="mobile-backdrop"
+          onClick={() => setCollapsed(true)}
+          style={{
+            display: 'none',
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.3)',
+            backdropFilter: 'blur(3px)',
+            zIndex: 99,
+          }}
+        />
       )}
 
-      <div
-        className={`main-content${collapsed ? ' sidebar-collapsed' : ''}`}
-        style={isParentOrStudent ? { marginLeft: 0 } : undefined}
-      >
+      <div className={`main-content${collapsed ? ' sidebar-collapsed' : ''}`}>
         {/* Topbar */}
         <header className="topbar">
           <div className="topbar-left">
-            {isParentOrStudent ? (
-              <div style={{ position: 'relative' }}>
-                <button
-                  onClick={() => setShowChildDropdown(!showChildDropdown)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    background: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '6px 12px',
-                    cursor: 'pointer',
-                    color: 'var(--text-primary)',
-                    fontWeight: 600,
-                    fontSize: 14,
-                    transition: 'var(--transition-fast)',
-                  }}
-                >
-                  <div
-                    className="avatar-fallback"
-                    style={{
-                      width: 28,
-                      height: 28,
-                      fontSize: 10,
-                      fontWeight: 700,
-                      background:
-                        'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
-                      color: 'white',
-                    }}
-                  >
-                    {selectedStudent
-                      ? `${selectedStudent.first_name?.[0] ?? ''}${selectedStudent.last_name?.[0] ?? ''}`.toUpperCase()
-                      : '??'}
-                  </div>
-                  <span>
-                    {selectedStudent
-                      ? `${selectedStudent.first_name} ${selectedStudent.last_name}`
-                      : 'Select Child'}
-                  </span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    style={{
-                      transform: showChildDropdown ? 'rotate(180deg)' : 'none',
-                      transition: 'transform 0.2s',
-                    }}
-                  >
-                    <path d="M7 10l5 5 5-5z" />
-                  </svg>
-                </button>
-
-                {showChildDropdown && linkedStudents && linkedStudents.length > 0 && (
-                  <>
-                    <div
-                      style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        zIndex: 999,
-                      }}
-                      onClick={() => setShowChildDropdown(false)}
-                    />
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: 0,
-                        marginTop: 8,
-                        background: 'var(--bg-secondary)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: 'var(--radius-md)',
-                        boxShadow: 'var(--shadow-lg)',
-                        zIndex: 1000,
-                        minWidth: 220,
-                        padding: 6,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
-                      }}
-                    >
-                      <div
-                        style={{
-                          padding: '6px 12px',
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: 'var(--text-muted)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em',
-                        }}
-                      >
-                        Linked Students
-                      </div>
-                      {linkedStudents.map((student: any) => (
-                        <button
-                          key={student.id}
-                          onClick={() => {
-                            dispatch(setSelectedStudent(student));
-                            setShowChildDropdown(false);
-                          }}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 10,
-                            width: '100%',
-                            padding: '8px 12px',
-                            border: 'none',
-                            background:
-                              selectedStudent?.id === student.id
-                                ? 'var(--color-primary-surface)'
-                                : 'none',
-                            color:
-                              selectedStudent?.id === student.id
-                                ? 'var(--color-primary)'
-                                : 'var(--text-primary)',
-                            borderRadius: 'var(--radius-sm)',
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                            fontWeight: selectedStudent?.id === student.id ? 600 : 500,
-                          }}
-                          onMouseEnter={(e) => {
-                            if (selectedStudent?.id !== student.id) {
-                              e.currentTarget.style.background = 'var(--bg-primary)';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (selectedStudent?.id !== student.id) {
-                              e.currentTarget.style.background = 'none';
-                            }
-                          }}
-                        >
-                          <div
-                            className="avatar-fallback"
-                            style={{
-                              width: 24,
-                              height: 24,
-                              fontSize: 9,
-                              fontWeight: 700,
-                              background:
-                                'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
-                              color: 'white',
-                            }}
-                          >
-                            {student.first_name?.[0] ?? ''}
-                            {student.last_name?.[0] ?? ''}
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div
-                              style={{
-                                fontSize: 13,
-                                textOverflow: 'ellipsis',
-                                overflow: 'hidden',
-                                whiteSpace: 'nowrap',
-                              }}
-                            >
-                              {student.first_name} {student.last_name}
-                            </div>
-                            <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>
-                              {student.class
-                                ? `${student.class.name} ${student.class.section}`
-                                : 'Class Unassigned'}
-                            </div>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <button
                   className="mobile-menu-toggle"
                   onClick={() => setCollapsed(!collapsed)}
@@ -417,207 +187,156 @@ export default function AppLayout() {
                   </svg>
                 </button>
                 <div className="breadcrumb" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--text-muted)', fontFamily: 'Inter, sans-serif' }}>
-                  <span>EduTrack AI</span>
-                  <span style={{ color: 'var(--text-muted)' }}>&gt;</span>
+                  <span className="mobile-hidden">EduTrack AI</span>
+                  <span className="mobile-hidden" style={{ color: 'var(--text-muted)' }}>&gt;</span>
                   {location.pathname.includes('/analytics/') && (
                     <>
-                      <span>Analytics</span>
-                      <span style={{ color: 'var(--text-muted)' }}>&gt;</span>
+                      <span className="mobile-hidden">Analytics</span>
+                      <span className="mobile-hidden" style={{ color: 'var(--text-muted)' }}>&gt;</span>
                     </>
                   )}
                   <span className="breadcrumb-current" style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{pageTitle}</span>
                 </div>
               </div>
-            )}
           </div>
 
           <div className="topbar-right">
             {/* Global Search for Staff */}
-            {!isParentOrStudent && (
-              <div className="search-bar mobile-hidden" style={{ position: 'relative' }}>
-                <span className="search-bar-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-muted)">
-                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                  </svg>
-                </span>
-                <input
-                  ref={searchInputRef}
-                  type="search"
-                  className="form-input"
-                  placeholder="Search students, reports, branches... (Ctrl + /)"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  onFocus={() => searchQuery.trim().length > 1 && setShowSearchResults(true)}
-                  style={{ height: 38, fontSize: 13, paddingRight: 12 }}
-                />
+            <div className="search-bar mobile-hidden" style={{ position: 'relative' }}>
+              <span className="search-bar-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-muted)">
+                  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+              </span>
+              <input
+                ref={searchInputRef}
+                type="search"
+                className="form-input"
+                placeholder="Search staff, reports, branches... (Ctrl + /)"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onFocus={() => searchQuery.trim().length > 1 && setShowSearchResults(true)}
+                style={{ height: 38, fontSize: 13, paddingRight: 12 }}
+              />
 
-                {showSearchResults && (
-                  <>
-                    <div
-                      style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        zIndex: 999,
-                      }}
-                      onClick={() => setShowSearchResults(false)}
-                    />
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: 0,
-                        right: 0,
-                        marginTop: 8,
-                        background: 'var(--bg-secondary)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: 'var(--radius-md)',
-                        boxShadow: 'var(--shadow-lg)',
-                        zIndex: 1000,
-                        maxHeight: 320,
-                        overflowY: 'auto',
-                        padding: 6,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
-                      }}
-                    >
-                      {isSearching && (
-                        <div
-                          style={{
-                            padding: 12,
-                            textAlign: 'center',
-                            fontSize: 13,
-                            color: 'var(--text-muted)',
-                          }}
-                        >
-                          Searching...
-                        </div>
-                      )}
-                      {!isSearching &&
-                        (!searchResults?.data || searchResults.data.length === 0) && (
-                          <div
-                            style={{
-                              padding: 12,
-                              textAlign: 'center',
-                              fontSize: 13,
-                              color: 'var(--text-muted)',
-                            }}
-                          >
-                            No students found
-                          </div>
-                        )}
-                      {!isSearching &&
-                        searchResults?.data &&
-                        searchResults.data.length > 0 &&
-                        searchResults.data.map((student: any) => {
-                          const initials =
-                            `${student.first_name?.[0] ?? ''}${student.last_name?.[0] ?? ''}`.toUpperCase();
-                          return (
-                            <button
-                              key={student.id}
-                              onClick={() => {
-                                navigate(`/students/${student.id}`);
-                                setShowSearchResults(false);
-                                setSearchQuery('');
-                              }}
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 12,
-                                width: '100%',
-                                padding: '8px 12px',
-                                border: 'none',
-                                background: 'none',
-                                color: 'var(--text-primary)',
-                                borderRadius: 'var(--radius-sm)',
-                                cursor: 'pointer',
-                                textAlign: 'left',
-                              }}
-                              onMouseEnter={(e) =>
-                                (e.currentTarget.style.background = 'var(--bg-primary)')
-                              }
-                              onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
-                            >
-                              <div
-                                className="avatar-fallback"
-                                style={{
-                                  width: 32,
-                                  height: 32,
-                                  fontSize: 11,
-                                  fontWeight: 700,
-                                  background:
-                                    'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
-                                  color: 'white',
-                                }}
-                              >
-                                {initials}
-                              </div>
-                              <div>
-                                <div style={{ fontSize: 13, fontWeight: 600 }}>
-                                  {student.first_name} {student.last_name}
-                                </div>
-                                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                                  #{student.student_code} ·{' '}
-                                  {student.class
-                                    ? `${student.class.name} ${student.class.section}`
-                                    : 'Unassigned'}
-                                </div>
-                              </div>
-                            </button>
-                          );
-                        })}
+              {showSearchResults && (
+                <>
+                  <div
+                    style={{
+                      position: 'fixed',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      zIndex: 999,
+                    }}
+                    onClick={() => setShowSearchResults(false)}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      right: 0,
+                      marginTop: 8,
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
+                      borderRadius: 'var(--radius-md)',
+                      boxShadow: 'var(--shadow-lg)',
+                      zIndex: 1000,
+                      maxHeight: 280,
+                      overflowY: 'auto',
+                      padding: 8,
+                    }}
+                  >
+                    <div style={{ padding: 8, fontSize: 12, color: 'var(--text-muted)' }}>
+                      Quick Links matching "{searchQuery}":
                     </div>
-                  </>
-                )}
-              </div>
-            )}
+                    {[
+                      { label: 'Finance Workspace', path: '/finance' },
+                      { label: 'HR Workspace', path: '/hr' },
+                      { label: 'Reception & Visitors', path: '/reception' },
+                      { label: 'Library Desk', path: '/library' },
+                      { label: 'Transport & Fleet', path: '/transport' },
+                      { label: 'Hostel & Roll Call', path: '/hostel' },
+                      { label: 'Security Command Center', path: '/security' },
+                      { label: 'Executive Analytics', path: '/analytics' },
+                    ]
+                      .filter(item => item.label.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .map(item => (
+                        <button
+                          key={item.path}
+                          onClick={() => {
+                            navigate(item.path);
+                            setShowSearchResults(false);
+                            setSearchQuery('');
+                          }}
+                          style={{
+                            display: 'block',
+                            width: '100%',
+                            padding: '8px 12px',
+                            border: 'none',
+                            background: 'none',
+                            color: 'var(--text-primary)',
+                            textAlign: 'left',
+                            borderRadius: 'var(--radius-sm)',
+                            cursor: 'pointer',
+                            fontSize: 13,
+                            fontWeight: 500,
+                          }}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-primary)')}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                  </div>
+                </>
+              )}
+            </div>
+
 
             {/* Notifications */}
-            {!isParentOrStudent && (
-              <button
-                id="topbar-notifications"
-                onClick={() => navigate('/notifications')}
-                style={{
-                  position: 'relative',
-                  background: 'var(--bg-secondary)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: 'var(--radius-md)',
-                  width: 38,
-                  height: 38,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  color: 'var(--text-secondary)',
-                  transition: 'var(--transition-fast)',
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
-                </svg>
-                <span style={{
-                  position: 'absolute',
-                  top: -4,
-                  right: -4,
-                  background: '#ef4444',
-                  color: 'white',
-                  borderRadius: '50%',
-                  width: 16,
-                  height: 16,
-                  fontSize: 10,
-                  fontWeight: 700,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: 'Inter, sans-serif'
-                }}>
-                  3
-                </span>
-              </button>
-            )}
+            <button
+              id="topbar-notifications"
+              onClick={() => navigate('/notifications')}
+              style={{
+                position: 'relative',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-md)',
+                width: 38,
+                height: 38,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: 'var(--text-secondary)',
+                transition: 'var(--transition-fast)',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+              </svg>
+              <span style={{
+                position: 'absolute',
+                top: -4,
+                right: -4,
+                background: '#ef4444',
+                color: 'white',
+                borderRadius: '50%',
+                width: 16,
+                height: 16,
+                fontSize: 10,
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'Inter, sans-serif'
+              }}>
+                3
+              </span>
+            </button>
 
             {/* Theme toggle */}
             <button
@@ -649,32 +368,25 @@ export default function AppLayout() {
 
             {/* User avatar menu */}
             <select
-              value={user?.role || 'SCHOOL_ADMIN'}
+              value={user?.role || 'ORGANIZATION_ADMIN'}
               onChange={(event) => {
                 dispatch(switchMockRole(event.target.value as any));
                 navigate('/dashboard');
               }}
               className="form-select demo-role-switcher"
               title="Switch demo role"
-              style={{ height: 38, width: 150, fontSize: 12, fontWeight: 700 }}
+              style={{ height: 38, width: 160, fontSize: 12, fontWeight: 700 }}
             >
-              <option value="SCHOOL_ADMIN">School Admin</option>
               <option value="ORGANIZATION_ADMIN">Organization Admin</option>
-              <option value="SUPER_ADMIN">Super Admin</option>
               <option value="PRINCIPAL">Principal</option>
-              <option value="VICE_PRINCIPAL">Vice Principal</option>
-              <option value="TEACHER">Teacher</option>
+              <option value="ACADEMIC_COORDINATOR">Academic Coordinator</option>
               <option value="ACCOUNTANT">Accountant</option>
+              <option value="HR">HR Manager</option>
               <option value="LIBRARIAN">Librarian</option>
-              <option value="HR">HR</option>
               <option value="TRANSPORT_MANAGER">Transport Manager</option>
               <option value="HOSTEL_MANAGER">Hostel Manager</option>
               <option value="RECEPTIONIST">Receptionist</option>
-              <option value="SECURITY">Security</option>
-              <option value="NURSE">Nurse</option>
-              <option value="COUNSELOR">Counselor</option>
-              <option value="PARENT">Parent</option>
-              <option value="STUDENT">Student</option>
+              <option value="SECURITY">Security Officer</option>
             </select>
 
             {/* User avatar menu */}
@@ -748,12 +460,16 @@ export default function AppLayout() {
                       borderRadius: 'var(--radius-md)',
                       boxShadow: 'var(--shadow-lg)',
                       zIndex: 1000,
-                      minWidth: 160,
+                      minWidth: 220,
+                      maxWidth: 'min(280px, calc(100vw - 24px))',
+                      maxHeight: 'min(520px, calc(100dvh - 80px))',
+                      overflowY: 'auto',
                       padding: 4,
                       display: 'flex',
                       flexDirection: 'column',
                     }}
                   >
+                    {/* User Info Header */}
                     <div
                       style={{
                         padding: '8px 12px',
@@ -766,6 +482,8 @@ export default function AppLayout() {
                       </div>
                       <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{user?.email}</div>
                     </div>
+
+                    {/* Logout */}
                     <button
                       onClick={handleLogout}
                       style={{
@@ -799,14 +517,7 @@ export default function AppLayout() {
         </header>
 
         {/* Page Content */}
-        <main
-          className="page-container"
-          style={
-            isParentOrStudent
-              ? { padding: '16px', paddingBottom: '90px', maxWidth: '100%', overflowX: 'hidden' }
-              : { overflowX: 'hidden' }
-          }
-        >
+        <main className="page-container" style={{ overflowX: 'hidden' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
@@ -821,158 +532,6 @@ export default function AppLayout() {
           </AnimatePresence>
         </main>
       </div>
-
-      {/* Parent Bottom Navigation (Mobile-first layout) */}
-      {isParentOrStudent && (
-        <nav
-          className="bottom-nav"
-          style={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 64,
-            background: 'var(--bg-secondary)',
-            borderTop: '1px solid var(--border-color)',
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            zIndex: 1000,
-            boxShadow: '0 -4px 16px rgba(0, 0, 0, 0.06)',
-            backdropFilter: 'blur(12px)',
-          }}
-        >
-          <NavLink
-            to="/dashboard"
-            style={({ isActive }) => ({
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
-              textDecoration: 'none',
-              fontSize: 10,
-              fontWeight: 600,
-              gap: 4,
-              flex: 1,
-              height: '100%',
-            })}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-            </svg>
-            <span>Dashboard</span>
-          </NavLink>
-          <NavLink
-            to="/timeline"
-            style={({ isActive }) => ({
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
-              textDecoration: 'none',
-              fontSize: 10,
-              fontWeight: 600,
-              gap: 4,
-              flex: 1,
-              height: '100%',
-            })}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
-            </svg>
-            <span>Timeline</span>
-          </NavLink>
-          <NavLink
-            to="/messages"
-            style={({ isActive }) => ({
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
-              textDecoration: 'none',
-              fontSize: 10,
-              fontWeight: 600,
-              gap: 4,
-              flex: 1,
-              height: '100%',
-            })}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" />
-            </svg>
-            <span>Messages</span>
-          </NavLink>
-          {user?.role === 'STUDENT' ? (
-            <NavLink
-              to="/puzzles"
-              style={({ isActive }) => ({
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
-                textDecoration: 'none',
-                fontSize: 10,
-                fontWeight: 600,
-                gap: 4,
-                flex: 1,
-                height: '100%',
-              })}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5c0-1.38-1.12-2.5-2.5-2.5S8 2.12 8 3.5V5H4c-1.1 0-2 .9-2 2v4h1.5c1.38 0 2.5 1.12 2.5 2.5S4.88 16 3.5 16H2v4c0 1.1.9 2 2 2h4v-1.5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5V22h4c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z" />
-              </svg>
-              <span>Puzzles</span>
-            </NavLink>
-          ) : (
-            <NavLink
-              to="/gallery"
-              style={({ isActive }) => ({
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
-                textDecoration: 'none',
-                fontSize: 10,
-                fontWeight: 600,
-                gap: 4,
-                flex: 1,
-                height: '100%',
-              })}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-              </svg>
-              <span>Gallery</span>
-            </NavLink>
-          )}
-          <NavLink
-            to="/profile"
-            style={({ isActive }) => ({
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
-              textDecoration: 'none',
-              fontSize: 10,
-              fontWeight: 600,
-              gap: 4,
-              flex: 1,
-              height: '100%',
-            })}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-            </svg>
-            <span>Profile</span>
-          </NavLink>
-        </nav>
-      )}
     </div>
   );
 }

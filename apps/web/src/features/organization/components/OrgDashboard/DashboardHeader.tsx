@@ -1,4 +1,6 @@
 
+import { Calendar, Building2, MapPin, Clock, Coins } from 'lucide-react';
+
 interface HeaderProps {
   onOpenPreferences: () => void;
   onGenerateReport: () => void;
@@ -84,11 +86,11 @@ export default function DashboardHeader({ onOpenPreferences, onGenerateReport, o
               flexWrap: 'wrap'
             }}
           >
-            <span>📅 AY: 2026-27</span>
-            <span>🏢 Total Branches: 5</span>
-            <span>📍 Active: 5 / 5</span>
-            <span>🕒 Last Synced: Today, 08:30 PM</span>
-            <span>💰 Fiscal Period: FY26</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Calendar size={12} /> AY: 2026-27</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Building2 size={12} /> Total Branches: 5</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> Active: 5 / 5</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Clock size={12} /> Last Synced: Today, 08:30 PM</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Coins size={12} /> Fiscal Period: FY26</span>
           </div>
         </div>
       </div>

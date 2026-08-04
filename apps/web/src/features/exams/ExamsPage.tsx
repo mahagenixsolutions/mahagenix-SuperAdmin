@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { PageLayout } from '../../components/erp/PageLayout';
-import { PageHeader } from '../../components/erp/PageHeader';
 import { DataGrid } from '../../components/erp/DataGrid';
 import type { GridColumn } from '../../components/erp/DataGrid';
-import { KPICard } from '../../components/erp/KPICard';
 import { StatusBadge } from '../../components/erp/StatusBadge';
+import { Tabs } from '../../components/ui/Tabs';
 import { 
-  Plus, Calendar, Award, FileSpreadsheet, Send, ShieldAlert, FileText, CheckCircle
+  Plus, Calendar, Award, FileSpreadsheet, Send, ShieldAlert, FileText, CheckCircle, 
+  ClipboardList, Check, X, Clock, ChevronRight, Info, Lightbulb, HelpCircle, ArrowRight
 } from 'lucide-react';
 
 interface ExamType {
@@ -116,101 +116,522 @@ const ExamsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Page Header */}
-      <PageHeader
-        title="Exams & Grading Portal"
-        subtitle="Schedule examinations, verify candidate hall tickets, record subject marks, and release final GPA results"
-        breadcrumbs={[{ label: 'Exams' }]}
-        actions={
-          <button className="btn btn-primary btn-sm" style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-            <Plus size={15} /> Create Exam Block
-          </button>
-        }
-      />
+      {/* Redesigned Custom Header matching mockup */}
+      <div style={{
+        background: '#ffffff',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: '16px',
+        padding: '24px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)',
+        fontFamily: 'Inter, sans-serif',
+        marginBottom: '24px',
+        flexWrap: 'wrap',
+        gap: '24px',
+      }}>
+        {/* Left Side Header Text */}
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <div style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '16px',
+            background: 'rgba(99, 102, 241, 0.08)',
+            color: '#4f46e5',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <ClipboardList size={28} />
+          </div>
+          <div>
+            <h1 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+              Exams & Grading Portal
+            </h1>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '6px 0 0 0', lineHeight: 1.4, maxWidth: '600px' }}>
+              Schedule examinations, verify candidate hall tickets, record subject marks, and release final GPA results.
+            </p>
+          </div>
+        </div>
 
-      {/* KPI Section */}
+        {/* Right Side Header Graphic Illustration */}
+        <div style={{
+          display: 'flex',
+          gap: '20px',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}>
+          {/* SVG Illustration: Checklist clipboard, pencil, graduation cap, books stack */}
+          <div style={{
+            width: '240px',
+            height: '90px',
+            opacity: 0.95,
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}>
+            <svg viewBox="0 0 200 100" width="100%" height="100%">
+              {/* Clipboard checklist */}
+              <rect x="110" y="10" width="45" height="70" rx="5" fill="#F8FAFC" stroke="#94A3B8" strokeWidth={1.5} />
+              <rect x="120" y="6" width="25" height="8" rx="2" fill="#475569" />
+              <circle cx="120" cy="28" r="3" fill="#10B981" />
+              <line x1="128" y1="28" x2="148" y2="28" stroke="#94A3B8" strokeWidth={2} strokeLinecap="round" />
+              <circle cx="120" cy="44" r="3" fill="#10B981" />
+              <line x1="128" y1="44" x2="148" y2="44" stroke="#94A3B8" strokeWidth={2} strokeLinecap="round" />
+              <circle cx="120" cy="60" r="3" fill="#10B981" />
+              <line x1="128" y1="60" x2="142" y2="60" stroke="#94A3B8" strokeWidth={2} strokeLinecap="round" />
+              
+              {/* Pencil */}
+              <path d="M165,30 L170,25 L175,30 L170,35 Z" fill="#F59E0B" />
+              <line x1="168" y1="32" x2="155" y2="55" stroke="#475569" strokeWidth={2.5} strokeLinecap="round" />
+              
+              {/* Stacked books with graduation cap */}
+              <path d="M30,70 L90,70 L90,82 L30,82 Z" fill="#4F46E5" />
+              <path d="M34,58 L86,58 L86,70 L34,70 Z" fill="#8B5CF6" />
+              <path d="M60,35 L85,42 L60,49 L35,42 Z" fill="#1E1B4B" />
+              <rect x="53" y="44" width="14" height="8" fill="#1E1B4B" />
+              <path d="M72,42 L80,48 L80,56" fill="none" stroke="#F59E0B" strokeWidth={1.5} />
+            </svg>
+          </div>
+
+          <button 
+            className="btn btn-primary" 
+            style={{
+              background: '#4f46e5',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '10px',
+              padding: '10px 20px',
+              fontSize: '14px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              boxShadow: '0 4px 6px -1px rgba(79, 70, 229, 0.25)',
+            }}
+          >
+            <Plus size={16} /> Create Exam Block
+          </button>
+        </div>
+      </div>
+
+      {/* Replaced KPI Summaries Card Row with exact mockup */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
         gap: '24px',
-        marginTop: '24px',
         marginBottom: '24px'
       }}>
-        <KPICard title="Scheduled Exams" value={mockSchedules.length} icon={<Calendar size={20} />} accentColor="var(--accent-primary)" />
-        <KPICard title="Active Exam Types" value={mockExamTypes.length} icon={<Award size={20} />} accentColor="var(--accent-violet)" />
-        <KPICard title="Dossiers Drafted" value="12 Classes" icon={<FileText size={20} />} accentColor="var(--accent-success)" />
-        <KPICard title="Grades Released" value="0%" icon={<Send size={20} />} accentColor="var(--accent-warning)" />
+        {/* Card 1: Scheduled Exams */}
+        <div style={{
+          background: '#ffffff',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: '16px',
+          padding: '24px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          fontFamily: 'Inter, sans-serif',
+          position: 'relative',
+        }}>
+          <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+            <div style={{
+              width: '36px', height: '36px', borderRadius: '50%',
+              background: 'rgba(59, 130, 246, 0.1)', color: '#3B82F6',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Calendar size={18} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>Scheduled Exams</span>
+              <span style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{mockSchedules.length}</span>
+              <div style={{ width: '20px', height: '2px', background: '#3B82F6', borderRadius: '1px' }} />
+              <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', marginTop: '10px' }}>This Term</span>
+            </div>
+          </div>
+          <div style={{ alignSelf: 'flex-end', paddingBottom: '4px' }}>
+            <svg width="65" height="40">
+              <path d="M5,35 Q20,30 35,20 T65,8" fill="none" stroke="#3B82F6" strokeWidth={2} strokeLinecap="round"/>
+              <circle cx="65" cy="8" r="3" fill="#3B82F6"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* Card 2: Active Exam Types */}
+        <div style={{
+          background: '#ffffff',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: '16px',
+          padding: '24px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          fontFamily: 'Inter, sans-serif',
+          position: 'relative',
+        }}>
+          <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+            <div style={{
+              width: '36px', height: '36px', borderRadius: '50%',
+              background: 'rgba(34, 197, 94, 0.1)', color: '#22C55E',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Award size={18} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>Active Exam Types</span>
+              <span style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{mockExamTypes.length}</span>
+              <div style={{ width: '20px', height: '2px', background: '#22C55E', borderRadius: '1px' }} />
+              <span style={{ fontSize: '11px', fontWeight: 700, color: '#22C55E', marginTop: '10px' }}>Currently Active</span>
+            </div>
+          </div>
+          <div style={{ alignSelf: 'flex-end', paddingBottom: '4px' }}>
+            <svg width="65" height="40">
+              <path d="M5,35 Q20,32 35,22 T65,12" fill="none" stroke="#22C55E" strokeWidth={2} strokeLinecap="round"/>
+              <circle cx="65" cy="12" r="3" fill="#22C55E"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* Card 3: Dossiers Drafted */}
+        <div style={{
+          background: '#ffffff',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: '16px',
+          padding: '24px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          fontFamily: 'Inter, sans-serif',
+          position: 'relative',
+        }}>
+          <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+            <div style={{
+              width: '36px', height: '36px', borderRadius: '50%',
+              background: 'rgba(245, 158, 11, 0.1)', color: '#F59E0B',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <FileText size={18} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>Dossiers Drafted</span>
+              <span style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>12 Classes</span>
+              <div style={{ width: '20px', height: '2px', background: '#F59E0B', borderRadius: '1px' }} />
+              <span style={{ fontSize: '11px', fontWeight: 700, color: '#F59E0B', marginTop: '10px' }}>In Progress</span>
+            </div>
+          </div>
+          <div style={{ alignSelf: 'flex-end', paddingBottom: '4px' }}>
+            <svg width="65" height="40">
+              <path d="M5,35 Q20,30 35,15 T65,10" fill="none" stroke="#F59E0B" strokeWidth={2} strokeLinecap="round"/>
+              <circle cx="65" cy="10" r="3" fill="#F59E0B"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* Card 4: Grades Released */}
+        <div style={{
+          background: '#ffffff',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: '16px',
+          padding: '24px',
+          display: 'flex',
+          flexDirection: 'column',
+          fontFamily: 'Inter, sans-serif',
+          justifyContent: 'space-between',
+          gap: '12px',
+        }}>
+          <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+            <div style={{
+              width: '36px', height: '36px', borderRadius: '50%',
+              background: 'rgba(139, 92, 246, 0.1)', color: '#8B5CF6',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Send size={18} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>Grades Released</span>
+              <span style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>0%</span>
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>This Term</span>
+            </div>
+          </div>
+          {/* Progress bar */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <div style={{ height: '6px', background: 'var(--bg-tertiary)', borderRadius: '3px', overflow: 'hidden', flex: 1 }}>
+              <div style={{ width: '0%', height: '100%', background: '#8B5CF6', borderRadius: '3px' }} />
+            </div>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginLeft: '10px', fontWeight: 700 }}>0%</span>
+          </div>
+        </div>
+
       </div>
 
       {/* Navigation Tabs */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '1px', gap: '24px', overflowX: 'auto' }}>
-        {[
+      <Tabs
+        tabs={[
           { id: 'types', label: 'Exam Types & Grading', icon: <Award size={15} /> },
           { id: 'schedule', label: 'Schedules & Hall Tickets', icon: <Calendar size={15} /> },
           { id: 'marks', label: 'Marks Entry Console', icon: <FileSpreadsheet size={15} /> },
           { id: 'results', label: 'Result Generation Engine', icon: <Send size={15} /> },
-        ].map((tab) => {
-          const active = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '12px 4px',
-                border: 'none',
-                background: 'transparent',
-                borderBottom: active ? '2px solid var(--accent-primary)' : '2px solid transparent',
-                color: active ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                fontWeight: active ? 700 : 500,
-                fontSize: '14px',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s',
-              }}
-            >
-              {tab.icon}
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
+        ]}
+        activeTab={activeTab}
+        onChange={(id) => setActiveTab(id as any)}
+        variant="default"
+        style={{ marginBottom: '20px' }}
+      />
 
       <div style={{ marginTop: '24px' }}>
         {/* Tab 1: Exam Types & Grade system */}
         {activeTab === 'types' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px' }}>
-            <div className="card" style={{ padding: '20px', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)' }}>
-              <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>Active Assessment Formats</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {mockExamTypes.map((item, idx) => (
-                  <div key={idx} style={{ padding: '16px', background: 'var(--bg-surface-raised)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                      <strong style={{ fontSize: '14px', color: 'var(--text-primary)' }}>{item.name}</strong>
-                      <span style={{ fontSize: '13px', background: 'var(--accent-primary-surface)', color: 'var(--accent-primary)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>Weight: {item.weightage}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            
+            {/* Split layout block: Assessment Formats (Left) & Grading Matrix (Right) */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', flexWrap: 'wrap' }}>
+              
+              {/* Active Assessment Formats Card */}
+              <div className="card" style={{
+                background: '#ffffff',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '16px',
+                padding: '24px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                fontFamily: 'Inter, sans-serif',
+                gap: '24px',
+              }}>
+                <div>
+                  <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Active Assessment Formats</h3>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {[
+                    { name: 'Unit Test I', desc: 'First term formative assessment tests.', pct: '15%', progress: '15', stroke: '#3B82F6', dash: '15, 85', bg: 'rgba(59, 130, 246, 0.08)', color: '#3B82F6', icon: <FileText size={18} /> },
+                    { name: 'Mid Term Examination', desc: 'Terminal exam block covering first half syllabus.', pct: '35%', progress: '35', stroke: '#10B981', dash: '35, 65', bg: 'rgba(16, 185, 129, 0.08)', color: '#10B981', icon: <FileSpreadsheet size={18} /> },
+                    { name: 'Final Term Examination', desc: 'Summative annual assessment tests.', pct: '50%', progress: '50', stroke: '#F59E0B', dash: '50, 50', bg: 'rgba(245, 158, 11, 0.08)', color: '#F59E0B', icon: <Award size={18} /> }
+                  ].map((item, idx) => (
+                    <div key={idx} style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '16px',
+                      background: 'var(--bg-canvas)',
+                      border: '1px solid var(--border-subtle)',
+                      borderRadius: '12px',
+                    }}>
+                      <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                        <div style={{
+                          width: '38px', height: '38px', borderRadius: '8px',
+                          background: item.bg, color: item.color,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          {item.icon}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.name}</div>
+                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{item.desc}</div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Weightage</div>
+                          <div style={{ fontSize: '14px', fontWeight: 800, color: item.color }}>{item.pct}</div>
+                        </div>
+                        {/* Circle Progress Loader SVG */}
+                        <svg width="32" height="32" viewBox="0 0 36 36">
+                          <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--border-subtle)" strokeWidth="3" />
+                          <circle cx="18" cy="18" r="15.915" fill="none" stroke={item.stroke} strokeWidth="3" strokeDasharray={item.dash} strokeDashoffset="25" />
+                        </svg>
+                      </div>
                     </div>
-                    <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0 }}>{item.description}</p>
+                  ))}
+                </div>
+
+                {/* Footer Banner */}
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  background: 'var(--bg-canvas)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '12px',
+                  padding: '12px 16px',
+                  fontSize: '13px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)' }}>
+                    <Lightbulb size={16} style={{ color: '#8B5CF6' }} />
+                    <span>Manage exam formats, configure weightage, and track assessment progress.</span>
+                  </div>
+                  <button
+                    onClick={() => alert('Opening formats settings...')}
+                    style={{
+                      background: 'none', border: 'none', color: '#4F46E5', fontWeight: 700, cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Manage Formats <ChevronRight size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Reference Grading Matrix Card */}
+              <div className="card" style={{
+                background: '#ffffff',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '16px',
+                padding: '24px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                fontFamily: 'Inter, sans-serif',
+                gap: '24px',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Reference Grading Matrix</h3>
+                    <HelpCircle size={14} style={{ color: 'var(--text-muted)', cursor: 'pointer' }} />
+                  </div>
+                  {/* Custom styled select dropdown */}
+                  <select style={{
+                    padding: '6px 12px', border: '1px solid var(--border-subtle)', borderRadius: '8px',
+                    fontSize: '12px', color: 'var(--text-primary)', background: 'var(--bg-canvas)', fontWeight: 600
+                  }}>
+                    <option>Current Term</option>
+                    <option>Previous Term</option>
+                  </select>
+                </div>
+
+                {/* Grading Table */}
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+                    <thead>
+                      <tr style={{ background: 'var(--bg-canvas)', borderBottom: '1px solid var(--border-subtle)' }}>
+                        <th style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: '11px', fontWeight: 700 }}>GRADE</th>
+                        <th style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: '11px', fontWeight: 700 }}>DESCRIPTION</th>
+                        <th style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: '11px', fontWeight: 700 }}>RANGE (%)</th>
+                        <th style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: '11px', fontWeight: 700 }}>POINTS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { grade: 'A+', desc: 'Outstanding', range: '90% - 100%', pts: '10', bg: 'rgba(34, 197, 94, 0.08)', color: '#22C55E' },
+                        { grade: 'A', desc: 'Excellent', range: '80% - 89%', pts: '9', bg: 'rgba(34, 197, 94, 0.08)', color: '#22C55E' },
+                        { grade: 'B+', desc: 'Very Good', range: '70% - 79%', pts: '8', bg: 'rgba(59, 130, 246, 0.08)', color: '#3B82F6' },
+                        { grade: 'B', desc: 'Good', range: '60% - 69%', pts: '7', bg: 'rgba(59, 130, 246, 0.08)', color: '#3B82F6' },
+                        { grade: 'C', desc: 'Satisfactory', range: '50% - 59%', pts: '6', bg: 'rgba(245, 158, 11, 0.08)', color: '#F59E0B' },
+                        { grade: 'F', desc: 'Fail', range: 'Below 50%', pts: '0', bg: 'rgba(239, 68, 68, 0.08)', color: '#EF4444' },
+                      ].map((row, idx) => (
+                        <tr key={idx} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                          <td style={{ padding: '10px 12px' }}>
+                            <span style={{
+                              background: row.bg, color: row.color,
+                              padding: '2px 8px', borderRadius: '4px', fontWeight: 700, fontSize: '11px'
+                            }}>{row.grade}</span>
+                          </td>
+                          <td style={{ padding: '10px 12px', color: 'var(--text-primary)', fontWeight: 600 }}>{row.desc}</td>
+                          <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>{row.range}</td>
+                          <td style={{ padding: '10px 12px', color: 'var(--text-primary)', fontWeight: 700 }}>{row.pts}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Footer Banner */}
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  background: 'var(--bg-canvas)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '12px',
+                  padding: '12px 16px',
+                  fontSize: '13px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)' }}>
+                    <Info size={16} style={{ color: '#3B82F6' }} />
+                    <span>Grading system automatically applied to all results.</span>
+                  </div>
+                  <button
+                    onClick={() => alert('Opening grading config...')}
+                    style={{
+                      background: 'none', border: 'none', color: '#4F46E5', fontWeight: 700, cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Configure Matrix <ChevronRight size={14} />
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Upcoming Exam Schedule Row (Bottom) */}
+            <div className="card" style={{
+              background: '#ffffff',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '16px',
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              fontFamily: 'Inter, sans-serif',
+              gap: '20px',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Upcoming Exam Schedule</h3>
+                <button
+                  onClick={() => setActiveTab('schedule')}
+                  style={{
+                    background: 'none', border: 'none', color: '#4F46E5', fontSize: '13px',
+                    fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px'
+                  }}
+                >
+                  View Full Timetable <ArrowRight size={14} />
+                </button>
+              </div>
+
+              {/* Horizonal grid row of 3 cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                {[
+                  { date: '25', month: 'JUL', title: 'Mid Term Examination', grade: 'Grade 10', time: '09:00 AM - 12:00 PM', tag: '3 Subjects', color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.08)', dateBg: 'rgba(59, 130, 246, 0.1)', dateColor: '#3B82F6' },
+                  { date: '05', month: 'AUG', title: 'Unit Test I', grade: 'Grade 9', time: '10:00 AM - 11:30 AM', tag: '2 Subjects', color: '#10B981', bg: 'rgba(16, 185, 129, 0.08)', dateBg: 'rgba(16, 185, 129, 0.1)', dateColor: '#10B981' },
+                  { date: '10', month: 'AUG', title: 'Practical Examination', grade: 'Grades 9 - 10', time: '01:00 PM - 04:00 PM', tag: '4 Subjects', color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.08)', dateBg: 'rgba(245, 158, 11, 0.1)', dateColor: '#F59E0B' },
+                ].map((item, idx) => (
+                  <div key={idx} style={{
+                    padding: '16px',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: '12px',
+                    background: 'var(--bg-canvas)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '14px',
+                  }}>
+                    <div style={{
+                      width: '42px', height: '44px', borderRadius: '8px',
+                      background: item.dateBg, color: item.dateColor,
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <span style={{ fontSize: '9px', fontWeight: 700, opacity: 0.8 }}>{item.month}</span>
+                      <span style={{ fontSize: '16px', fontWeight: 800, lineHeight: 1 }}>{item.date}</span>
+                    </div>
+
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.title}</span>
+                        <span style={{
+                          fontSize: '9px', fontWeight: 700, padding: '2px 8px', borderRadius: '4px',
+                          background: item.bg, color: item.color,
+                        }}>{item.tag}</span>
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{item.grade}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '3px', marginTop: '4px' }}>
+                        <Clock size={10} />
+                        <span>{item.time}</span>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="card" style={{ padding: '20px', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)' }}>
-              <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>Reference Grading Matrix</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {mockGrades.map((g, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px dashed var(--border-subtle)', fontSize: '13px' }}>
-                    <div>
-                      <strong style={{ color: 'var(--text-primary)' }}>Grade {g.grade}</strong>
-                      <span style={{ color: 'var(--text-secondary)', marginLeft: '10px' }}>({g.remarks})</span>
-                    </div>
-                    <span style={{ color: 'var(--text-primary)' }}>Range: <strong>{g.range}</strong> · Pt: {g.points}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         )}
 

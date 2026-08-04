@@ -14,12 +14,9 @@ const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
 
 export default function DashboardWidgetCard({ widget }: Props) {
   return (
-    <div style={{
-      background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)',
-      borderRadius: 'var(--radius-lg)', overflow: 'hidden',
-    }}>
+    <div className="card dashboard-card">
       <div style={{
-        padding: '16px 20px', borderBottom: '1px solid var(--border-subtle)',
+        padding: '14px 18px', borderBottom: '1px solid var(--border-subtle)',
         fontWeight: 700, fontSize: 14, color: 'var(--text-primary)',
         display: 'flex', alignItems: 'center', gap: 8,
       }}>
@@ -29,7 +26,7 @@ export default function DashboardWidgetCard({ widget }: Props) {
         }} />
         {widget.title}
       </div>
-      <div style={{ padding: '8px 0' }}>
+      <div style={{ padding: '6px 0' }}>
         {widget.items.map((item, idx) => {
           const statusStyle = STATUS_COLORS[item.status || 'neutral'];
           return (
@@ -37,26 +34,27 @@ export default function DashboardWidgetCard({ widget }: Props) {
               key={idx}
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '10px 20px', gap: 12, transition: 'background 0.15s',
+                padding: '9px 16px', gap: 10, transition: 'background 0.15s',
               }}
               onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-surface-raised)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
                 {item.icon && <span style={{ fontSize: 14, flexShrink: 0 }}>{item.icon}</span>}
                 <span style={{
-                  fontSize: 13, color: 'var(--text-primary)', fontWeight: 500,
-                  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  fontSize: '12.5px', color: 'var(--text-primary)', fontWeight: 500,
+                  wordBreak: 'break-word', lineHeight: 1.3,
                 }}>
                   {item.label}
                 </span>
               </div>
               <span style={{
-                fontSize: 11, fontWeight: 600, textTransform: 'uppercase',
-                letterSpacing: '0.04em', padding: '3px 8px',
+                fontSize: '10.5px', fontWeight: 700, textTransform: 'uppercase',
+                letterSpacing: '0.03em', padding: '3px 8px',
                 borderRadius: 'var(--radius-sm)', flexShrink: 0,
                 background: statusStyle.bg, color: statusStyle.color,
                 border: `1px solid ${statusStyle.color}20`,
+                whiteSpace: 'nowrap',
               }}>
                 {item.value}
               </span>

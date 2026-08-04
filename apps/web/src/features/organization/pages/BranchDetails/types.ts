@@ -1,6 +1,6 @@
 export interface LeadershipProfile {
   name: string;
-  role: 'PRINCIPAL' | 'VICE_PRINCIPAL' | 'ADMIN';
+  role: 'PRINCIPAL' | 'ADMIN';
   email: string;
   phone: string;
   tenure: string;

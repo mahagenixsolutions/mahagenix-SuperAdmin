@@ -1,6 +1,20 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  GraduationCap, 
+  DollarSign, 
+  Users, 
+  UserCheck, 
+  Building, 
+  Bus, 
+  FileText, 
+  ClipboardList, 
+  Settings, 
+  ArrowLeft 
+} from 'lucide-react';
 import { mockBranchDetails } from './mockData';
+import { Tabs } from '../../../../components/ui/Tabs';
 
 // Subcomponents
 import BranchHeader from './BranchHeader';
@@ -45,17 +59,17 @@ export default function BranchDetails() {
     alert(`Quick Action Triggered: ${actionName.replace('-', ' ').toUpperCase()} inside ${branch.name}`);
   };
 
-  const tabs: { key: TabKey; label: string }[] = [
-    { key: 'overview', label: 'Overview' },
-    { key: 'academics', label: 'Academics' },
-    { key: 'finance', label: 'Finance' },
-    { key: 'students', label: 'Students' },
-    { key: 'teachers', label: 'Teachers' },
-    { key: 'infrastructure', label: 'Infrastructure' },
-    { key: 'transport', label: 'Transport' },
-    { key: 'documents', label: 'Documents' },
-    { key: 'activity', label: 'Activity' },
-    { key: 'settings', label: 'Settings' }
+  const tabs: { key: TabKey; label: string; icon: React.ReactNode }[] = [
+    { key: 'overview', label: 'Overview', icon: <LayoutDashboard size={14} /> },
+    { key: 'academics', label: 'Academics', icon: <GraduationCap size={14} /> },
+    { key: 'finance', label: 'Finance', icon: <DollarSign size={14} /> },
+    { key: 'students', label: 'Students', icon: <Users size={14} /> },
+    { key: 'teachers', label: 'Teachers', icon: <UserCheck size={14} /> },
+    { key: 'infrastructure', label: 'Infrastructure', icon: <Building size={14} /> },
+    { key: 'transport', label: 'Transport', icon: <Bus size={14} /> },
+    { key: 'documents', label: 'Documents', icon: <FileText size={14} /> },
+    { key: 'activity', label: 'Activity', icon: <ClipboardList size={14} /> },
+    { key: 'settings', label: 'Settings', icon: <Settings size={14} /> }
   ];
 
   const renderActiveTabContent = () => {
@@ -136,7 +150,7 @@ export default function BranchDetails() {
             padding: 0
           }}
         >
-          ← Back to Branches Directory
+          <ArrowLeft size={16} /> Back to Branches Directory
         </button>
       </div>
 
@@ -154,37 +168,13 @@ export default function BranchDetails() {
       <BranchKPIs branch={branch} />
 
       {/* Performance tab switcher navigation */}
-      <div style={{
-        display: 'flex',
-        borderBottom: '1px solid #cbd5e1',
-        overflowX: 'auto',
-        whiteSpace: 'nowrap',
-        gap: '28px',
-        marginTop: '10px'
-      }}>
-        {tabs.map((tab) => {
-          const isActive = activeTab === tab.key;
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              style={{
-                background: 'none',
-                border: 'none',
-                borderBottom: isActive ? '3px solid #2563eb' : '3px solid transparent',
-                padding: '12px 4px',
-                color: isActive ? '#2563eb' : '#64748b',
-                fontSize: '14px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.15s'
-              }}
-            >
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
+      <Tabs
+        tabs={tabs.map(t => ({ id: t.key, label: t.label, icon: t.icon }))}
+        activeTab={activeTab}
+        onChange={(id) => setActiveTab(id as TabKey)}
+        variant="scrollable"
+        style={{ marginTop: '10px' }}
+      />
 
       {/* Render Dynamic Tab Content */}
       <div style={{ minHeight: '300px' }}>

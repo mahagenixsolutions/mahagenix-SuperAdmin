@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 
 import { mockStudents, mockTimelineEvents } from '../../data/mockData';
+import { Tabs } from '../../components/ui/Tabs';
 
 const AVAILABLE_BADGES = [
   { name: 'Star Student', icon: '⭐', desc: 'Outstanding general classroom behavior and peer support.', points: 50 },
@@ -236,49 +237,19 @@ export default function StudentDetailPage() {
         {/* COLUMN 2: Details & Tabs Content */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {/* Tabs Menu Header */}
-          <div style={{
-            display: 'flex',
-            borderBottom: '1px solid var(--border-subtle)',
-            paddingBottom: '1px',
-            gap: '24px',
-            overflowX: 'auto',
-            scrollbarWidth: 'none'
-          }}>
-            {[
+          <Tabs
+            tabs={[
               { id: 'timeline', label: 'Timeline', icon: <Clock size={15} /> },
               { id: 'academics', label: 'Academic History', icon: <Award size={15} /> },
               { id: 'attendance', label: 'Attendance Logs', icon: <Activity size={15} /> },
               { id: 'medical', label: 'Medical Info', icon: <Heart size={15} /> },
               { id: 'guardians', label: 'Guardian Details', icon: <Users size={15} /> },
               { id: 'documents', label: 'Documents', icon: <FileText size={15} /> },
-            ].map((tab) => {
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '12px 4px',
-                    border: 'none',
-                    background: 'transparent',
-                    borderBottom: active ? '2px solid var(--accent-primary)' : '2px solid transparent',
-                    color: active ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                    fontWeight: active ? 700 : 500,
-                    fontSize: '14px',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                    transition: 'all 0.2s',
-                  }}
-                >
-                  {tab.icon}
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
+            ]}
+            activeTab={activeTab}
+            onChange={(id) => setActiveTab(id as any)}
+            variant="default"
+          />
 
           {/* Tab Pane Renders */}
           <div style={{ minHeight: '360px' }}>
@@ -350,7 +321,7 @@ export default function StudentDetailPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                 <div className="card" style={{ padding: '20px', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)' }}>
                   <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>Attendance Monthly Summary</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(140px, 100%), 1fr))', gap: '16px' }}>
                     {[
                       { month: 'June', rate: '98%', days: '21/22' },
                       { month: 'May', rate: '95%', days: '19/20' },
@@ -575,7 +546,7 @@ export default function StudentDetailPage() {
             </div>
             <form onSubmit={handleAwardBadge} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: -4 }}>Choose Badge Type</label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, maxHeight: 200, overflowY: 'auto', padding: 2 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(120px, 100%), 1fr))', gap: 8, maxHeight: 200, overflowY: 'auto', padding: 2 }}>
                 {AVAILABLE_BADGES.map(badge => (
                   <div 
                     key={badge.name}

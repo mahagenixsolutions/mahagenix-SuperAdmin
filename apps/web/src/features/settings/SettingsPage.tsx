@@ -190,7 +190,6 @@ const SettingsPage: React.FC = () => {
   ]);
 
   const [roles] = useState<SystemRole[]>([
-    { id: 'ROL001', name: 'SUPER_ADMIN', description: 'Complete system access, multi-tenant billing, and server settings control.', userCount: 2 },
     { id: 'ROL002', name: 'SCHOOL_ADMIN', description: 'School profile configurations, roles & permissions mapping, and full database audits.', userCount: 4 },
     { id: 'ROL003', name: 'PRINCIPAL', description: 'Academic management, HR review approvals, and school analytics insight.', userCount: 1 },
     { id: 'ROL004', name: 'TEACHER', description: 'Add results, track subject progress, student verification, and attendance marking.', userCount: 42 },

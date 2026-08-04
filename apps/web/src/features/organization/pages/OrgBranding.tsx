@@ -79,18 +79,19 @@ export default function OrgBranding() {
   };
 
   const getSubTabStyle = (active: boolean) => ({
-    padding: '10px 18px',
+    padding: '8px 18px',
     border: 'none',
-    borderBottom: active ? '2px solid #2563eb' : '2px solid transparent',
-    background: 'transparent',
-    color: active ? '#2563eb' : '#6b7280',
-    fontWeight: 600,
+    borderRadius: '9999px',
+    background: active ? '#ffffff' : 'transparent',
+    color: active ? '#0284C7' : '#475569',
+    fontWeight: active ? 700 : 600,
     fontSize: '13px',
     cursor: 'pointer',
-    display: 'flex',
+    display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
-    transition: 'all 0.2s'
+    boxShadow: active ? '0 2px 8px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06)' : 'none',
+    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
   });
 
   return (
@@ -138,7 +139,7 @@ export default function OrgBranding() {
         </button>
       </div>
 
-      <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', gap: 10, marginTop: 4 }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center', background: 'var(--bg-surface-raised, #F1F5F9)', border: '1px solid var(--border-subtle, rgba(226, 232, 240, 0.8))', borderRadius: '9999px', padding: '4px 6px', gap: 4, marginTop: 4, overflowX: 'auto', maxWidth: '100%', boxSizing: 'border-box' }}>
         <button onClick={() => setActiveTab('branding')} style={getSubTabStyle(activeTab === 'branding')}>
           {getIconSvg('⚙️')} Branding
         </button>
@@ -154,7 +155,7 @@ export default function OrgBranding() {
       </div>
 
       {/* Main Form/Preview Workspace Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(320px, 100%), 1fr))', gap: '20px', width: '100%', boxSizing: 'border-box' }}>
         {/* Brand Identity */}
         <div style={{
           background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '12px',
