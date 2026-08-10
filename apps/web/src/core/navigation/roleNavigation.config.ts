@@ -156,8 +156,8 @@ export const ROLE_NAVIGATION: Partial<Record<UserRole, RoleNavSection[]>> = {
     {
       section: 'SETTINGS',
       items: [
-        { to: '/profile', icon: UserIcon, label: 'Profile' },
-        { to: '/settings', icon: SettingsIcon, label: 'Settings' },
+        { to: '/academic/profile', icon: UserIcon, label: 'Profile' },
+        { to: '/academic/settings', icon: SettingsIcon, label: 'Settings' },
       ],
     },
   ],

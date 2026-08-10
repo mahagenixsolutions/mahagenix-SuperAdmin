@@ -518,18 +518,15 @@ export default function AppLayout() {
 
         {/* Page Content */}
         <main className="page-container" style={{ overflowX: 'hidden' }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.45, ease: [0.25, 0.8, 0.25, 1] }}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            style={{ width: '100%', minHeight: '100%' }}
+          >
+            <Outlet />
+          </motion.div>
         </main>
       </div>
     </div>

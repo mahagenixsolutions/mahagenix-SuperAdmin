@@ -1,196 +1,238 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../store';
 import { 
-  Activity, BookOpen, AlertTriangle, Calendar, FileText, CheckCircle, 
-  Users, TrendingUp, Search, Bell, Sparkles, ChevronRight, Zap, Target
+  Activity, BookOpen, AlertTriangle, CheckCircle, 
+  Sparkles, Target, Bell, MoreVertical, X, Info,
+  FileText, Users
 } from 'lucide-react';
+import { DashboardLayout } from '../layouts/DashboardLayout';
+import { KPICard } from '../components/KPICard';
+import { SidebarWidget } from '../components/SidebarWidget';
 
 export default function AcademicCommandCenter() {
   const user = useSelector((s: RootState) => s.auth.user);
+  const [selectedRowDetail, setSelectedRowDetail] = useState<any | null>(null);
+
+  const tableData = [
+    { dept: 'Sciences', prog: 72, lag: 'Grade 9 Physics (45%)', status: 'On Track', color: '#10b981', target: '75%', totalSubjects: 14, leadTeacher: 'Dr. M. Sharma' },
+    { dept: 'Mathematics', prog: 65, lag: 'Grade 10 Algebra (52%)', status: 'Warning', color: '#f59e0b', target: '60%', totalSubjects: 12, leadTeacher: 'Prof. M. Iyer' },
+    { dept: 'Languages', prog: 81, lag: 'French (68%)', status: 'Ahead', color: '#3b82f6', target: '80%', totalSubjects: 10, leadTeacher: 'Mrs. R. Khanna' },
+    { dept: 'Humanities', prog: 54, lag: 'Grade 8 History (38%)', status: 'Behind', color: '#ef4444', target: '70%', totalSubjects: 15, leadTeacher: 'Mr. A. Desai' },
+  ];
+
+  const kpis = [
+    { label: 'Syllabus Completion', value: '68%', status: { label: 'Target: 75%', tone: 'info' as const }, color: '#3b82f6', bg: '#eff6ff', icon: <BookOpen size={20} /> },
+    { label: 'Avg Attendance', value: '94.2%', trend: { value: '1.2% from last week', isPositive: true }, color: '#10b981', bg: '#ecfdf5', icon: <Activity size={20} /> },
+    { label: 'Pending Approvals', value: '24', status: { label: '14 Plans, 10 Exams', tone: 'warning' as const }, color: '#f59e0b', bg: '#fffbeb', icon: <CheckCircle size={20} /> },
+    { label: 'Critical Alerts', value: '3', status: { label: 'Action required', tone: 'danger' as const }, color: '#ef4444', bg: '#fef2f2', icon: <AlertTriangle size={20} /> },
+  ];
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', paddingBottom: '40px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      
-      {/* Hero Section */}
-      <div style={{ 
-        background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', 
-        borderRadius: '16px', padding: '32px', color: 'white',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        boxShadow: '0 10px 15px -3px rgba(30, 27, 75, 0.3)'
-      }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 700, letterSpacing: '0.5px' }}>
-              COMMAND CENTER
-            </span>
-            <span style={{ fontSize: '13px', color: '#c7d2fe', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981' }} />
-              Live Academic Feed Active
-            </span>
-          </div>
-          <h1 style={{ margin: '0 0 8px 0', fontSize: '28px', fontWeight: 800 }}>Good morning, {user?.first_name || 'Coordinator'}.</h1>
-          <p style={{ margin: 0, color: '#a5b4fc', fontSize: '15px', maxWidth: '600px', lineHeight: 1.5 }}>
-            You have 14 pending lesson plan approvals and 3 urgent academic alerts requiring attention before the term ends.
-          </p>
-        </div>
-        
-        {/* Quick Actions Card built into Hero */}
-        <div style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '12px', padding: '16px', width: '280px' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#e0e7ff', marginBottom: '12px', textTransform: 'uppercase' }}>Quick Actions</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <button style={{ width: '100%', padding: '10px', background: 'white', color: '#312e81', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
-              Review Lesson Plans <ChevronRight size={16} />
-            </button>
-            <button style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '8px', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
-              Adjust Timetable <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Primary KPIs (Academic Health) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-        {[
-          { label: 'Syllabus Completion', value: '68%', target: 'Target: 75%', color: '#3b82f6', bg: '#eff6ff', icon: <BookOpen size={20} /> },
-          { label: 'Avg Attendance', value: '94.2%', target: '+1.2% from last week', color: '#10b981', bg: '#ecfdf5', icon: <Activity size={20} /> },
-          { label: 'Pending Approvals', value: '24', target: '14 Lesson Plans, 10 Exams', color: '#f59e0b', bg: '#fffbeb', icon: <CheckCircle size={20} /> },
-          { label: 'Critical Alerts', value: '3', target: 'Action required immediately', color: '#ef4444', bg: '#fef2f2', icon: <AlertTriangle size={20} /> },
-        ].map((kpi, i) => (
-          <div key={i} style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: kpi.bg, color: kpi.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {kpi.icon}
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280', marginBottom: '4px' }}>{kpi.label}</div>
-              <div style={{ fontSize: '24px', fontWeight: 800, color: '#111827' }}>{kpi.value}</div>
-              <div style={{ fontSize: '12px', fontWeight: 500, color: kpi.color, marginTop: '8px' }}>{kpi.target}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Main Grid Layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: '24px' }}>
-        
-        {/* Left Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          
+    <DashboardLayout
+      breadcrumbs={[{ label: 'EduTrack AI' }, { label: 'Dashboard' }]}
+      title="Academic Command Center"
+      subtitle={`Welcome back, ${user?.first_name || 'Coordinator'}. Here is your academic operations overview.`}
+      roleBadge="ACADEMIC COORDINATOR"
+      heroTitle={`Good morning, ${user?.first_name || 'Coordinator'}.`}
+      heroDescription="You have 14 pending lesson plan approvals and 3 urgent academic alerts requiring attention before the term ends."
+      heroBadge="COMMAND CENTER"
+      heroActions={[
+        { label: 'Review Lesson Plans', primary: true, onClick: () => window.location.href = '/academic/lesson-plans' },
+        { label: 'Adjust Timetable', onClick: () => window.location.href = '/classes' }
+      ]}
+      kpiCards={
+        <>
+          {kpis.map((kpi, i) => (
+            <KPICard
+              key={i}
+              label={kpi.label}
+              value={kpi.value}
+              icon={kpi.icon}
+              tone={kpi.color}
+              bg={kpi.bg}
+              trend={kpi.trend}
+              status={kpi.status}
+            />
+          ))}
+        </>
+      }
+      primaryContent={
+        <>
           {/* Curriculum Progress Table */}
-          <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-            <div style={{ padding: '20px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="academic-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <div style={{ padding: '20px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+              <h3 className="academic-card-title">
                 <Target size={18} color="#4f46e5" /> Curriculum Progress Tracker
               </h3>
               <a href="/academic/syllabus" style={{ fontSize: '13px', fontWeight: 600, color: '#4f46e5', textDecoration: 'none' }}>View Detailed Report</a>
             </div>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e5e7eb' }}>
-                  <th style={{ padding: '12px 20px', fontSize: '12px', fontWeight: 600, color: '#64748b' }}>Department</th>
-                  <th style={{ padding: '12px 20px', fontSize: '12px', fontWeight: 600, color: '#64748b' }}>Overall Progress</th>
-                  <th style={{ padding: '12px 20px', fontSize: '12px', fontWeight: 600, color: '#64748b' }}>Lagging Subject</th>
-                  <th style={{ padding: '12px 20px', fontSize: '12px', fontWeight: 600, color: '#64748b' }}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { dept: 'Sciences', prog: 72, lag: 'Grade 9 Physics (45%)', status: 'On Track', color: '#10b981' },
-                  { dept: 'Mathematics', prog: 65, lag: 'Grade 10 Algebra (52%)', status: 'Warning', color: '#f59e0b' },
-                  { dept: 'Languages', prog: 81, lag: 'French (68%)', status: 'Ahead', color: '#3b82f6' },
-                  { dept: 'Humanities', prog: 54, lag: 'Grade 8 History (38%)', status: 'Behind', color: '#ef4444' },
-                ].map((row, i) => (
-                  <tr key={i} style={{ borderBottom: i === 3 ? 'none' : '1px solid #f1f5f9' }}>
-                    <td style={{ padding: '16px 20px', fontSize: '14px', fontWeight: 600, color: '#111827' }}>{row.dept}</td>
-                    <td style={{ padding: '16px 20px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ flex: 1, background: '#f1f5f9', height: '6px', borderRadius: '3px' }}>
-                          <div style={{ width: `${row.prog}%`, background: row.color, height: '100%', borderRadius: '3px' }} />
-                        </div>
-                        <span style={{ fontSize: '13px', fontWeight: 600, color: '#475569' }}>{row.prog}%</span>
-                      </div>
-                    </td>
-                    <td style={{ padding: '16px 20px', fontSize: '13px', color: '#475569' }}>{row.lag}</td>
-                    <td style={{ padding: '16px 20px' }}>
-                      <span style={{ background: `${row.color}15`, color: row.color, padding: '4px 8px', borderRadius: '6px', fontSize: '12px', fontWeight: 600 }}>{row.status}</span>
-                    </td>
+            
+            <div className="academic-table-wrapper" style={{ border: 'none', borderRadius: 0 }}>
+              <table>
+                <thead>
+                  <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                    <th style={{ padding: '12px 20px', fontSize: '12px', fontWeight: 600, color: '#64748b' }}>Department</th>
+                    <th style={{ padding: '12px 20px', fontSize: '12px', fontWeight: 600, color: '#64748b' }}>Progress</th>
+                    <th className="academic-col-secondary" style={{ padding: '12px 20px', fontSize: '12px', fontWeight: 600, color: '#64748b' }}>Lagging Subject</th>
+                    <th style={{ padding: '12px 20px', fontSize: '12px', fontWeight: 600, color: '#64748b' }}>Status</th>
+                    <th className="academic-col-details" style={{ padding: '12px 16px', fontSize: '12px', fontWeight: 600, color: '#64748b', textAlign: 'center' }}>Details</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {tableData.map((row, i) => (
+                    <tr key={i} style={{ borderBottom: i === tableData.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
+                      <td style={{ padding: '16px 20px', fontSize: '14px', fontWeight: 600, color: '#111827' }}>{row.dept}</td>
+                      <td style={{ padding: '16px 20px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '120px' }}>
+                          <div style={{ flex: 1, background: '#f1f5f9', height: '6px', borderRadius: '3px' }}>
+                            <div style={{ width: `${row.prog}%`, background: row.color, height: '100%', borderRadius: '3px' }} />
+                          </div>
+                          <span style={{ fontSize: '13px', fontWeight: 600, color: '#475569' }}>{row.prog}%</span>
+                        </div>
+                      </td>
+                      <td className="academic-col-secondary" style={{ padding: '16px 20px', fontSize: '13px', color: '#475569' }}>{row.lag}</td>
+                      <td style={{ padding: '16px 20px' }}>
+                        <span style={{ background: `${row.color}15`, color: row.color, padding: '4px 8px', borderRadius: '6px', fontSize: '12px', fontWeight: 600 }}>{row.status}</span>
+                      </td>
+                      <td className="academic-col-details" style={{ padding: '16px', textAlign: 'center' }}>
+                        <button 
+                          onClick={() => setSelectedRowDetail(row)}
+                          style={{ background: '#f1f5f9', border: 'none', borderRadius: '8px', padding: '6px 10px', color: '#475569', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                          title="View Details"
+                        >
+                          <MoreVertical size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          {/* Exam Readiness & Teacher Workload */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-            {/* Exam Readiness */}
-            <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          {/* Exam Readiness & Teacher Workload Sub Grid */}
+          <div className="academic-sub-grid">
+            {/* Examination Readiness Card */}
+            <div className="academic-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#111827' }}>Examination Readiness</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#eff6ff', color: '#4f46e5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <FileText size={18} />
+                  </div>
+                  <div>
+                    <h3 className="academic-card-title" style={{ fontSize: '15px' }}>Examination Readiness</h3>
+                    <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>Mid-Term Assessment Checklist</p>
+                  </div>
+                </div>
+                <span style={{ fontSize: '11px', fontWeight: 700, background: '#e0e7ff', color: '#4338ca', padding: '4px 10px', borderRadius: '20px' }}>
+                  78% Overall
+                </span>
               </div>
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '6px' }}>
-                    <span style={{ fontWeight: 600, color: '#374151' }}>Mid-Term Papers Set</span>
-                    <span style={{ fontWeight: 700, color: '#111827' }}>42 / 56</span>
+                {/* Item 1 */}
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '14px 16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b' }}>Mid-Term Papers Set</span>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#4f46e5' }}>42 / 56 <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>(75%)</span></span>
                   </div>
-                  <div style={{ background: '#f1f5f9', height: '6px', borderRadius: '3px' }}><div style={{ width: '75%', background: '#3b82f6', height: '100%', borderRadius: '3px' }}/></div>
+                  <div style={{ background: '#e2e8f0', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ width: '75%', background: 'linear-gradient(90deg, #6366f1 0%, #4f46e5 100%)', height: '100%', borderRadius: '4px' }} />
+                  </div>
                 </div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '6px' }}>
-                    <span style={{ fontWeight: 600, color: '#374151' }}>Invigilation Rosters</span>
-                    <span style={{ fontWeight: 700, color: '#111827' }}>Drafting</span>
+
+                {/* Item 2 */}
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '14px 16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b' }}>Invigilation Rosters</span>
+                    <span style={{ fontSize: '11px', fontWeight: 700, background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', padding: '2px 8px', borderRadius: '6px' }}>
+                      Drafting (40%)
+                    </span>
                   </div>
-                  <div style={{ background: '#f1f5f9', height: '6px', borderRadius: '3px' }}><div style={{ width: '40%', background: '#f59e0b', height: '100%', borderRadius: '3px' }}/></div>
+                  <div style={{ background: '#e2e8f0', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ width: '40%', background: 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)', height: '100%', borderRadius: '4px' }} />
+                  </div>
                 </div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '6px' }}>
-                    <span style={{ fontWeight: 600, color: '#374151' }}>Seating Plans</span>
-                    <span style={{ fontWeight: 700, color: '#111827' }}>Completed</span>
+
+                {/* Item 3 */}
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '14px 16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b' }}>Seating Plans</span>
+                    <span style={{ fontSize: '11px', fontWeight: 700, background: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0', padding: '2px 8px', borderRadius: '6px' }}>
+                      Completed (100%)
+                    </span>
                   </div>
-                  <div style={{ background: '#f1f5f9', height: '6px', borderRadius: '3px' }}><div style={{ width: '100%', background: '#10b981', height: '100%', borderRadius: '3px' }}/></div>
+                  <div style={{ background: '#e2e8f0', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)', height: '100%', borderRadius: '4px' }} />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Teacher Workload Heatmap Placeholder */}
-            <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+            {/* Teacher Workload Card */}
+            <div className="academic-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#111827' }}>Teacher Workload</h3>
-                <a href="/teachers" style={{ fontSize: '12px', fontWeight: 600, color: '#4f46e5', textDecoration: 'none' }}>Optimize</a>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#ecfdf5', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Users size={18} />
+                  </div>
+                  <div>
+                    <h3 className="academic-card-title" style={{ fontSize: '15px' }}>Teacher Workload</h3>
+                    <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>Faculty Capacity Distribution</p>
+                  </div>
+                </div>
+                <a href="/teachers" style={{ fontSize: '12px', fontWeight: 700, color: '#4f46e5', textDecoration: 'none', background: '#e0e7ff', padding: '6px 12px', borderRadius: '8px' }}>
+                  Optimize
+                </a>
+              </div>
+
+              {/* Legend Pills */}
+              <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', fontSize: '11px', fontWeight: 700, flexWrap: 'wrap' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#b91c1c' }}>
+                  <div style={{ width: 8, height: 8, background: '#ef4444', borderRadius: '2px' }} /> Overload (&gt;24h)
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#047857' }}>
+                  <div style={{ width: 8, height: 8, background: '#10b981', borderRadius: '2px' }} /> Optimal (18-24h)
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0369a1' }}>
+                  <div style={{ width: 8, height: 8, background: '#38bdf8', borderRadius: '2px' }} /> Under (&lt;18h)
+                </span>
               </div>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {[
-                  { name: 'Science Dept', overload: 3, optimal: 12, under: 1 },
-                  { name: 'Math Dept', overload: 5, optimal: 8, under: 0 },
-                  { name: 'Languages', overload: 0, optimal: 15, under: 4 },
+                  { name: 'Science Dept', overload: 3, optimal: 12, under: 1, total: '16 Faculty' },
+                  { name: 'Math Dept', overload: 5, optimal: 8, under: 0, total: '13 Faculty' },
+                  { name: 'Languages', overload: 0, optimal: 15, under: 4, total: '19 Faculty' },
                 ].map((dept, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px' }}>
-                    <span style={{ fontWeight: 600, color: '#475569', width: '90px' }}>{dept.name}</span>
-                    <div style={{ display: 'flex', gap: '4px', flex: 1 }}>
-                      <div title="Overloaded" style={{ flex: dept.overload, background: '#fca5a5', height: '16px', borderRadius: '4px' }} />
-                      <div title="Optimal" style={{ flex: dept.optimal, background: '#6ee7b7', height: '16px', borderRadius: '4px' }} />
-                      <div title="Underutilized" style={{ flex: dept.under, background: '#bae6fd', height: '16px', borderRadius: '4px' }} />
+                  <div key={i} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px 18px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', fontSize: '13px' }}>
+                      <span style={{ fontWeight: 700, color: '#1e293b' }}>{dept.name}</span>
+                      <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>{dept.total}</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '4px', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
+                      {dept.overload > 0 && (
+                        <div title={`Overloaded: ${dept.overload}`} style={{ flex: dept.overload, background: '#ef4444' }} />
+                      )}
+                      {dept.optimal > 0 && (
+                        <div title={`Optimal: ${dept.optimal}`} style={{ flex: dept.optimal, background: '#10b981' }} />
+                      )}
+                      {dept.under > 0 && (
+                        <div title={`Underutilized: ${dept.under}`} style={{ flex: dept.under, background: '#38bdf8' }} />
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
-              <div style={{ display: 'flex', gap: '12px', marginTop: '16px', fontSize: '11px', color: '#64748b' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: 8, height: 8, background: '#fca5a5', borderRadius: '2px' }}/> Overload</span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: 8, height: 8, background: '#6ee7b7', borderRadius: '2px' }}/> Optimal</span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: 8, height: 8, background: '#bae6fd', borderRadius: '2px' }}/> Under</span>
-              </div>
             </div>
           </div>
-        </div>
-
-        {/* Right Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          
-          {/* AI Insights Card */}
-          <div style={{ background: 'linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%)', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '24px', boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.1)' }}>
+        </>
+      }
+      sidebarContent={
+        <>
+          {/* AI Intelligence Sidebar Widget */}
+          <div style={{ background: 'linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%)', border: '1px solid #bbf7d0', borderRadius: '20px', padding: '24px', boxShadow: '0 4px 14px rgba(16, 185, 129, 0.08)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
               <div style={{ background: '#10b981', color: 'white', padding: '6px', borderRadius: '8px' }}>
                 <Sparkles size={16} />
@@ -199,15 +241,15 @@ export default function AcademicCommandCenter() {
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ background: 'white', border: '1px solid #d1fae5', padding: '16px', borderRadius: '8px' }}>
+              <div style={{ background: 'white', border: '1px solid #d1fae5', padding: '16px', borderRadius: '12px' }}>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: '#065f46', marginBottom: '4px' }}>Timetable Optimization Found</div>
                 <div style={{ fontSize: '12px', color: '#047857', lineHeight: 1.5 }}>
                   Swapping Mrs. Sharma's Grade 8 Science period with Mr. Iyer's Math period on Thursdays resolves 3 teacher workload conflicts.
                 </div>
-                <button style={{ marginTop: '12px', background: '#10b981', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>Apply Change</button>
+                <button style={{ marginTop: '12px', background: '#10b981', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}>Apply Change</button>
               </div>
               
-              <div style={{ background: 'white', border: '1px solid #d1fae5', padding: '16px', borderRadius: '8px' }}>
+              <div style={{ background: 'white', border: '1px solid #d1fae5', padding: '16px', borderRadius: '12px' }}>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: '#065f46', marginBottom: '4px' }}>Syllabus Risk Detected</div>
                 <div style={{ fontSize: '12px', color: '#047857', lineHeight: 1.5 }}>
                   Grade 9 History is historically 15% slower in Term 1. Consider allocating 2 extra periods next week.
@@ -217,35 +259,27 @@ export default function AcademicCommandCenter() {
           </div>
 
           {/* Academic Alerts list */}
-          <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '15px', fontWeight: 700, color: '#111827', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Bell size={18} color="#f59e0b" /> Academic Alerts
-            </h3>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {[
-                { title: 'Grade 8 Science syllabus behind schedule', time: '2 hours ago', type: 'critical' },
-                { title: '3 teacher allocations missing for next week', time: '5 hours ago', type: 'warning' },
-                { title: 'Timetable conflict detected in Grade 6', time: 'Yesterday', type: 'warning' },
-                { title: '5 lesson plans overdue for approval', time: 'Yesterday', type: 'info' }
-              ].map((alert, i) => (
-                <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', paddingBottom: '12px', borderBottom: i === 3 ? 'none' : '1px solid #f1f5f9' }}>
-                  <div style={{ 
-                    width: '8px', height: '8px', borderRadius: '50%', marginTop: '6px',
-                    background: alert.type === 'critical' ? '#ef4444' : alert.type === 'warning' ? '#f59e0b' : '#3b82f6'
-                  }} />
-                  <div>
-                    <div style={{ fontSize: '13px', fontWeight: 600, color: '#111827', lineHeight: 1.4 }}>{alert.title}</div>
-                    <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{alert.time}</div>
-                  </div>
+          <SidebarWidget title="Academic Alerts" icon={<Bell size={18} color="#f59e0b" />}>
+            {[
+              { title: 'Grade 8 Science syllabus behind schedule', time: '2 hours ago', type: 'critical' },
+              { title: '3 teacher allocations missing for next week', time: '5 hours ago', type: 'warning' },
+              { title: 'Timetable conflict detected in Grade 6', time: 'Yesterday', type: 'warning' },
+              { title: '5 lesson plans overdue for approval', time: 'Yesterday', type: 'info' }
+            ].map((alertItem, i) => (
+              <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', paddingBottom: '12px', borderBottom: i === 3 ? 'none' : '1px solid #f1f5f9' }}>
+                <div style={{ 
+                  width: '8px', height: '8px', borderRadius: '50%', marginTop: '6px', flexShrink: 0,
+                  background: alertItem.type === 'critical' ? '#ef4444' : alertItem.type === 'warning' ? '#f59e0b' : '#3b82f6'
+                }} />
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#111827', lineHeight: 1.4 }}>{alertItem.title}</div>
+                  <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{alertItem.time}</div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
+              </div>
+            ))}
+          </SidebarWidget>
+        </>
+      }
+    />
   );
 }

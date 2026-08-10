@@ -78,6 +78,7 @@ import { PermissionPages } from './components/system/PermissionPages';
 const StudentsPage = lazy(() => import('./features/students/StudentsPage'));
 const StudentDetailPage = lazy(() => import('./features/students/StudentDetailPage'));
 const TeachersPage = lazy(() => import('./features/teachers/TeachersPage'));
+const TeacherPerformancePage = lazy(() => import('./features/teachers/TeacherPerformancePage'));
 const ParentsPage = lazy(() => import('./features/parent/ParentsPage'));
 const FeesPage = lazy(() => import('./features/fees/FeesPage'));
 const ExamsPage = lazy(() => import('./features/exams/ExamsPage'));
@@ -100,6 +101,8 @@ const OnlineClassesPage = lazy(() => import('./features/online-classes/OnlineCla
 const QuestionBankPage = lazy(() => import('./features/exams/QuestionBankPage'));
 const AssignmentsPage = lazy(() => import('./features/assignments/AssignmentsPage'));
 const AcademicAuditPage = lazy(() => import('./features/academic/AcademicAuditPage'));
+const AcademicSettingsPage = lazy(() => import('./features/academic/AcademicSettingsPage'));
+const AcademicCoordinatorProfilePage = lazy(() => import('./features/academic/AcademicCoordinatorProfilePage'));
 const NoticesPage = lazy(() => import('./features/communication/NoticesPage'));
 
 
@@ -162,6 +165,7 @@ export default function App() {
             <Route path="students" element={<Suspense fallback={<PageLoader />}><StudentsPage /></Suspense>} />
             <Route path="students/:id" element={<Suspense fallback={<PageLoader />}><StudentDetailPage /></Suspense>} />
             <Route path="teachers" element={<Suspense fallback={<PageLoader />}><TeachersPage /></Suspense>} />
+            <Route path="teachers/performance" element={<Suspense fallback={<PageLoader />}><TeacherPerformancePage /></Suspense>} />
             <Route path="parents" element={<Suspense fallback={<PageLoader />}><ParentsPage /></Suspense>} />
             <Route path="fees" element={<Suspense fallback={<PageLoader />}><FeesPage /></Suspense>} />
             <Route path="fees/*" element={<Suspense fallback={<PageLoader />}><FeesPage /></Suspense>} />
@@ -172,6 +176,7 @@ export default function App() {
             <Route path="academic/syllabus" element={<Suspense fallback={<PageLoader />}><SyllabusTrackerPage /></Suspense>} />
             <Route path="academic/lesson-plans" element={<Suspense fallback={<PageLoader />}><LessonPlansPage /></Suspense>} />
             <Route path="academic/audit" element={<Suspense fallback={<PageLoader />}><AcademicAuditPage /></Suspense>} />
+            <Route path="academic/settings" element={<Suspense fallback={<PageLoader />}><AcademicSettingsPage /></Suspense>} />
             <Route path="academic/*" element={<Suspense fallback={<PageLoader />}><AcademicPage /></Suspense>} />
             <Route path="academic-years" element={<Suspense fallback={<PageLoader />}><AcademicYearsPage /></Suspense>} />
             
@@ -233,6 +238,12 @@ export default function App() {
             } />
             <Route path="settings" element={
               <Suspense fallback={<PageLoader />}><SettingsPage /></Suspense>
+            } />
+            <Route path="profile" element={
+              <Suspense fallback={<PageLoader />}><PrincipalProfilePage /></Suspense>
+            } />
+            <Route path="academic/profile" element={
+              <Suspense fallback={<PageLoader />}><AcademicCoordinatorProfilePage /></Suspense>
             } />
 
             {/* Unified Finance Workspace ERP Routes */}

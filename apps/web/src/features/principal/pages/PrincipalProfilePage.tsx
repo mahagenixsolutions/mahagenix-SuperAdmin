@@ -54,8 +54,14 @@ interface ProfileData {
   aboutMe: string;
 }
 
+import AcademicCoordinatorProfilePage from '../../academic/AcademicCoordinatorProfilePage';
+
 export default function PrincipalProfilePage() {
   const user = useSelector((s: RootState) => s.auth.user);
+
+  if (user?.role === 'ACADEMIC_COORDINATOR') {
+    return <AcademicCoordinatorProfilePage />;
+  }
   const navigate = useNavigate();
 
   const [isMobile, setIsMobile] = useState(false);
@@ -69,23 +75,23 @@ export default function PrincipalProfilePage() {
 
   // State for editable profile details
   const [profile, setProfile] = useState<ProfileData>({
-    name: `${user?.first_name ?? 'Rajesh'} ${user?.last_name ?? 'Kumar'}`,
-    designation: 'Principal',
-    branch: 'Koranamgala Branch',
-    school: 'Greenfield International School',
-    employeeId: 'EMP-2024-001',
+    name: user?.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : 'Dr. Rajesh Sharma',
+    designation: user?.role === 'ACADEMIC_COORDINATOR' ? 'Academic Coordinator' : user?.role === 'SUPER_ADMIN' ? 'Super Administrator' : user?.role ? user.role.replace('_', ' ') : 'Academic Coordinator',
+    branch: 'Main Campus',
+    school: 'EduVerse International School',
+    employeeId: user?.id ? `EMP-${user.id.substring(0, 6).toUpperCase()}` : 'EMP-2026-042',
     since: 'April 1, 2018',
-    experience: '8+ Years in Education Leadership',
-    qualifications: 'M.Ed, B.Ed, MBA (Education Management)',
+    experience: '8+ Years in Education Leadership & Quality Governance',
+    qualifications: 'M.Ed, B.Ed, M.Sc (Education Management)',
     dob: 'May 12, 1983',
     nationality: 'Indian',
     languages: 'English, Hindi, Kannada',
-    email: 'principal@greenfield.edu.in',
+    email: user?.email || 'coordinator@eduverse.school',
     phone: '+91 98765 43210',
     altPhone: '+91 87654 32109',
     officeHours: 'Mon – Fri, 8:00 AM – 4:00 PM',
-    officeAddress: 'Greenfield International School, Koranamgala, Bengaluru, Karnataka – 560034',
-    aboutMe: 'Dedicated to creating an environment where students learn, grow, and become responsible global citizens.',
+    officeAddress: 'EduVerse International School, Main Campus, Bengaluru, Karnataka – 560034',
+    aboutMe: 'Dedicated to leading academic excellence, quality governance, curriculum compliance, and empowering educators.',
   });
 
   // Modal states

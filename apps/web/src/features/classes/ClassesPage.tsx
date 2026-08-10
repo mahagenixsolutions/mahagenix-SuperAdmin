@@ -26,12 +26,12 @@ export default function ClassesPage() {
     <div style={{ fontFamily: 'Inter, sans-serif', display: 'flex', flexDirection: 'column', gap: '20px', height: 'calc(100vh - 40px)', overflow: 'hidden' }}>
       
       {/* Top Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexShrink: 0 }}>
-        <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', flexShrink: 0 }}>
+        <div style={{ flex: '1 1 260px', minWidth: 0 }}>
           <h1 style={{ margin: '0 0 4px 0', fontSize: '24px', fontWeight: 800, color: '#111827' }}>Timetable Studio</h1>
           <p style={{ margin: 0, color: '#6b7280', fontSize: '13px' }}>Plan, optimize, and publish weekly schedules.</p>
         </div>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           <button style={{ 
             display: 'flex', alignItems: 'center', gap: '8px', 
             background: 'white', color: '#111827', border: '1px solid #d1d5db', 
@@ -57,7 +57,7 @@ export default function ClassesPage() {
       </div>
 
       {/* Toolbar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '12px 20px', borderRadius: '12px', border: '1px solid #e5e7eb', flexShrink: 0 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '12px 20px', borderRadius: '12px', border: '1px solid #e5e7eb', flexShrink: 0, flexWrap: 'wrap', gap: '12px' }}>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderRight: '1px solid #e5e7eb', paddingRight: '16px' }}>

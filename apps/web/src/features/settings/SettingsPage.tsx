@@ -97,7 +97,17 @@ interface AuditLog {
   ip: string;
 }
 
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store';
+import AcademicSettingsPage from '../academic/AcademicSettingsPage';
+
 const SettingsPage: React.FC = () => {
+  const user = useSelector((s: RootState) => s.auth.user);
+
+  if (user?.role === 'ACADEMIC_COORDINATOR') {
+    return <AcademicSettingsPage />;
+  }
+
   // --- Active Tab State ---
   const [activeTab, setActiveTab] = useState<
     | 'profile'

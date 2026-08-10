@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
-  FileText, Clock, CheckCircle, XCircle, Search, Filter, 
-  MoreHorizontal, MessageSquare, Paperclip, Calendar
+  Clock, CheckCircle, XCircle, MoreHorizontal, 
+  MessageSquare, Paperclip, AlertCircle, Sparkles
 } from 'lucide-react';
+import { ManagementLayout } from './layouts/ManagementLayout';
+import { KPICard } from './components/KPICard';
+import { FilterBar } from './components/FilterBar';
+import { SidebarWidget } from './components/SidebarWidget';
 
 export default function LessonPlansPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+
   const columns = [
     {
       id: 'pending', title: 'Pending Approval', color: '#f59e0b', bg: '#fffbeb',
@@ -29,130 +36,106 @@ export default function LessonPlansPage() {
     }
   ];
 
+  const kpiData = [
+    { label: 'Pending Reviews', value: '24', tone: '#f59e0b', bg: '#fffbeb', icon: <Clock size={22} />, status: { label: 'Action Needed', tone: 'warning' as const } },
+    { label: 'Needs Revision', value: '8', tone: '#8b5cf6', bg: '#f3e8ff', icon: <AlertCircle size={22} />, status: { label: 'Returned', tone: 'info' as const } },
+    { label: 'Approved (This Week)', value: '82', tone: '#10b981', bg: '#ecfdf5', icon: <CheckCircle size={22} />, trend: { value: '91% Pass Rate', isPositive: true } },
+    { label: 'Missing Submissions', value: '12', tone: '#ef4444', bg: '#fef2f2', icon: <XCircle size={22} />, status: { label: 'Overdue', tone: 'danger' as const } },
+  ];
+
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', paddingBottom: '40px', display: 'flex', flexDirection: 'column', gap: '24px', height: 'calc(100vh - 40px)', overflow: 'hidden' }}>
-      
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexShrink: 0 }}>
-        <div>
-          <h1 style={{ margin: '0 0 6px 0', fontSize: '24px', fontWeight: 800, color: '#111827' }}>Lesson Plan Approvals</h1>
-          <p style={{ margin: 0, color: '#6b7280', fontSize: '14px' }}>Review, comment, and approve weekly lesson plans submitted by teachers.</p>
-        </div>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <div style={{ position: 'relative' }}>
-            <Search size={16} style={{ position: 'absolute', left: 12, top: 10, color: '#9ca3af' }} />
-            <input type="text" placeholder="Search plans..." style={{ width: '240px', padding: '8px 12px 8px 36px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '13px', outline: 'none' }} />
-          </div>
-          <button style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'white', color: '#111827', border: '1px solid #d1d5db', padding: '10px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
-            <Filter size={16} /> Filters
-          </button>
-        </div>
-      </div>
-
-      {/* Analytics Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', flexShrink: 0 }}>
-        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', marginBottom: '4px' }}>Pending Reviews</div>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#111827' }}>24</div>
-          </div>
-          <div style={{ width: 40, height: 40, borderRadius: '10px', background: '#fffbeb', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Clock size={20} />
-          </div>
-        </div>
-        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', marginBottom: '4px' }}>Needs Revision</div>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#111827' }}>8</div>
-          </div>
-          <div style={{ width: 40, height: 40, borderRadius: '10px', background: '#f3e8ff', color: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <AlertCircle size={20} />
-          </div>
-        </div>
-        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', marginBottom: '4px' }}>Approved (This Week)</div>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#111827' }}>82</div>
-          </div>
-          <div style={{ width: 40, height: 40, borderRadius: '10px', background: '#ecfdf5', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CheckCircle size={20} />
-          </div>
-        </div>
-        <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', marginBottom: '4px' }}>Missing Submissions</div>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#111827' }}>12</div>
-          </div>
-          <div style={{ width: 40, height: 40, borderRadius: '10px', background: '#fef2f2', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <XCircle size={20} />
-          </div>
-        </div>
-      </div>
-
-      {/* Kanban Board */}
-      <div style={{ display: 'flex', gap: '20px', flex: 1, minHeight: 0, overflowX: 'auto', paddingBottom: '8px' }}>
-        {columns.map(col => (
-          <div key={col.id} style={{ 
-            background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: '12px', 
-            minWidth: '320px', width: '320px', display: 'flex', flexDirection: 'column' 
-          }}>
-            {/* Column Header */}
-            <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: col.color }} />
-                <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#111827' }}>{col.title}</h3>
-              </div>
-              <span style={{ background: '#e2e8f0', color: '#475569', fontSize: '12px', fontWeight: 700, padding: '2px 8px', borderRadius: '12px' }}>
-                {col.items.length}
-              </span>
-            </div>
-
-            {/* Column Cards */}
-            <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, overflowY: 'auto' }}>
-              {col.items.map((item, idx) => (
-                <div key={idx} style={{ 
-                  background: 'white', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '16px', 
-                  cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                    <span style={{ background: '#f1f5f9', color: '#475569', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>{item.grade}</span>
-                    <button style={{ background: 'transparent', border: 'none', color: '#9ca3af', cursor: 'pointer' }}><MoreHorizontal size={16}/></button>
-                  </div>
-                  
-                  <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 700, color: '#111827', lineHeight: 1.4 }}>
-                    {item.title}
-                  </h4>
-                  
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>
-                    <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: col.bg, color: col.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700 }}>
-                      {item.teacher.split(' ').map(n=>n[0]).join('')}
-                    </div>
-                    {item.teacher}
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #f1f5f9', paddingTop: '12px' }}>
-                    <div style={{ fontSize: '11px', color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Calendar size={12} /> {item.date}
-                    </div>
-                    <div style={{ display: 'flex', gap: '12px', color: '#9ca3af' }}>
-                      {item.attachments > 0 && (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px' }}>
-                          <Paperclip size={12} /> {item.attachments}
-                        </span>
-                      )}
-                      {item.comments > 0 && (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px' }}>
-                          <MessageSquare size={12} /> {item.comments}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+    <ManagementLayout
+      breadcrumbs={[{ label: 'Academic' }, { label: 'Lesson Plans' }]}
+      title="Lesson Plan Approvals"
+      subtitle="Review, comment, and approve weekly lesson plans submitted by faculty members."
+      kpiCards={
+        <>
+          {kpiData.map((k, i) => (
+            <KPICard key={i} label={k.label} value={k.value} tone={k.tone} bg={k.bg} icon={k.icon} status={k.status} trend={k.trend} />
+          ))}
+        </>
+      }
+      filterBar={
+        <FilterBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          searchPlaceholder="Search plans by teacher or subject..."
+          filterGroups={[
+            {
+              id: 'status',
+              label: 'Status',
+              value: statusFilter,
+              onChange: setStatusFilter,
+              options: [
+                { label: 'All Statuses', value: 'All' },
+                { label: 'Pending Approval', value: 'Pending' },
+                { label: 'Needs Revision', value: 'Revision' },
+                { label: 'Approved', value: 'Approved' },
+              ]
+            }
+          ]}
+        />
+      }
+      mainContent={
+        <div className="academic-kanban-grid">
+          {columns.map(col => (
+            <div key={col.id} style={{ 
+              background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '18px', 
+              display: 'flex', flexDirection: 'column', overflow: 'hidden'
+            }}>
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: col.color }} />
+                  <span style={{ fontWeight: 700, fontSize: '14px', color: '#111827' }}>{col.title}</span>
                 </div>
-              ))}
+                <span style={{ background: col.bg, color: col.color, padding: '2px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: 700 }}>
+                  {col.items.length}
+                </span>
+              </div>
+
+              <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {col.items.map((item, idx) => (
+                  <div key={idx} className="academic-card" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <span style={{ background: '#f1f5f9', color: '#475569', padding: '2px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 600 }}>
+                        {item.grade}
+                      </span>
+                      <button style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+                        <MoreHorizontal size={16} />
+                      </button>
+                    </div>
+
+                    <div>
+                      <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: 700, color: '#111827', lineHeight: 1.4 }}>{item.title}</h4>
+                      <div style={{ fontSize: '12px', color: '#64748b' }}>Teacher: <strong>{item.teacher}</strong></div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#64748b', paddingTop: '8px', borderTop: '1px solid #f1f5f9' }}>
+                      <span>{item.date}</span>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        {item.attachments > 0 && <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}><Paperclip size={12} /> {item.attachments}</span>}
+                        {item.comments > 0 && <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}><MessageSquare size={12} /> {item.comments}</span>}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      }
+      sidePanel={
+        <SidebarWidget title="AI Lesson Audit" icon={<Sparkles size={18} color="#8b5cf6" />}>
+          <div style={{ background: '#f3e8ff', border: '1px solid #d8b4fe', borderRadius: '12px', padding: '16px' }}>
+            <div style={{ fontSize: '13px', fontWeight: 700, color: '#6b21a8', marginBottom: '4px' }}>
+              Taxonomy Mapping Verified
+            </div>
+            <div style={{ fontSize: '12px', color: '#7e22ce', lineHeight: 1.5 }}>
+              All 82 approved plans meet Bloom's Taxonomy learning outcome objectives for Term 1.
             </div>
           </div>
-        ))}
-      </div>
-    </div>
+        </SidebarWidget>
+      }
+    />
   );
 }
